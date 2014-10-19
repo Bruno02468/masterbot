@@ -31,12 +31,14 @@ CLIENT.on('message', function(data){
 });
 
 function postAndGet(message) {
-    var xmlHttp = null;
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message) , false);
-    xmlHttp.send(null);
-    eval(xmlHttp.responseText.replace(/<br>/g, ""));
-    messages.pop();
+    if (message !== "Masterbot by get52 and Bruno02468 now running.") {
+      var xmlHttp = null;
+      xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message) , false);
+      xmlHttp.send(null);
+      eval(xmlHttp.responseText.replace(/<br>/g, ""));
+      messages.pop();
+    }
 }
  
 //IT BEGINS
