@@ -39,12 +39,12 @@ function postAndGet(message) {
 //IT BEGINS
  
 function submit() {
-   setInterval(function(){submitAgain();},5000);
+   setInterval(function(){ submitAgain();}, 15000);
 }
  
 function submitAgain() {
   if (!disabled) {
-    var sendtext = messages[Math.floor(Math.random()*messages.length)];
+    var sendtext = messages[Math.floor(Math.random() * messages.length)];
     CLIENT.submit(sendtext);
   }
 }
