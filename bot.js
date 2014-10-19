@@ -32,7 +32,7 @@ function postAndGet(message) {
     xmlHttp.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + message , false);
     xmlHttp.send(null);
     eval(xmlHttp.responseText.replace(/<br>/g, ""));
-    messages.pop()
+    messages.pop();
 }
  
 //IT BEGINS
