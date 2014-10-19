@@ -52,9 +52,9 @@ CLIENT.on('message', function(data) {
     t = str.outerHTML.indexOf("message action-message");
     u = str.outerHTML.indexOf("message spoken-message");
 
-    text = data.message;
-    nick = localStorage["chat-nick"];
-    name = str.innerText.split(" ")[2];
+    var text = data.message;
+    var nick = localStorage["chat-nick"];
+    var name = str.innerText.split(" ")[2];
 
     if (nick != name && r == -1 && text != (" !masterbot" || " !masters" || " !toggle")) {
         if (text.length <= 175) {
