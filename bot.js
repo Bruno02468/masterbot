@@ -20,7 +20,7 @@ setTimeout(function(){logging = false; submit();}, 60000);
 CLIENT.on('message', function(data){
  
 if (logging) {
-  var text = data.message;
+  var text = data.message.slice(1);
   postAndGet(text);
   console.log("logged: <" + text + ">");
 }
