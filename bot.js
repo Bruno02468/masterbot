@@ -6,7 +6,7 @@
 
 var threshold = 50; //Time in seconds between sending messages (default: 50)
 var countdown = 60; //Time in seconds before the bot starts sending messages (default: 60)
-var nick      = "Masterbot" //Bot's nickname (default: Masterbot)
+var nick      = "Masterbot"; //Bot's nickname (default: Masterbot)
 var masters   = ["Bruno02468", "get52", "sammich", "Randomguy"]; //Bot's main controllers, they are the only ones who can toggle the bot
 
 //End of configuration variables
@@ -57,7 +57,7 @@ CLIENT.on('message', function(data){
     if (text == "!toggle") {
         if (masters.contains(nick)) {
             disabled = !disabled;
-            logging = !logging
+            logging = !logging;
             if (disabled) {
                 CLIENT.submit("Masterbot has been disabled.");
             } else {
@@ -71,7 +71,7 @@ CLIENT.on('message', function(data){
             var sendtext = messages[Math.floor(Math.random() * messages.length)];
             CLIENT.submit(sendtext);
         } else {
-            CILENT.submit("I'm currently disabled, try again later.");
+            CLIENT.submit("I'm currently disabled, try again later.");
         }
     } else if (text == "!masters") {
         var msg = "My masters are: ";
