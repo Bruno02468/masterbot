@@ -46,6 +46,10 @@ setTimeout(function(){logging = false; submit();}, countdown * 1000);
 
 CLIENT.on('message', function(data) {
     var text = data.message;
+    
+    if (data.message[0] !== "$") {
+        text = data.message.slice(1);
+-   }
     var nick = data.nick;
     
     if (text == "!toggle") {
