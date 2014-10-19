@@ -49,7 +49,7 @@ CLIENT.on('message', function(data) {
     
     if (data.message[0] !== "$") {
         text = data.message.slice(1);
--   }
+    }
     var nick = data.nick;
     
     if (text == "!toggle") {
