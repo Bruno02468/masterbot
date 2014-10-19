@@ -12,7 +12,7 @@ var masters   = ["Bruno02468", "get52", "sammich", "Randomguy"]; //Bot's main co
 //End of configuration variables
 
 
-//Adding the Array.contains utility function
+//Adding the contains utility functions
 
 Array.prototype.contains = function(obj) {
     var i = this.length;
@@ -22,6 +22,10 @@ Array.prototype.contains = function(obj) {
         }
     }
     return false;
+}
+
+String.prototype.contains = function(obj) {
+    return (this.indexOf(obj) > -1);
 }
 
 //Defining some variables
@@ -52,7 +56,7 @@ CLIENT.on('message', function(data) {
     }
     var nick = data.nick;
     
-    if (text == "!toggle") {
+    if (text.contains("!toggle")) {
         if (masters.contains(nick)) {
             disabled = !disabled;
             logging = !logging;
@@ -64,14 +68,14 @@ CLIENT.on('message', function(data) {
         } else {
             CLIENT.submit("You do not have permission to do this, " + nick + ".");
         }
-    } else if (text == "!masterbot") {
+    } else if (text.contains("!masterbot")) {
         if (!disabled) {
             var sendtext = messages[Math.floor(Math.random() * messages.length)];
             CLIENT.submit(sendtext);
         } else {
             CLIENT.submit("I'm currently disabled, try again later.");
         }
-    } else if (text == "!masters") {
+    } else if (text.contains("!masters")) {
         var msg = "My masters are: ";
         for (var i = 0; i <= masters.length - 2; i++) {
             msg += masters[i] + ", ";
