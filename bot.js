@@ -19,10 +19,9 @@ Updates:
 - Objects are better than arrays for this
 - Antispamming added
 - Does not log its own commands
+- Fixed bug where it didn't log anything
  
 */
-
-//IMPORTANT: This version is defective.
 
 //Defining Variables
 var logging = false;
@@ -54,7 +53,7 @@ CLIENT.on('message', function(data) {
     u = str.outerHTML.indexOf("message spoken-message");
 
     text = data.message;
-    nick = data.nick;
+    nick = localStorage["chat-nick"];
     name = str.innerText.split(" ")[2];
 
     if (nick != name && r == -1 && text != (" !masterbot" || " !masters" || " !toggle")) {
