@@ -44,15 +44,9 @@ setTimeout(function(){logging = false; submit();}, countdown * 1000);
  
 //Begin logging process and listen for commands
 
-CLIENT.on('message', function(data){
-    var text = "";
+CLIENT.on('message', function(data) {
+    var text = data.message;
     var nick = data.nick;
-    
-    if (data.message[0] !== "$") {
-        text = data.message.slice(1);
-    } else {
-        text = data.message;
-    }
     
     if (text == "!toggle") {
         if (masters.contains(nick)) {
@@ -75,7 +69,7 @@ CLIENT.on('message', function(data){
         }
     } else if (text == "!masters") {
         var msg = "My masters are: ";
-        for (var i = 0; i < masters.length - 2; i++) {
+        for (var i = 0; i <= masters.length - 2; i++) {
             msg += masters[i] + ", ";
         }
         msg += "and " + masters[masters.length - 1] + ".";
