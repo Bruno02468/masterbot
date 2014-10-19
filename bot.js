@@ -53,7 +53,7 @@ CLIENT.on('message', function(data) {
 
     var text = data.message;
     var nick = data.nick;
-    var name = str.innerText.split(" ")[2];
+    var name = str.innerHTML.split(" ")[2];
 
     if (nick != name && r == -1 && s == -1 && text != (" !masterbot" || " !masters" || " !toggle")) {
         if (text.length <= 175) {
