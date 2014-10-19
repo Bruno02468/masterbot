@@ -20,7 +20,7 @@ setTimeout(function(){logging = false; submit();}, 60000);
 CLIENT.on('message', function(data){
   if (logging) {
      var text;
-     if (text[0] !== "$") {
+     if (data.message[0] !== "$") {
         text = data.message.slice(1);
      } else {
         text = data.message;
