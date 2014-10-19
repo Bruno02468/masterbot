@@ -1,123 +1,138 @@
-/* Masterbot by get52 and completely revamped by Bruno02468.
- * Run it using the run script on the GitHub repo to avoid need for updates.
- */
+/*MasterBot v1.2
+ 
+Designed by Get52, Bruno02468 and Randomguy_
+ 
+Notes:
 
-//Configuration variables
+- Use the run script on the GitHub repo please
+- use "disabled = true;" to turn off the bot
+- Changing your nick during usage may result in bot shutdown
+- /me commands still need some work
+ 
+Updates:
 
-var threshold = 50; //Time in seconds between sending messages (default: 50)
-var countdown = 60; //Time in seconds before the bot starts sending messages (default: 60)
-var throttle  = 45; //Time in seconds between users can request a random message (default: 45)
-var nick      = "Masterbot"; //Bot's nickname (default: Masterbot)
-var masters   = ["Bruno02468", "get52", "sammich", "Randomguy"]; //Bot's main controllers, they are the only ones who can toggle the bot
-
-//End of configuration variables
-
-
-//Adding the contains utility functions
-
-Array.prototype.contains = function(obj) {
-    var i = this.length;
-    while (i--) {
-        if (this[i] === obj) {
-            return true;
-        }
-    }
-    return false;
-}
-
-String.prototype.contains = function(obj) {
-    return (this.indexOf(obj) > -1);
-}
-
-//Defining some variables
-
+- This now samples continously
+- Doesn't sample your own messages that's a good thing
+- Does not read PM's and join/leave messages
+- Speak and /me commands adapted
+- Uses .ajax to send to server (did I do it right?)
+- Objects are better than arrays for this
+- Antispamming added
+- Does not log its own commands
+ 
+*/
+//Defining Variables
 var logging = false;
 var disabled = false;
-var messages = [];
-var throttled = false;
+var masters = ["Bruno02468", "get52", "sammich", "Randomguy_"]; //bot's main controllers
+var object = new Object();
+var canSend = false;
+var score = 0;
 
-//Booting up
+//Configurating input
 
-if (!logging) {
-    CLIENT.submit("/nick " + nick);
-    CLIENT.submit("Masterbot by get52 and Bruno02468 now running.");
-    logging = true;
-}
- 
-//Start countdown
- 
-setTimeout(function(){logging = false; submit();}, countdown * 1000);
- 
+var lag = prompt("Enter the delay between logging and sending", "60") * 1000;
+var botnick = prompt("What is my name?", "Masterbot");
+
+CLIENT.submit("/nick " + botnick);
+setTimeout(function() {
+    canSend = true;
+    console.log(">> Sending has now been enabled.");
+}, lag);
+
 //Begin logging process and listen for commands
 
+var k = 0;
 CLIENT.on('message', function(data) {
+
+    str = $('#messages').children().slice(-1)[0];
+    r = str.outerHTML.indexOf("message personal-message");
+    s = str.outerHTML.indexOf("message general-message");
+    t = str.outerHTML.indexOf("message action-message");
+    u = str.outerHTML.indexOf("message spoken-message");
+
     var text = data.message;
-    
-    if (data.message[0] !== "$") {
-        text = data.message.slice(1);
-    }
     var nick = data.nick;
-    
-    if (text.contains("!toggle")) {
-        if (masters.contains(nick)) {
-            disabled = !disabled;
-            logging = !logging;
-            if (disabled) {
-                CLIENT.submit("Masterbot has been disabled.");
+    var name = str.innerText.split(" ")[2];
+
+    if (nick != name && r == -1 && s == -1 && text != (" !masterbot" || " !masters" || " !toggle")) {
+        if (text.length <= 175) {
+            if (t != -1) {
+                object[k] = "/me " + text;
+            } else if (u != -1) {
+                object[k] = "/speak " + text;
             } else {
-                CLIENT.submit("Masterbot has been enabled.");
+                object[k] = text;
+                console.log('"' + text + '" has been logged');
             }
+            postAndGet(object[k]);
+            k++;
         } else {
-            CLIENT.submit("You do not have permission to do this, " + nick + ".");
+            console.log("that was too long4me. Not logged (length > 200)");
         }
-    } else if (text.contains("!masterbot")) {
-        if (!disabled) {
-            if (!throttled) {
-                var sendtext = messages[Math.floor(Math.random() * messages.length)];
-                CLIENT.submit(sendtext);
-                throttled = true;
-                setTimeout(function(){throttled = false;}, throttle * 1000);
-            } else {
-                CLIENT.submit("Please wait a bit before requesting another message. Current throttle: " + throttle + " seconds.");
-            }
-        } else {
-            CLIENT.submit("I'm currently disabled, try again later.");
-        }
-    } else if (text.contains("!masters")) {
-        var msg = "My masters are: ";
-        for (var i = 0; i <= masters.length - 2; i++) {
-            msg += masters[i] + ", ";
-        }
-        msg += "and " + masters[masters.length - 1] + ".";
-        CLIENT.submit(msg);
-    } else if (logging) {
-        postAndGet(text);
-        console.log("Logged to server: <" + text + ">");
     }
+    if (!antiSpam) {
+        if (text == " !toggle") {
+            if (masters.contains(nick)) {
+                reverseVars();
+                if (!disabled)
+                    CLIENT.submit("Masterbot has been enabled.");
+                spamFilters();
+            } else {
+                CLIENT.submit("You do not have permission to do this.");
+                spamFilters();
+            }
+        } else if (text == " !masterbot" && canSend) {
+            var random = Math.floor(Math.random() * Object.keys(object).length);
+            var sendtext = object[random];
+            CLIENT.submit(sendtext);
+            spamFilters();
+        } else if (text == " !masters") {
+            var msg = "My masters are: ";
+            for (var i = 0; i < masters.length - 2; i++) {
+                msg += masters[i] + ", ";
+            }
+            msg += "and " + masters[masters.length - 1] + ".";
+            CLIENT.submit(msg);
+            spamFilters();
+        }
+    }
+
 });
 
-//Function that saves the message externally and updates the array
+function reverseVars() {
+    disabled = !disabled;
+    logging = !logging;
+}
+
+//External saving
 
 function postAndGet(message) {
-    if (message !== "Masterbot by get52 and Bruno02468 now running.") {
-        var xmlHttp = null;
-        xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message) , false);
-        xmlHttp.send(null);
-        eval(xmlHttp.responseText.replace(/<br>/g, ""));
-        messages.pop();
+    $.ajax({
+        url: "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message),
+        type: 'GET',
+        success: function(text) {
+            eval(text.replace(/<br>/g, ""));
+        }
+    });
+}
+
+//Antispam functions
+
+var antiSpam = false;
+
+function spamFilters() {
+    score++;
+    antiSpam = true;
+    setTimeout(function() {
+        antiSpam = false;
+    }, 650);
+}
+
+setInterval(function() {
+    if (score > 0) {
+        score--;
     }
-}
- 
-//IT BEGINS
- 
-function submit() {
-    setInterval(function(){ submitAgain();}, threshold * 1000);
-}
- 
-function submitAgain() {
-    if (!disabled) {
-        var sendtext = messages[Math.floor(Math.random() * messages.length)];
-        CLIENT.submit(sendtext);
-    }
-}
+}, 8000);
+
+console.log("I am running.");
