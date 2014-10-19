@@ -5,11 +5,15 @@ were all made by Bruno02468, including the github repo.*/
  
 //setting variables
 
-CLIENT.submit("Masterbot by get52 and Bruno02468 now running.");
- 
-var logging = true;
+var logging = false;
 var disabled = false;
 var messages = [];
+
+if (!logging) {
+  CLIENT.submit("/nick Masterbot");
+  CLIENT.submit("Masterbot by get52 and Bruno02468 now running.");
+  loggin = true;
+}
  
 //instantiating countdown and submit function
  
