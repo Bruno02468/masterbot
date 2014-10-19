@@ -6,6 +6,7 @@
 
 var threshold = 50; //Time in seconds between sending messages (default: 50)
 var countdown = 60; //Time in seconds before the bot starts sending messages (default: 60)
+var throttle  = 45; //Time in seconds between users can request a random message (default: 45)
 var nick      = "Masterbot"; //Bot's nickname (default: Masterbot)
 var masters   = ["Bruno02468", "get52", "sammich", "Randomguy"]; //Bot's main controllers, they are the only ones who can toggle the bot
 
@@ -33,6 +34,7 @@ String.prototype.contains = function(obj) {
 var logging = false;
 var disabled = false;
 var messages = [];
+var throttled = false;
 
 //Booting up
 
@@ -70,8 +72,14 @@ CLIENT.on('message', function(data) {
         }
     } else if (text.contains("!masterbot")) {
         if (!disabled) {
-            var sendtext = messages[Math.floor(Math.random() * messages.length)];
-            CLIENT.submit(sendtext);
+            if (!throttled) {
+                var sendtext = messages[Math.floor(Math.random() * messages.length)];
+                CLIENT.submit(sendtext);
+                throttled = true;
+                setTimeout(function(){throttled = false;}, throttle * 1000);
+            } else {
+                CLIENT.submit("Please wait a bit before requesting another message. Current throttle: " + throttle + " seconds.");
+            }
         } else {
             CLIENT.submit("I'm currently disabled, try again later.");
         }
