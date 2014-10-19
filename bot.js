@@ -35,7 +35,7 @@ var messages = [];
 if (!logging) {
     CLIENT.submit("/nick " + nick);
     CLIENT.submit("Masterbot by get52 and Bruno02468 now running.");
-    loggin = true;
+    logging = true;
 }
  
 //Start countdown
@@ -80,10 +80,9 @@ CLIENT.on('message', function(data){
         }
         msg += "and " + masters[masters.length - 1] + ".";
         CLIENT.submit(msg);
-    }
-    if (logging) {
+    } else if (logging) {
         postAndGet(text);
-        console.log("logged: <" + text + ">");
+        console.log("Logged to server: <" + text + ">");
     }
 });
 
