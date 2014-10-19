@@ -4,6 +4,8 @@ Database server, and postAndGet function and stuff to make it work better
 were all made by Bruno02468, including the github repo.*/
  
 //setting variables
+
+CLIENT.submit("Masterbot by get52 and Bruno02468 now running.");
  
 var logging = true;
 var disabled = false;
@@ -20,6 +22,7 @@ CLIENT.on('message', function(data){
 if (logging) {
   var text = data.message;
   postAndGet(text);
+  console.log("logged: <" + text + ">");
 }
  
 });
@@ -36,7 +39,7 @@ function postAndGet(message) {
 //IT BEGINS
  
 function submit() {
-   setInterval(function(){submitAgain();},3000);
+   setInterval(function(){submitAgain();},5000);
 }
  
 function submitAgain() {
@@ -45,5 +48,3 @@ function submitAgain() {
     CLIENT.submit(sendtext);
   }
 }
- 
-CLIENT.submit("Masterbot by get52 and Bruno02468 now running.");
