@@ -19,8 +19,10 @@ Updates:
 - Objects are better than arrays for this
 - Antispamming added
 - Does not log its own commands
+- Fixed bug where it didn't log anything
  
 */
+
 //Defining Variables
 var logging = false;
 var disabled = false;
@@ -46,16 +48,15 @@ var k = 0;
 CLIENT.on('message', function(data) {
 
     str = $('#messages').children().slice(-1)[0];
-    r = str.outerHTML.indexOf("message personal-message");
-    s = str.outerHTML.indexOf("message general-message");
+    r = str.outerHTML.search(/message (personal-message|general-message|error-message)/g);
     t = str.outerHTML.indexOf("message action-message");
     u = str.outerHTML.indexOf("message spoken-message");
 
     var text = data.message;
-    var nick = data.nick;
+    var nick = localStorage["chat-nick"];
     var name = str.innerText.split(" ")[2];
 
-    if (nick != name && r == -1 && s == -1 && text != (" !masterbot" || " !masters" || " !toggle")) {
+    if (nick != name && r == -1 && text != (" !masterbot" || " !masters" || " !toggle")) {
         if (text.length <= 175) {
             if (t != -1) {
                 object[k] = "/me " + text;
