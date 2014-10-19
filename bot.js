@@ -1,4 +1,4 @@
-/*MasterBot v1.2
+/*MasterBot v1.3.[bigint]
  
 Designed by Get52, Bruno02468 and Randomguy_
  
@@ -42,21 +42,38 @@ setTimeout(function() {
     console.log(">> Sending has now been enabled.");
 }, lag);
 
+//Adding the .contains utility functions
+
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
+String.prototype.contains = function(obj) {
+    return (this.indexOf(obj) > -1);
+}
+
 //Begin logging process and listen for commands
 
 var k = 0;
 CLIENT.on('message', function(data) {
 
-    str = $('#messages').children().slice(-1)[0];
-    r = str.outerHTML.search(/message (personal-message|general-message|error-message)/g);
-    t = str.outerHTML.indexOf("message action-message");
-    u = str.outerHTML.indexOf("message spoken-message");
+    var str = $('#messages').children().slice(-1)[0];
+    console.log(str);
+    var r = str.outerHTML.search(/message (personal-message|general-message|error-message)/g);
+    var t = str.outerHTML.indexOf("message action-message");
+    var u = str.outerHTML.indexOf("message spoken-message");
 
     var text = data.message;
     var nick = localStorage["chat-nick"];
     var name = str.innerText.split(" ")[2];
 
-    if (nick != name && r == -1 && text != (" !masterbot" || " !masters" || " !toggle")) {
+    if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle")) {
         if (text.length <= 175) {
             if (t != -1) {
                 object[k] = "/me " + text;
@@ -73,7 +90,7 @@ CLIENT.on('message', function(data) {
         }
     }
     if (!antiSpam) {
-        if (text == " !toggle") {
+        if (text.contains("!toggle")) {
             if (masters.contains(nick)) {
                 reverseVars();
                 if (!disabled)
@@ -83,12 +100,12 @@ CLIENT.on('message', function(data) {
                 CLIENT.submit("You do not have permission to do this.");
                 spamFilters();
             }
-        } else if (text == " !masterbot" && canSend) {
+        } else if (text.contains(" !masterbot") && canSend) {
             var random = Math.floor(Math.random() * Object.keys(object).length);
             var sendtext = object[random];
             CLIENT.submit(sendtext);
             spamFilters();
-        } else if (text == " !masters") {
+        } else if (text.contains("!masters")) {
             var msg = "My masters are: ";
             for (var i = 0; i < masters.length - 2; i++) {
                 msg += masters[i] + ", ";
