@@ -9,8 +9,6 @@ var logging = true;
 var disabled = false;
 var messages = [];
  
-//instantiating logger
- 
 //instantiating countdown and submit function
  
 setTimeout(function(){logging = false; submit();}, 60000);
