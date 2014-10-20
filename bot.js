@@ -90,7 +90,7 @@ CLIENT.on('message', function(data) {
             if (!disabled) {
                 CLIENT.submit("Masterbot has been enabled.");
             } else {
-                CLIENT.submit("masterbot has been disabled.");
+                CLIENT.submit("Masterbot has been disabled.");
             }
             spamFilters();
         } else {
