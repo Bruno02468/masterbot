@@ -69,7 +69,7 @@ CLIENT.on('message', function(data) {
     var t = str.outerHTML.indexOf("message action-message");
     var u = str.outerHTML.indexOf("message spoken-message");
 
-    var text = data.message;
+    var text = data.message.trim();
     var nick = localStorage["chat-nick"];
     var name = data.nick
 
@@ -100,7 +100,7 @@ CLIENT.on('message', function(data) {
                 CLIENT.submit("You do not have permission to do this.");
                 spamFilters();
             }
-        } else if (text.contains(" !masterbot") && canSend) {
+        } else if (text.contains("!masterbot") && canSend) {
             var random = Math.floor(Math.random() * Object.keys(object).length);
             var sendtext = object[random];
             CLIENT.submit(sendtext);
