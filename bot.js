@@ -71,7 +71,7 @@ CLIENT.on('message', function(data) {
 
     var text = data.message;
     var nick = localStorage["chat-nick"];
-    var name = str.innerText.split(" ")[2];
+    var name = data.nick
 
     if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle")) {
         if (text.length <= 175) {
