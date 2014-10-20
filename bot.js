@@ -64,13 +64,13 @@ CLIENT.on('message', function(data) {
 
     if (nick != name && r == -1 && text.search(/(!masterbot|!masters|!toggle|Masterbot has been enabled\.|You do not have permission to toggle me\.)/g) == -1 ) {
         if (text.length <= 175) {
-            var mseg;
+            var msg;
             if (t != -1) {
-                mseg = "/me " + text;
+                msg = "/me " + text;
             } else if (u != -1) {
-                mseg = "/speak " + text;
+                msg = "/speak " + text;
             } else {
-                mseg = text;
+                msg = text;
                 console.log('"' + text + '" has been logged');
             }
             postAndGet(msg);
