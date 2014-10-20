@@ -130,13 +130,22 @@ function reverseVars() {
 //External saving
 
 function postAndGet(message) {
-    $.ajax({
+    /* Currently not receiving the data from the server and I don't know
+       how to make AJAX calls with jQuery. Temporarily reverting to XmlHttpRequest */
+    
+    /*$.ajax({
         url: "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message),
         type: 'GET',
         success: function(text) {
             eval(text.replace(/<br>/g, ""));
         }
-    });
+    });*/
+    var request = null;
+    request = new XMLHttpRequest();
+    request.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message) , false);
+    request.send(null);
+    eval(request.responseText.replace(/<br>/g, ""));
+    messages.pop();
 }
 
 //Antispam functions
