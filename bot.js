@@ -22,10 +22,10 @@ var canSend = false;
 var score = 0;
 var help = "I am Masterbot, original code by get52, revamped and messed with by Bruno02468 and Randomguy_!\n";
    help += "Commands:\n";
-   help += " !random: send a random message from the growing database filled with stuff you all send.\n";
+   help += "  !random: send a random message from the growing database filled with stuff you all send.\n";
    help += "  !roll: roll a random 5-digit number.\n";
    help += "  !coinflip: self-explanatory, I believe.\n";
-   help += "  !yesorno: Ask me a question!\n";
+   help += "  !ask: Ask me a question!\n";
    //help += "  !masters: lists who can control the bot.\n"; it still runs its own command
    help += "That's it, don't spam me or you're getting banned. :3";
 
