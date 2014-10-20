@@ -11,15 +11,8 @@ Notes:
  
 Updates:
 
-- This now samples continously
-- Doesn't sample your own messages that's a good thing
-- Does not read PM's and join/leave messages
-- Speak and /me commands adapted
-- Uses .ajax to send to server (did I do it right?)
-- Objects are better than arrays for this
-- Antispamming added
-- Does not log its own commands
-- Fixed bug where it didn't log anything
+- Perfect for keks!
+- That's it.
  
 */
 
@@ -27,7 +20,7 @@ Updates:
 var logging = false;
 var disabled = false;
 var masters = ["Bruno02468", "get52", "sammich", "Randomguy_"]; //bot's main controllers
-var object = new Object();
+var messages = [];
 var canSend = false;
 var score = 0;
 
@@ -35,8 +28,9 @@ var score = 0;
 
 var lag = prompt("Enter the delay between logging and sending", "60") * 1000;
 var botnick = prompt("What is my name?", "Masterbot");
-
-CLIENT.submit("/nick " + botnick);
+if (botnick !== null) {
+    CLIENT.submit("/nick " + botnick);
+}
 setTimeout(function() {
     canSend = true;
     console.log(">> Sending has now been enabled.");
@@ -64,7 +58,6 @@ var k = 0;
 CLIENT.on('message', function(data) {
 
     var str = $('#messages').children().slice(-1)[0];
-    console.log(str);
     var r = str.outerHTML.search(/message (personal-message|general-message|error-message)/g);
     var t = str.outerHTML.indexOf("message action-message");
     var u = str.outerHTML.indexOf("message spoken-message");
@@ -76,46 +69,43 @@ CLIENT.on('message', function(data) {
     if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle")) {
         if (text.length <= 175) {
             if (t != -1) {
-                object[k] = "/me " + text;
+                messages[k] = "/me " + text;
             } else if (u != -1) {
-                object[k] = "/speak " + text;
+                messages[k] = "/speak " + text;
             } else {
-                object[k] = text;
+                messages[k] = text;
                 console.log('"' + text + '" has been logged');
             }
-            postAndGet(object[k]);
+            postAndGet(messages[k]);
             k++;
         } else {
             console.log("that was too long4me. Not logged (length > 200)");
         }
     }
-    if (!antiSpam) {
-        if (text.contains("!toggle")) {
-            if (masters.contains(nick)) {
-                reverseVars();
-                if (!disabled)
-                    CLIENT.submit("Masterbot has been enabled.");
-                spamFilters();
-            } else {
-                CLIENT.submit("You do not have permission to do this.");
-                spamFilters();
-            }
-        } else if (text.contains("!masterbot") && canSend) {
-            var random = Math.floor(Math.random() * Object.keys(object).length);
-            var sendtext = object[random];
-            CLIENT.submit(sendtext);
+    if (text.contains("!toggle")) {
+        if (masters.contains(nick)) {
+            reverseVars();
+            if (!disabled)
+                CLIENT.submit("Masterbot has been enabled.");
             spamFilters();
-        } else if (text.contains("!masters")) {
-            var msg = "My masters are: ";
-            for (var i = 0; i < masters.length - 2; i++) {
-                msg += masters[i] + ", ";
-            }
-            msg += "and " + masters[masters.length - 1] + ".";
-            CLIENT.submit(msg);
+        } else {
+            CLIENT.submit("You do not have permission to toggle me.");
             spamFilters();
         }
+    } else if (text.contains("!masterbot") && canSend && !antiSpam) {
+        var random = Math.floor(Math.random() * Object.keys(messages).length);
+        var sendtext = messages[random];
+        CLIENT.submit(sendtext);
+        spamFilters();
+    } else if (text.contains("!masters")) {
+        var msg = "My masters are: ";
+        for (var i = 0; i < masters.length - 2; i++) {
+            msg += masters[i] + ", ";
+        }
+        msg += "and " + masters[masters.length - 1] + ".";
+        CLIENT.submit(msg);
+        spamFilters();
     }
-
 });
 
 function reverseVars() {
