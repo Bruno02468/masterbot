@@ -9,11 +9,6 @@ Notes:
 - Changing your nick during usage may result in bot shutdown
 - /me commands still need some work
  
-Updates:
-
-- Perfect for keks!
-- That's it.
- 
 */
 
 //Defining Variables
@@ -67,7 +62,7 @@ CLIENT.on('message', function(data) {
     var nick = localStorage["chat-nick"];
     var name = data.nick
 
-    if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle")) {
+    if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle"||"Masterbot has been enabled."||"You do not have permission to toggle me.")) {
         if (text.length <= 175) {
             var msg;
             if (t != -1) {
@@ -86,11 +81,8 @@ CLIENT.on('message', function(data) {
     if (text.contains("!toggle")) {
         if (masters.contains(name) || name == nick) {
             reverseVars();
-            if (!disabled) {
+            if (!disabled)
                 CLIENT.submit("Masterbot has been enabled.");
-            } else {
-                CLIENT.submit("Masterbot has been disabled.");
-            }
             spamFilters();
         } else {
             CLIENT.submit("You do not have permission to toggle me.");
