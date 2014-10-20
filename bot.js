@@ -21,7 +21,7 @@ var score = 0;
 
 //Configurating input
 var lag = prompt("Enter the delay between logging and sending", "60") * 1000;
-if (lag == null) {
+if (lag === null) {
     lag = 60000;
 }
 var botnick = prompt("What is my name?", "Masterbot");
@@ -43,11 +43,11 @@ Array.prototype.contains = function(obj) {
         }
     }
     return false;
-}
+};
 
 String.prototype.contains = function(obj) {
     return (this.indexOf(obj) > -1);
-}
+};
 
 //Begin logging process and listen for commands
 
@@ -60,17 +60,17 @@ CLIENT.on('message', function(data) {
 
     var text = data.message.trim();
     var nick = localStorage["chat-nick"];
-    var name = data.nick
+    var name = data.nick;
 
     if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle"||"Masterbot has been enabled."||"You do not have permission to toggle me.")) {
         if (text.length <= 175) {
-            var msg;
+            var mseg;
             if (t != -1) {
-                msg = "/me " + text;
+                mseg = "/me " + text;
             } else if (u != -1) {
-                msg = "/speak " + text;
+                mseg = "/speak " + text;
             } else {
-                msg = text;
+                mseg = text;
                 console.log('"' + text + '" has been logged');
             }
             postAndGet(msg);
