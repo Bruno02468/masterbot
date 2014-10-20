@@ -62,7 +62,7 @@ CLIENT.on('message', function(data) {
     var nick = localStorage["chat-nick"];
     var name = data.nick;
 
-    if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle"||"Masterbot has been enabled."||"You do not have permission to toggle me.")) {
+    if (nick != name && r == -1 && text.search(/(!masterbot|!masters|!toggle|Masterbot has been enabled\.|You do not have permission to toggle me\.)/g) == -1 ) {
         if (text.length <= 175) {
             var mseg;
             if (t != -1) {
