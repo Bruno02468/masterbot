@@ -10,7 +10,6 @@ Notes:
 - /me commands still need some work
  
 */
-
 //Defining Variables
 var logging = false;
 var disabled = false;
@@ -20,17 +19,18 @@ var canSend = false;
 var score = 0;
 
 //Configurating input
-var lag = prompt("Enter the delay between logging and sending (sampling time)", "0") * 1000;
-if (lag == (null || "")) {
-    lag = 0;
+var lag = prompt("Enter the delay between logging and sending", "60") * 1000;
+if (lag === null) {
+    lag = 60000;
 }
 var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null) {
     CLIENT.submit("/nick " + botnick);
 }
+CLIENT.submit("/style default");
 setTimeout(function() {
     canSend = true;
-    console.log("Sending has now been enabled.");
+    console.log(">> Sending has now been enabled.");
 }, lag);
 
 //Adding the .contains utility functions
@@ -62,47 +62,48 @@ CLIENT.on('message', function(data) {
     var nick = localStorage["chat-nick"];
     var name = data.nick;
 
-    if (nick != name && r == -1 && text.search(/(!masterbot|!masters|!toggle|Masterbot has been enabled\.|You do not have permission to toggle me\.)/g) == -1 ) {
+    if (nick != name && r == -1 && text.search(/(!masterbot|!masters|!toggle|Masterbot has been enabled\.|You do not have permission to toggle me\.)/g) == -1) {
         if (text.length <= 175) {
-            var msg;
+            var mseg;
             if (t != -1) {
-                msg = "/me " + text;
+                mseg = "/me " + text;
             } else if (u != -1) {
-                msg = "/speak " + text;
+                mseg = "/speak " + text;
             } else {
-                msg = text;
+                mseg = text;
                 console.log('"' + text + '" has been logged');
             }
-            postAndGet(msg);
+            messages.push(mseg);
+            postAndGet(mseg);
         } else {
             console.log("that was too long4me. Not logged (length > 200)");
         }
     }
-    if (text.contains("!toggle")) {
-        if (masters.contains(name) || name == nick) {
-            reverseVars();
-            if (!disabled)
-                CLIENT.submit("Masterbot has been enabled.");
+    if (!antiSpam) {
+        if (text.contains("!toggle")) {
+            if (masters.contains(name) || name == nick) {
+                reverseVars();
+                if (!disabled)
+                    CLIENT.submit("Masterbot has been enabled.");
+                spamFilters();
+            } else {
+                CLIENT.submit("You do not have permission to toggle me.");
+                spamFilters();
+            }
+        } else if (text.contains("!masterbot") && canSend && messages.length > 0) {
+            var random = Math.floor(Math.random() * messages.length);
+            var sendtext = messages[random];
+            CLIENT.submit(sendtext);
             spamFilters();
-        } else {
-            CLIENT.submit("You do not have permission to toggle me.");
+        } else if (text.contains("!masters")) {
+            var msg = "My masters are: ";
+            for (var i = 0; i < masters.length - 2; i++) {
+                msg += masters[i] + ", ";
+            }
+            msg += "and " + masters[masters.length - 1] + ".";
+            CLIENT.submit(msg);
             spamFilters();
         }
-    }
-    if (text.contains("!masterbot") && canSend) {
-        var random = Math.floor(Math.random() * messages.length);
-        var sendtext = messages[random];
-        CLIENT.submit(sendtext);
-        spamFilters();
-    }
-    if (text.contains("!masters")) {
-        var msg = "My masters are: ";
-        for (var i = 0; i < masters.length - 2; i++) {
-            msg += masters[i] + ", ";
-        }
-        msg += "and " + masters[masters.length - 1] + ".";
-        CLIENT.submit(msg);
-        spamFilters();
     }
 });
 
