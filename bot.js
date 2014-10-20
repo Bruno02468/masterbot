@@ -1,4 +1,4 @@
-/*MasterBot v1.3.[bigint]
+/*MasterBot v1.4.[bigint]
  
 Designed by Get52, Bruno02468 and Randomguy_
  
@@ -98,12 +98,12 @@ CLIENT.on('message', function(data) {
             spamFilters();
             
         } else if (text.contains("!roll") && canSend) {
-            var random = Math.floor(Math.random()*90000) + 10000;
-            CLIENT.submit("They see " + name + " rollin' " + random + ", they hatin'!");
+            var rand = Math.floor(Math.random()*90000) + 10000;
+            CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
             spamFilters();
             
         } else if (text.contains("!yesorno") && canSend) {
-            var yes = Math.random()<.5;
+            var yes = (Math.random()<0.5);
             if (yes) {
                 CLIENT.submit("Yes.");
             } else {
