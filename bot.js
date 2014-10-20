@@ -2,17 +2,7 @@
  
 Designed by Get52, Bruno02468 and Randomguy_
  
-Notes:
-
-- Use the run script on the GitHub repo please
-- use "disabled = true;" to turn off the bot
-- Changing your nick during usage may result in bot shutdown
-- /me commands still need some work
- 
-Updates:
-
-- Perfect for keks!
-- That's it.
+Note: Changing your nick during usage may result in bot shutdown
  
 */
 
@@ -83,7 +73,7 @@ CLIENT.on('message', function(data) {
         }
     }
     if (text.contains("!toggle")) {
-        if (masters.contains(nick)) {
+        if (masters.contains(name)) {
             reverseVars();
             if (!disabled)
                 CLIENT.submit("Masterbot has been enabled.");
