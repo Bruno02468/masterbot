@@ -56,7 +56,6 @@ String.prototype.contains = function(obj) {
 
 //Begin logging process and listen for commands
 
-var k = 0;
 CLIENT.on('message', function(data) {
 
     var str = $('#messages').children().slice(-1)[0];
@@ -70,16 +69,16 @@ CLIENT.on('message', function(data) {
 
     if (nick != name && r == -1 && !text.contains("!masterbot" || "!masters" || "!toggle")) {
         if (text.length <= 175) {
+            var msg;
             if (t != -1) {
-                messages[k] = "/me " + text;
+                msg = "/me " + text;
             } else if (u != -1) {
-                messages[k] = "/speak " + text;
+                msg = "/speak " + text;
             } else {
-                messages[k] = text;
+                msg = text;
                 console.log('"' + text + '" has been logged');
             }
-            postAndGet(messages[k]);
-            k++;
+            postAndGet(msg);
         } else {
             console.log("that was too long4me. Not logged (length > 200)");
         }
@@ -99,7 +98,7 @@ CLIENT.on('message', function(data) {
         }
     }
     if (text.contains("!masterbot") && canSend) {
-        var random = Math.floor(Math.random() * Object.keys(messages).length);
+        var random = Math.floor(Math.random() * messages.length);
         var sendtext = messages[random];
         CLIENT.submit(sendtext);
         spamFilters();
