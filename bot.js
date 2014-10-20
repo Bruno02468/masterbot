@@ -25,7 +25,7 @@ if (lag === null) {
 }
 var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null) {
-    CLIENT.submit("/nick " + botnick);
+    CLIENT.submit("/nick " + botnick.toLowerCase());
 }
 CLIENT.submit("/style default");
 setTimeout(function() {
@@ -46,7 +46,7 @@ Array.prototype.contains = function(obj) {
 };
 
 String.prototype.contains = function(obj) {
-    return (this.indexOf(obj) > -1);
+    return (this.toLowerCase().indexOf(obj) > -1);
 };
 
 //Begin logging process and listen for commands
@@ -62,7 +62,7 @@ CLIENT.on('message', function(data) {
     var nick = localStorage["chat-nick"];
     var name = data.nick;
 
-    if (nick != name && r == -1 && text.search(/(!masterbot|!masters|!toggle|Masterbot has been enabled\.|You do not have permission to toggle me\.)/g) == -1) {
+    if (nick != (name || botnick) && r == -1 && text.search(/(!masterbot|!masters|!toggle|!random|!roll|!coinflip)/gi) == -1) {
         if (text.length <= 175) {
             var mseg;
             if (t != -1) {
@@ -71,12 +71,13 @@ CLIENT.on('message', function(data) {
                 mseg = "/speak " + text;
             } else {
                 mseg = text;
-                //console.log('"' + text + '" has been logged');
             }
             postAndGet(mseg);
-        } else {
-            console.log("that was too long4me. Not logged (length > 200)");
+            //console.log('"' + text + '" has been logged');
         }
+        /*else {
+                    console.log("that was too long4me. Not logged (length > 200)");
+                } */
     }
     if (!antiSpam) {
         if (text.contains("!toggle")) {
@@ -84,32 +85,11 @@ CLIENT.on('message', function(data) {
                 reverseVars();
                 if (!disabled)
                     CLIENT.submit("Masterbot has been enabled.");
-                spamFilters();
             } else {
                 CLIENT.submit("You do not have permission to toggle me.");
-                spamFilters();
-            }
-            
-        } else if (text.contains("!random") && canSend && messages.length > 0) {
-            var random = Math.floor(Math.random() * messages.length);
-            var sendtext = messages[random];
-            CLIENT.submit(sendtext);
-            spamFilters();
-            
-        } else if (text.contains("!roll") && canSend) {
-            var rand = Math.floor(Math.random()*90000) + 10000;
-            CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
-            spamFilters();
-            
-        } else if (text.contains("!yesorno") && canSend) {
-            var yes = (Math.random()<0.5);
-            if (yes) {
-                CLIENT.submit("Yes.");
-            } else {
-                CLIENT.submit("No.");
             }
             spamFilters();
-            
+
         } else if (text.contains("!masters")) {
             var msg = "My masters are: ";
             for (var i = 0; i < masters.length - 2; i++) {
@@ -118,6 +98,28 @@ CLIENT.on('message', function(data) {
             msg += "and " + masters[masters.length - 1] + ".";
             CLIENT.submit(msg);
             spamFilters();
+        } else if (canSend) {
+            if (text.contains("!random") && messages.length > 0) {
+                var random = Math.floor(Math.random() * messages.length);
+                var sendtext = messages[random];
+                CLIENT.submit(sendtext);
+                spamFilters();
+
+            } else if (text.contains("!roll")) {
+                var rand = Math.floor(Math.random() * 90000) + 10000;
+                CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
+                spamFilters();
+
+            } else if (text.contains("!coinflip")) {
+                var yes = (Math.random() < 0.5);
+                if (yes) {
+                    CLIENT.submit("Heads");
+                } else {
+                    CLIENT.submit("Tails");
+                }
+                spamFilters();
+
+            }
         }
     }
 });
@@ -130,22 +132,13 @@ function reverseVars() {
 //External saving
 
 function postAndGet(message) {
-    /* Currently not receiving the data from the server and I don't know
-       how to make AJAX calls with jQuery. Temporarily reverting to XmlHttpRequest */
-    
-    /*$.ajax({
+    $.ajax({
         url: "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message),
         type: 'GET',
         success: function(text) {
             eval(text.replace(/<br>/g, ""));
         }
-    });*/
-    var request = null;
-    request = new XMLHttpRequest();
-    request.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message) , false);
-    request.send(null);
-    eval(request.responseText.replace(/<br>/g, ""));
-    messages.pop();
+    });
 }
 
 //Antispam functions
@@ -167,4 +160,4 @@ setInterval(function() {
 }, 8000);
 
 console.log("Masterbot is now running.");
-CLIENT.submit("Masterbot is now running.");
+CLIENT.submit("/echo Masterbot is now running.");
