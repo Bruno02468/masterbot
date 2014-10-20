@@ -19,9 +19,9 @@ var canSend = false;
 var score = 0;
 
 //Configurating input
-var lag = prompt("Enter the delay between logging and sending", "60") * 1000;
+var lag = prompt("Enter the delay between logging and sending", "0") * 1000;
 if (lag === null) {
-    lag = 60000;
+    lag = 0;
 }
 var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null) {
@@ -71,9 +71,8 @@ CLIENT.on('message', function(data) {
                 mseg = "/speak " + text;
             } else {
                 mseg = text;
-                console.log('"' + text + '" has been logged');
+                //console.log('"' + text + '" has been logged');
             }
-            messages.push(mseg);
             postAndGet(mseg);
         } else {
             console.log("that was too long4me. Not logged (length > 200)");
