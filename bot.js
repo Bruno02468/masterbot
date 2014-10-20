@@ -25,8 +25,10 @@ var canSend = false;
 var score = 0;
 
 //Configurating input
-
 var lag = prompt("Enter the delay between logging and sending", "60") * 1000;
+if (lag == null) {
+    lag = 60000;
+}
 var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null) {
     CLIENT.submit("/nick " + botnick);
@@ -83,21 +85,26 @@ CLIENT.on('message', function(data) {
         }
     }
     if (text.contains("!toggle")) {
-        if (masters.contains(nick)) {
+        if (masters.contains(name) || name == nick) {
             reverseVars();
-            if (!disabled)
+            if (!disabled) {
                 CLIENT.submit("Masterbot has been enabled.");
+            } else {
+                CLIENT.submit("masterbot has been disabled.");
+            }
             spamFilters();
         } else {
             CLIENT.submit("You do not have permission to toggle me.");
             spamFilters();
         }
-    } else if (text.contains("!masterbot") && canSend && !antiSpam) {
+    }
+    if (text.contains("!masterbot") && canSend) {
         var random = Math.floor(Math.random() * Object.keys(messages).length);
         var sendtext = messages[random];
         CLIENT.submit(sendtext);
         spamFilters();
-    } else if (text.contains("!masters")) {
+    }
+    if (text.contains("!masters")) {
         var msg = "My masters are: ";
         for (var i = 0; i < masters.length - 2; i++) {
             msg += masters[i] + ", ";
