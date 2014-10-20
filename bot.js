@@ -66,7 +66,7 @@ CLIENT.submit("/style default");
 //Begin logging process and listen for commands
 CLIENT.on('message', function(data) {
     var str = $('#messages').children().slice(-1)[0];
-    var r = str.outerHTML.search(/message (personal-message|general-message|error-message)/g);
+    var r = str.outerHTML.search(/message (personal-message|general-message|error-message|note-message)/g);
     var t = str.outerHTML.indexOf("message action-message");
     var u = str.outerHTML.indexOf("message spoken-message");
     var text = data.message.trim();
