@@ -67,7 +67,7 @@ CLIENT.on('message', function(data) {
                 mseg = text;
             }
          var request = new XMLHttpRequest(); //saves message externally
-    	request.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message), false);
+    	request.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(mseg), false);
     	request.send();
     }
     if (!antiSpam && score < 6 && name != nick) {
