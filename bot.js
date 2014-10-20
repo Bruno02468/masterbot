@@ -8,14 +8,25 @@ Notes:
 - use "disabled = true;" to turn off the bot
 - Changing your nick during usage may result in bot shutdown
 - /me commands still need some work
- 
+
+~~~ PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS
+     ~ Bruno
+
 */
+
 //Defining Variables
 var logging = false;
 var disabled = false;
 var masters = ["Bruno02468", "get52", "sammich", "Randomguy_"]; //bot's main controllers
 var canSend = false;
 var score = 0;
+var help = "I am Masterbot, original code by get52, revamped and messed with by Bruno02468 and Randomguy_!\n";
+   help += "Commands:\n";
+   help += " !random: send a random message from the growing database filled with stuff you all send.\n";
+   help += "  !roll: roll a random 5-digit number.\n";
+   help += "  !coinflip: self-explanatory, I believe.\n";
+   help += "  !masters: lists who can control the bot.\n";
+   help += "That's it, don't spam me or you're getting banned. :3";
 
 //Configurating input
 var lag = prompt("Enter the delay between logging and sending", "0") * 1000;
@@ -115,6 +126,10 @@ CLIENT.on('message', function(data) {
                 }
                 spamFilters();
 
+            } else if (text.contains("!help")) {
+                CLIENT.submit(help);
+                spamFilters();
+
             }
         }
     }
@@ -144,7 +159,9 @@ function sendRandom() {
     request = new XMLHttpRequest();
     request.open("GET", "http://bruno02468.com/spooks_bot/random_message.php", false);
     request.send(null);
-    CLIENT.submit(request.responseText);
+    var msg = request.responseText;
+    CLIENT.submit(msg);
+    console.log("function called and responde text was " + msg);
 }
 
 //Antispam functions
