@@ -31,14 +31,29 @@ setInterval(function() {
     }
 }, 8000);
 function sendRandom() {//fetches a random message from the server and sends it
-    var request = new XMLHttpRequest();
-    request.open("GET", "http://bruno02468.com/spooks_bot/random_message.php", false);
-    request.send();
-    var msg = request.responseText;
-    CLIENT.submit(msg);
+    $.ajax({
+    url : "http://bruno02468.com/spooks_bot/random_message.php",
+    type : 'GET',
+    success : function(data) {              
+        CLIENT.submit(data);
+    },
+    error : function(request,error)
+    {
+        alert("Request: "+JSON.stringify(request));
+    }
+});
 }
 String.prototype.contains = function(obj) {//adding utility functions
     return (this.toLowerCase().indexOf(obj) > -1);
+};
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
 };
 function getRandomInt(min, max) { //inclusive
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -66,9 +81,17 @@ CLIENT.on('message', function(data) {
             } else {
                 mseg = text;
             }
-         var request = new XMLHttpRequest(); //saves message externally
-    	request.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(mseg), false);
-    	request.send();
+         $.ajax({
+    url : "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(mseg),
+    type : 'GET',
+    success : function(data) {              
+        console.log("Succesfully pushed to server");
+    },
+    error : function(request,error)
+    {
+        alert("Request: "+JSON.stringify(request));
+    }
+    });
     }
     if (!antiSpam && score < 6 && name != nick) {
         if (text.contains("!toggle")) {
