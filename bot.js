@@ -90,11 +90,27 @@ CLIENT.on('message', function(data) {
                 CLIENT.submit("You do not have permission to toggle me.");
                 spamFilters();
             }
-        } else if (text.contains("!masterbot") && canSend && messages.length > 0) {
+            
+        } else if (text.contains("!random") && canSend && messages.length > 0) {
             var random = Math.floor(Math.random() * messages.length);
             var sendtext = messages[random];
             CLIENT.submit(sendtext);
             spamFilters();
+            
+        } else if (text.contains("!roll") && canSend) {
+            var random = Math.floor(Math.random()*90000) + 10000;
+            CLIENT.submit("They see " + name + " rollin' " + random + ", they hatin'!");
+            spamFilters();
+            
+        } else if (text.contains("!yesorno") && canSend) {
+            var yes = Math.random()<.5;
+            if (yes) {
+                CLIENT.submit("Yes.");
+            } else {
+                CLIENT.submit("No.");
+            }
+            spamFilters();
+            
         } else if (text.contains("!masters")) {
             var msg = "My masters are: ";
             for (var i = 0; i < masters.length - 2; i++) {
@@ -142,4 +158,5 @@ setInterval(function() {
     }
 }, 8000);
 
-console.log("I am running.");
+console.log("Masterbot is now running.");
+CLIENT.submit("Masterbot is now running.");
