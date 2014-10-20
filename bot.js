@@ -20,9 +20,9 @@ var canSend = false;
 var score = 0;
 
 //Configurating input
-var lag = prompt("Enter the delay between logging and sending", "60") * 1000;
-if (lag === null) {
-    lag = 60000;
+var lag = prompt("Enter the delay between logging and sending (sampling time)", "0") * 1000;
+if (lag == (null || "")) {
+    lag = 0;
 }
 var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null) {
@@ -30,7 +30,7 @@ if (botnick !== null) {
 }
 setTimeout(function() {
     canSend = true;
-    console.log(">> Sending has now been enabled.");
+    console.log("Sending has now been enabled.");
 }, lag);
 
 //Adding the .contains utility functions
