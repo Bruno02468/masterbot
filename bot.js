@@ -1,6 +1,8 @@
 /*MasterBot v1.4.[bigint]
  
 Designed by Get52, Bruno02468 and Randomguy_
+ 
+Notes:
 
 - Use the run script on the GitHub repo please
 - use "disabled = true;" to turn off the bot
@@ -11,25 +13,35 @@ Designed by Get52, Bruno02468 and Randomguy_
      ~ Bruno
 
 */
+
 //Defining Variables
+var logging = false;
 var disabled = false;
 var masters = ["Bruno02468", "get52", "sammich", "Randomguy_"]; //bot's main controllers
+var canSend = false;
 var score = 0;
 var help = "I am Masterbot, original code by get52, revamped and messed with by Bruno02468 and Randomguy_!\n";
-help += "Commands:\n";
-help += "  !random: send a random message from the database filled with all logged messages.\n";
-help += "  !checkem: roll a random 5-digit number.\n";
-help += "  !coinflip: self-explanatory, I believe.\n";
-help += "  !ask: Ask me a question!\n";
+   help += "Commands:\n";
+   help += "  !random: send a random message from the growing database filled with stuff you all send.\n";
+   help += "  !roll: roll a random 5-digit number.\n";
+   help += "  !coinflip: self-explanatory, I believe.\n";
+   help += "  !ask: Ask me a question!\n";
+   help += "That's it, don't spam me or you're getting banned. :3";
 
-//Configurating input
+//Configuration prompts
 
+var lag = prompt("Enter the delay between logging and sending", "0") * 1000;
+if (lag === null) {
+    lag = 0;
+}
 var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null) {
     CLIENT.submit("/nick " + botnick.toLowerCase());
 }
-
 CLIENT.submit("/style default");
+setTimeout(function() {
+    canSend = true;
+}, lag);
 
 //Adding the utility functions
 
@@ -64,67 +76,74 @@ CLIENT.on('message', function(data) {
     var nick = localStorage["chat-nick"];
     var name = data.nick;
 
-    if (nick != (name || botnick) && r == -1 && text.search(/!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)/gi) == -1) {
-        if (text.length <= 175) {
+    if (nick != (name || botnick) && r == -1 && text.search(/(!help|!ask|!masters|!toggle|!random|!roll|!coinflip)/gi) == -1) {
+        if (text.length <= 200) {
             var mseg;
             if (t != -1) {
-                mseg = "/me " + text;
+                //mseg = "/me " + text;
             } else if (u != -1) {
-                mseg = "/speak " + text;
+                //mseg = "/speak " + text;
             } else {
                 mseg = text;
+                saveOut(mseg);
             }
-            saveOut(mseg);
+            
         }
     }
-    if (!antiSpam && score < 6 && name != nick) {
+    
+    if (!antiSpam && name !== nick) {
         if (text.contains("!toggle")) {
             if (masters.contains(name)) {
-                disabled = !disabled;
+                reverseVars();
                 if (!disabled)
                     CLIENT.submit("Masterbot has been enabled.");
             } else {
                 CLIENT.submit("You do not have permission to toggle me.");
             }
             spamFilters();
-        } else if (!disabled) {
 
-            if (text.contains("!masters")) {
-                var msg;
-                for (var i = 0; i < masters.length - 2; i++)
-                    msg += masters[i] + ", ";
-                msg += masters[masters.length - 1];
-                CLIENT.submit(msg);
-                spamFilters();
-            } else if (text.contains("!random")) {
+        } else if (text.contains("!masters")) {
+            var msg = "My masters are: ";
+            for (var i = 0; i < masters.length - 2; i++) {
+                msg += masters[i] + ", ";
+            }
+            msg += "and " + masters[masters.length - 1] + ".";
+            CLIENT.submit(msg);
+            spamFilters();
+        } else if (canSend) {
+            if (text.contains("!random")) {
                 sendRandom();
-            } else if (text.contains("!checkem")) {
+            } else if (text.contains("!roll")) {
                 var rand = Math.floor(Math.random() * 90000) + 10000;
                 CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
                 spamFilters();
 
             } else if (text.contains("!coinflip")) {
-                if (Math.random() < 0.5)
-                    CLIENT.submit("Heads");
-                else
-                    CLIENT.submit("Tails");
+                var yes = (Math.random() < 0.5);
+                if (yes) {
+                    CLIENT.submit("Heads.");
+                } else {
+                    CLIENT.submit("Tails.");
+                }
                 spamFilters();
+
             } else if (text.contains("!ask")) {
                 switch (getRandomInt(0, 3)) {
                     case (0):
-                        CLIENT.submit("No");
+                        CLIENT.submit("No.");
                         break;
                     case (1):
-                        CLIENT.submit("Yes");
+                        CLIENT.submit("Yes.");
                         break;
                     case (2):
-                        CLIENT.submit("Maybe");
+                        CLIENT.submit("Maybe.");
                         break;
                     default: //Also covers unexpected results
                         CLIENT.submit("I don't know.");
                         break;
                 }
                 spamFilters();
+
             } else if (text.contains("!help")) {
                 CLIENT.submit(help);
                 spamFilters();
@@ -134,13 +153,25 @@ CLIENT.on('message', function(data) {
     }
 });
 
+function reverseVars() {
+    disabled = !disabled;
+    logging = !logging;
+}
+
 //Only saves externally, prints nothing
 
 function saveOut(message) {
-    $.ajax({
+    /*$.ajax({
         url: "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message),
         type: 'GET',
-    });
+        success: function() {
+            
+        }
+    });*/
+    var request = null;
+    request = new XMLHttpRequest();
+    request.open("GET", "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message), false);
+    request.send(null);
 }
 
 //Fetches a random message from my server and sends it
@@ -150,8 +181,7 @@ function sendRandom() {
     request = new XMLHttpRequest();
     request.open("GET", "http://bruno02468.com/spooks_bot/random_message.php", false);
     request.send(null);
-    var msg = request.responseText;
-    CLIENT.submit(msg);
+    CLIENT.submit(request.responseText);
 }
 
 //Antispam functions
