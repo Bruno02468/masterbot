@@ -26,10 +26,10 @@ var help = "I am Masterbot, original code by get52, revamped and messed with by 
    help += "  !roll: roll a random 5-digit number.\n";
    help += "  !coinflip: self-explanatory, I believe.\n";
    help += "  !ask: Ask me a question!\n";
-   //help += "  !masters: lists who can control the bot.\n"; it still runs its own command
    help += "That's it, don't spam me or you're getting banned. :3";
 
-//Configurating input
+//Configuration prompts
+
 var lag = prompt("Enter the delay between logging and sending", "0") * 1000;
 if (lag === null) {
     lag = 0;
@@ -41,7 +41,6 @@ if (botnick !== null) {
 CLIENT.submit("/style default");
 setTimeout(function() {
     canSend = true;
-    console.log(">> Sending has now been enabled.");
 }, lag);
 
 //Adding the utility functions
@@ -77,8 +76,8 @@ CLIENT.on('message', function(data) {
     var nick = localStorage["chat-nick"];
     var name = data.nick;
 
-    if (nick != (name || botnick) && r == -1 && text.search(/(!masterbot|!masters|!toggle|!random|!roll|!coinflip)/gi) == -1) {
-        if (text.length <= 175) {
+    if (nick != (name || botnick) && r == -1 && text.search(/(!help|!ask|!masters|!toggle|!random|!roll|!coinflip)/gi) == -1) {
+        if (text.length <= 200) {
             var mseg;
             if (t != -1) {
                 mseg = "/me " + text;
@@ -88,15 +87,12 @@ CLIENT.on('message', function(data) {
                 mseg = text;
             }
             saveOut(mseg);
-            //console.log('"' + text + '" has been logged');
         }
-        /*else {
-                    console.log("that was too long4me. Not logged (length > 200)");
-                } */
     }
-    if (!antiSpam) {
+    
+    if (!antiSpam && name !== nick) {
         if (text.contains("!toggle")) {
-            if (masters.contains(name) || name == nick) {
+            if (masters.contains(name)) {
                 reverseVars();
                 if (!disabled)
                     CLIENT.submit("Masterbot has been enabled.");
@@ -124,9 +120,9 @@ CLIENT.on('message', function(data) {
             } else if (text.contains("!coinflip")) {
                 var yes = (Math.random() < 0.5);
                 if (yes) {
-                    CLIENT.submit("Heads");
+                    CLIENT.submit("Heads.");
                 } else {
-                    CLIENT.submit("Tails");
+                    CLIENT.submit("Tails.");
                 }
                 spamFilters();
 
@@ -142,7 +138,7 @@ CLIENT.on('message', function(data) {
                         CLIENT.submit("Maybe.");
                         break;
                     default: //Also covers unexpected results
-                        CLIENT.submit("I don't know");
+                        CLIENT.submit("I don't know.");
                         break;
                 }
                 spamFilters();
@@ -182,7 +178,6 @@ function sendRandom() {
     request.send(null);
     var msg = request.responseText;
     CLIENT.submit(msg);
-    console.log("function called and responde text was " + msg);
 }
 
 //Antispam functions
