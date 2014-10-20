@@ -25,6 +25,7 @@ var help = "I am Masterbot, original code by get52, revamped and messed with by 
    help += " !random: send a random message from the growing database filled with stuff you all send.\n";
    help += "  !roll: roll a random 5-digit number.\n";
    help += "  !coinflip: self-explanatory, I believe.\n";
+   help += "  !yesorno: Ask me a question!\n";
    //help += "  !masters: lists who can control the bot.\n"; it still runs its own command
    help += "That's it, don't spam me or you're getting banned. :3";
 
@@ -43,7 +44,7 @@ setTimeout(function() {
     console.log(">> Sending has now been enabled.");
 }, lag);
 
-//Adding the .contains utility functions
+//Adding the utility functions
 
 Array.prototype.contains = function(obj) {
     var i = this.length;
@@ -58,6 +59,10 @@ Array.prototype.contains = function(obj) {
 String.prototype.contains = function(obj) {
     return (this.toLowerCase().indexOf(obj) > -1);
 };
+
+function getRandomInt(min, max) { //inclusive
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 //Begin logging process and listen for commands
 
@@ -122,6 +127,23 @@ CLIENT.on('message', function(data) {
                     CLIENT.submit("Heads");
                 } else {
                     CLIENT.submit("Tails");
+                }
+                spamFilters();
+
+            } else if (text.contains("!ask")) {
+                switch (getRandomInt(0, 3)) {
+                    case (0):
+                        CLIENT.submit("No.");
+                        break;
+                    case (1):
+                        CLIENT.submit("Yes.");
+                        break;
+                    case (2):
+                        CLIENT.submit("Maybe.");
+                        break;
+                    default: //Also covers unexpected results
+                        CLIENT.submit("I don't know");
+                        break;
                 }
                 spamFilters();
 
