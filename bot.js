@@ -14,7 +14,6 @@ Notes:
 var logging = false;
 var disabled = false;
 var masters = ["Bruno02468", "get52", "sammich", "Randomguy_"]; //bot's main controllers
-var messages = [];
 var canSend = false;
 var score = 0;
 
@@ -72,7 +71,7 @@ CLIENT.on('message', function(data) {
             } else {
                 mseg = text;
             }
-            postAndGet(mseg);
+            saveOut(mseg);
             //console.log('"' + text + '" has been logged');
         }
         /*else {
@@ -100,11 +99,8 @@ CLIENT.on('message', function(data) {
             spamFilters();
         } else if (canSend) {
             if (text.contains("!random") && messages.length > 0) {
-                var random = Math.floor(Math.random() * messages.length);
-                var sendtext = messages[random];
-                CLIENT.submit(sendtext);
-                spamFilters();
-
+                sendRandom();
+                
             } else if (text.contains("!roll")) {
                 var rand = Math.floor(Math.random() * 90000) + 10000;
                 CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
@@ -129,16 +125,26 @@ function reverseVars() {
     logging = !logging;
 }
 
-//External saving
+//Only saves externally, prints nothing
 
-function postAndGet(message) {
+function saveOut(message) {
     $.ajax({
         url: "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(message),
         type: 'GET',
-        success: function(text) {
-            eval(text.replace(/<br>/g, ""));
+        success: function() {
+            
         }
     });
+}
+
+//Fetches a random message from my server and sends it
+
+function sendRandom() {
+    var request = null;
+    request = new XMLHttpRequest();
+    request.open("GET", "http://bruno02468.com/spooks_bot/random_message.php", false);
+    request.send(null);
+    CLIENT.submit(request.responseText);
 }
 
 //Antispam functions
