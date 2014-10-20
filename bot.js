@@ -25,7 +25,7 @@ var help = "I am Masterbot, original code by get52, revamped and messed with by 
    help += " !random: send a random message from the growing database filled with stuff you all send.\n";
    help += "  !roll: roll a random 5-digit number.\n";
    help += "  !coinflip: self-explanatory, I believe.\n";
-   help += "  !masters: lists who can control the bot.\n";
+   //help += "  !masters: lists who can control the bot.\n"; it still runs its own command
    help += "That's it, don't spam me or you're getting banned. :3";
 
 //Configurating input
@@ -109,9 +109,8 @@ CLIENT.on('message', function(data) {
             CLIENT.submit(msg);
             spamFilters();
         } else if (canSend) {
-            if (text.contains("!random") && messages.length > 0) {
+            if (text.contains("!random")) {
                 sendRandom();
-                
             } else if (text.contains("!roll")) {
                 var rand = Math.floor(Math.random() * 90000) + 10000;
                 CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
