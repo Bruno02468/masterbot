@@ -43,21 +43,7 @@ function sendRandom() {//fetches a random message from the server and sends it
     }
 });
 }
-String.prototype.contains = function(obj) {//adding utility functions
-    return (this.toLowerCase().indexOf(obj) > -1);
-};
-Array.prototype.contains = function(obj) {
-    var i = this.length;
-    while (i--) {
-        if (this[i] === obj) {
-            return true;
-        }
-    }
-    return false;
-};
-function getRandomInt(min, max) { //inclusive
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
 var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null)
 CLIENT.submit("/nick " + botnick.toLowerCase());
@@ -89,12 +75,12 @@ CLIENT.on('message', function(data) {
     },
     error : function(request,error)
     {
-        alert("Request: "+JSON.stringify(request));
+        alert("Request: " + JSON.stringify(request));
     }
     });
     }
     if (!antiSpam && score < 6 && name != nick) {
-        if (text.contains("!toggle")) {
+        if (text.indexOf("!toggle") > -1) {
             if (masters.contains(name)) {
                 disabled = !disabled;
                 if (!disabled)
@@ -104,28 +90,28 @@ CLIENT.on('message', function(data) {
             }
             spamFilters();
         } else if (!disabled) {
-            if (text.contains("!masters")) {
+            if (text.indexOf("!masters") > -1) {
                 var msg = "";
                 for (var i = 0; i < masters.length - 2; i++)
                     msg += masters[i] + ", ";
                 msg += masters[masters.length - 1];
                 CLIENT.submit(msg);
                 spamFilters();
-            } else if (text.contains("!random")) {
+            } else if (text.indexOf("!random") > -1) {
                 sendRandom();
-            } else if (text.contains("!checkem")) {
+            } else if (text.indexOf("!checkem") > -1) {
                 var rand = Math.floor(Math.random() * 90000) + 10000;
                 CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
                 spamFilters();
 
-            } else if (text.contains("!coinflip")) {
+            } else if (text.indexOf("!coinflip") > -1) {
                 if (Math.random() < 0.5)
                     CLIENT.submit("Heads");
                 else
                     CLIENT.submit("Tails");
                 spamFilters();
-            } else if (text.contains("!ask")) {
-                switch (getRandomInt(0, 3)) {
+            } else if (text.indexOf("!ask") > -1) {
+                switch (Math.floor(Math.random()*3)) {
                     case (0):
                         CLIENT.submit("No");
                         break;
@@ -140,7 +126,7 @@ CLIENT.on('message', function(data) {
                         break;
                 }
                 spamFilters();
-            } else if (text.contains("!help")) {
+            } else if (text.indexOf("!help") > -1) {
                 CLIENT.submit(help);
                 spamFilters();
             }
@@ -150,4 +136,4 @@ CLIENT.on('message', function(data) {
 
 // Displaying task completion status
 console.log("Masterbot is now running.");
-CLIENT.submit("/echo Masterbot is now running.");
+CLIENT.submit("/echo Masterbot is now running."); 
