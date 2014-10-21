@@ -58,7 +58,7 @@ CLIENT.on('message', function(data) {
     var text = data.message.trim();
     var nick = localStorage["chat-nick"];
     var name = data.nick;
-    if (nick != (name || botnick) && r == -1 && text.search(/!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)/gi) == -1 && text.length <= 175) {
+    if (nick != botnick && r == -1 && text.search(/!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)/gi) == -1 && text.length <= 175) {
             var mseg;
       if (t != -1) {
                 mseg = "/me " + text;
@@ -79,7 +79,8 @@ CLIENT.on('message', function(data) {
     }
     });
     }
-    if (!antiSpam && score < 6 && name != nick) {
+    if (name != botnick){
+    if (!antiSpam && score < 6) {
         if (text.indexOf("!toggle") > -1) {
             if (masters.contains(name)) {
                 disabled = !disabled;
