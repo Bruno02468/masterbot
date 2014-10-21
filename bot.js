@@ -44,7 +44,7 @@ function sendRandom() {//fetches a random message from the server and sends it
 });
 }
 
-var botnick = prompt("What is my name?", "Masterbot");
+var botnick = prompt("What is my name?", "Masterbot").toLowerCase();
 if (botnick !== null)
 CLIENT.submit("/nick " + botnick.toLowerCase());
 CLIENT.submit("/style default");
