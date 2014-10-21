@@ -133,6 +133,7 @@ CLIENT.on('message', function(data) {
             }
         }
     }
+    }
 });
 
 // Displaying task completion status
