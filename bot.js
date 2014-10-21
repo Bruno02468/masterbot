@@ -58,7 +58,7 @@ CLIENT.on('message', function(data) {
     var text = data.message.trim();
     var nick = localStorage["chat-nick"];
     var name = data.nick;
-    if (nick.toLowerCase() != botnick.toLowerCase() && r == -1 && text.search(/!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)/gi) == -1 && text.length <= 175) {
+    if (nick.toLowerCase() != botnick.toLowerCase() && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
             var mseg;
       if (t != -1) {
                 mseg = "/me " + text;
