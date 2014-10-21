@@ -44,7 +44,7 @@ function sendRandom() {//fetches a random message from the server and sends it
 });
 }
 
-var botnick = prompt("What is my name?", "Masterbot").toLowerCase();
+var botnick = prompt("What is my name?", "Masterbot");
 if (botnick !== null)
 CLIENT.submit("/nick " + botnick.toLowerCase());
 CLIENT.submit("/style default");
@@ -58,7 +58,7 @@ CLIENT.on('message', function(data) {
     var text = data.message.trim();
     var nick = localStorage["chat-nick"];
     var name = data.nick;
-    if (nick != botnick && r == -1 && text.search(/!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)/gi) == -1 && text.length <= 175) {
+    if (nick.toLowerCase() != botnick.toLowerCase() && r == -1 && text.search(/!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)/gi) == -1 && text.length <= 175) {
             var mseg;
       if (t != -1) {
                 mseg = "/me " + text;
@@ -79,7 +79,7 @@ CLIENT.on('message', function(data) {
     }
     });
     }
-    if (name != botnick){
+    if (name.toLowerCase() != botnick.toLowerCase()){
     if (!antiSpam && score < 6) {
         if (text.indexOf("!toggle") > -1) {
             if (masters.contains(name)) {
