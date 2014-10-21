@@ -127,6 +127,4 @@ CLIENT.on('message', function(data) {
     }
 });
 
-// Displaying task completion status
-console.log("Masterbot is now running.");
 CLIENT.submit("/echo Masterbot is now running."); 
