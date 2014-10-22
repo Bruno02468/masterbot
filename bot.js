@@ -34,13 +34,10 @@ function sendRandom() {//fetches a random message from the server and sends it
     type : 'GET',
     success : function(data) {              
         CLIENT.submit(data);
-    },
-    error : function(request,error)
-    {
-        alert("Request: "+JSON.stringify(request));
     }
 });
 }
+String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 var botnick = prompt("What is my name?", "Masterbot");
 botnick = botnick.toLowerCase();
 if (botnick !== null)
@@ -49,10 +46,7 @@ CLIENT.submit("/style default");
 
 //Begin logging process and listen for commands
 CLIENT.on('message', function(data) {
-    var str = $('#messages').children().slice(-1)[0];
-    var r = str.outerHTML.search(/message (personal-message|general-message|error-message|note-message|system-message)/g);
-    var t = str.outerHTML.indexOf("message action-message");
-    var u = str.outerHTML.indexOf("message spoken-message");
+    var r = $('#messages').children().slice(-1)[0].outerHTML.search(/message (personal-message|general-message|error-message|note-message|system-message)/g);
     var text = data.message.trim();
     if (data.nick !== undefined)
     var name = data.nick.toLowerCase();
@@ -60,9 +54,9 @@ CLIENT.on('message', function(data) {
     spamFilters();
     if (name != botnick && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
             var mseg = text;
-      if (t != -1) {
+      if (str.contains("message action-message")) {
                 mseg = "/me " + text;
-            } else if (u != -1) {
+            } else if (str.contains("message spoken-message")) {
                 mseg = "/speak " + text;
             }
          $.ajax({
@@ -70,16 +64,11 @@ CLIENT.on('message', function(data) {
     type : 'GET',
     success : function(data) {              
         console.log("Succesfully pushed to server");
-    },
-    error : function(request,error)
-    {
-        alert("Request: " + JSON.stringify(request));
     }
     });
     }
-    if (name != botnick){
-    if (!antiSpam && score < 6) {
-        if (text.indexOf("!toggle") > -1) {
+    if (name != botnick && !antiSpam && score < 6) {
+        if (text.contains("!toggle")) {
             if (masters.contains(name)) {
                 disabled = !disabled;
                 if (!disabled)
@@ -88,23 +77,23 @@ CLIENT.on('message', function(data) {
                 CLIENT.submit("You do not have permission to toggle me.");
             }
         } else if (!disabled) {
-            if (text.indexOf("!masters") > -1) {
+            if (text.contains("!masters")) {
                 var msg = "";
                 for (var i = 0; i < masters.length - 2; i++)
                     msg += masters[i] + ", ";
                 msg += masters[masters.length - 1];
                 CLIENT.submit(msg);
-            } else if (text.indexOf("!random") > -1) {
+            } else if (text.contains("!random")) {
                 sendRandom();
-            } else if (text.indexOf("!checkem") > -1) {
+            } else if (text.contains("!checkem")) {
                 var rand = Math.floor(Math.random() * 90000) + 10000;
                 CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
-            } else if (text.indexOf("!coinflip") > -1) {
+            } else if (text.contains("!coinflip")) {
                 if (Math.random() < 0.5)
                     CLIENT.submit("Heads");
                 else
                     CLIENT.submit("Tails");
-            } else if (text.indexOf("!ask") > -1) {
+            } else if (text.contains("!ask")) {
                 switch (Math.floor(Math.random()*3)) {
                     case (0):
                         CLIENT.submit("No");
@@ -119,12 +108,10 @@ CLIENT.on('message', function(data) {
                         CLIENT.submit("I don't know.");
                         break;
                 }
-            } else if (text.indexOf("!help") > -1) {
+            } else if (text.contains("!help")) {
                 CLIENT.submit(help);
             }
         }
     }
-    }
 });
-
 CLIENT.submit("/echo Masterbot is now running."); 
