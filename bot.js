@@ -38,7 +38,8 @@ function sendRandom() {//fetches a random message from the server and sends it
 });
 }
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
-var botnick = prompt("What is my name?", "Masterbot");
+var botnick = "Masterbot"; 
+botnick = prompt("What is my name?", "Masterbot");
 botnick = botnick.toLowerCase();
 if (botnick !== null)
 CLIENT.submit("/nick " + botnick);
