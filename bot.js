@@ -54,19 +54,16 @@ CLIENT.on('message', function(data) {
     if (name == botnick)
     spamFilters();
     if (name != botnick && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
-            var mseg = text;
-      if (str.contains("message action-message")) {
-                mseg = "/me " + text;
-            } else if (str.contains("message spoken-message")) {
-                mseg = "/speak " + text;
-            }
-         $.ajax({
-    url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(mseg),
-    type : 'GET',
-    success : function(data) {              
-        console.log("Succesfully pushed to server");
-    }
-    });
+            
+        if (!text.contains("message action-message") && !text.contains("message spoken-message")) {
+        var mseg = text;
+        $.ajax({
+            url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(mseg),
+            type : 'GET',
+            success : function(data) {console.log("Succesfully pushed to server"); }
+        });
+        }
+        
     }
     if (name != botnick && !antiSpam && score < 6) {
         if (text.contains("!toggle")) {
