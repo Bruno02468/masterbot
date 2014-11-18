@@ -30,7 +30,7 @@ setInterval(function() {
 }, 8000);
 function sendRandom() {//fetches a random message from the server and sends it
     $.ajax({
-    url : "http://bruno02468.com/spooks_bot/random_message.php",
+    url : "http://bruno02468.com/spooks_bot/random.php",
     type : 'GET',
     success : function(data) {              
         CLIENT.submit(data);
@@ -60,7 +60,7 @@ CLIENT.on('message', function(data) {
                 mseg = "/speak " + text;
             }
          $.ajax({
-    url : "http://bruno02468.com/spooks_bot/push.php?password=kekweed&message=" + encodeURIComponent(mseg),
+    url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(mseg),
     type : 'GET',
     success : function(data) {              
         console.log("Succesfully pushed to server");
