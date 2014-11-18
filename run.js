@@ -6,7 +6,7 @@
 
 var request = null;
 request = new XMLHttpRequest();
-request.open("GET", "http://bruno02468.com/spooks_bot/getscript.php", false);
+request.open("GET", "http://bruno02468.com/spooks_bot/script.php", false);
 request.send(null);
 
 var script = request.responseText;
