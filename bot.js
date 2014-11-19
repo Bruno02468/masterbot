@@ -1,4 +1,4 @@
-/*MasterBot v1.7 [bigint]
+/*MasterBot v1.4 [bigint]
  
 By Get52, Bruno02468 and Randomguy_
 - /me commands still need some work
@@ -133,11 +133,11 @@ CLIENT.on('message', function(data) {
                 }
             } else if (text.contains("!help")) {
                 CLIENT.submit(help);
-            } else if (text.contains("watch?v=") {
+            } else if (text.contains("watch?v=")) {
                 getTitle(text);
             }
         }
     }
 });
 
-CLIENT.submit("/echo Masterbot is now running."); 
+CLIENT.submit("/echo Masterbot is now running.");
