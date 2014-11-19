@@ -1,19 +1,22 @@
-/*MasterBot v1.4 [bigint]
+/*MasterBot v1.7 [bigint]
  
 By Get52, Bruno02468 and Randomguy_
 - /me commands still need some work
 - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
 
 */
-//Instantiating Bot
+
+
 var disabled = false;
 var masters = ["Bruno02468", "get52", "sammich", "Randomguy_"]; //bot's main controllers
+
 var help = "I am Masterbot, original code by get52, revamped and messed with by Bruno02468 and Randomguy_!\n";
-help += "Commands:\n";
-help += "  !random: send a random message from the database filled with all logged messages.\n";
-help += "  !checkem: roll a random 5-digit number.\n";
-help += "  !coinflip: self-explanatory, I believe.\n";
-help += "  !ask: Ask me a question!\n";
+    help += "Commands:\n";
+    help += "  !random: send a random message from the database filled with all logged messages.\n";
+    help += "  !checkem: roll a random 5-digit number.\n";
+    help += "  !coinflip: self-explanatory, I believe.\n";
+    help += "  !ask: Ask me a question!\n";
+
 var antiSpam = false;
 function spamFilters() {
     score++;
@@ -22,30 +25,51 @@ function spamFilters() {
         antiSpam = false;
     }, 650);
 }
+
 var score = 0;
 setInterval(function() {
     if (score > 0) {
         score--;
     }
 }, 8000);
+
 function sendRandom() {//fetches a random message from the server and sends it
     $.ajax({
-    url : "http://bruno02468.com/spooks_bot/random.php",
-    type : 'GET',
-    success : function(data) {              
-        CLIENT.submit(data);
-    }
-});
+        url : "http://bruno02468.com/spooks_bot/random.php",
+        type : 'GET',
+        success : function(data) { CLIENT.submit(data); }
+    });
 }
+
+function getTitle(url) {
+    
+    var video_id = url.split('v=')[1];
+    var ampersandPosition = video_id.indexOf('&');
+    if(ampersandPosition != -1) {
+        video_id = video_id.substring(0, ampersandPosition);
+    }
+    
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/youtube.php?id=" + video_id,
+        type : 'GET',
+        success : function(data) { CLIENT.submit("Title: " + data); }
+    });
+    
+}
+
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+
 var botnick = "Masterbot"; 
 botnick = prompt("What is my name?", "Masterbot");
 botnick = botnick.toLowerCase();
-if (botnick !== null)
-CLIENT.submit("/nick " + botnick);
+
+if (botnick !== null) {
+    CLIENT.submit("/nick " + botnick);
+}
 CLIENT.submit("/style default");
 
 //Begin logging process and listen for commands
+
 CLIENT.on('message', function(data) {
     var r = $('#messages').children().slice(-1)[0].outerHTML.search(/message (personal-message|general-message|error-message|note-message|system-message)/g);
     var text = data.message.trim();
@@ -65,6 +89,7 @@ CLIENT.on('message', function(data) {
         }
         
     }
+    
     if (name != botnick && !antiSpam && score < 6) {
         if (text.contains("!toggle")) {
             if (masters.contains(name)) {
@@ -108,8 +133,11 @@ CLIENT.on('message', function(data) {
                 }
             } else if (text.contains("!help")) {
                 CLIENT.submit(help);
+            } else if (text.contains("watch?v=") {
+                getTitle(text);
             }
         }
     }
 });
+
 CLIENT.submit("/echo Masterbot is now running."); 
