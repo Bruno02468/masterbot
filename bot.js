@@ -1,4 +1,4 @@
-/*MasterBot v1.4 [bigint]
+/*MasterBot v1.[bigint]
  
 By Get52, Bruno02468 and Randomguy_
 - /me commands still need some work
@@ -41,27 +41,35 @@ function sendRandom() {//fetches a random message from the server and sends it
     });
 }
 
+var title = "";
 function getTitle(url) {
     
     var video_id = url.split('v=')[1];
+    video_id = video_id.substring(0, video_id.indexOf('v=') + 12);
     var ampersandPosition = video_id.indexOf('&');
     if(ampersandPosition != -1) {
         video_id = video_id.substring(0, ampersandPosition);
     }
+    title = "Couldn't get title."
     
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/youtube.php?id=" + video_id,
         type : 'GET',
         success : function(data) { CLIENT.submit("Title: " + data); }
     });
+}
+
+function getTitles(message) {
+    
+    message = message.substring(message.indexOf("http"));
+    getTitle(message);
     
 }
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
 var botnick = "Masterbot"; 
-botnick = prompt("What is my name?", "Masterbot");
-botnick = botnick.toLowerCase();
+botnick = prompt("What should my name be?", "Masterbot");
 
 if (botnick !== null) {
     CLIENT.submit("/nick " + botnick);
@@ -134,7 +142,7 @@ CLIENT.on('message', function(data) {
             } else if (text.contains("!help")) {
                 CLIENT.submit(help);
             } else if (text.contains("watch?v=")) {
-                getTitle(text);
+                getTitles(text);
             }
         }
     }
