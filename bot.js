@@ -8,7 +8,7 @@
 
 
 var disabled = false;
-var masters = ["Bruno02468", "sammich", "Randomguy_"]; //bot's main controllers
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy"]; //bot's main controllers
 
 var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
@@ -19,7 +19,7 @@ var help = "I am Masterbot, original code by get52, completely revamped by Bruno
     help += "  !count: See the number of questions in the database.\n";
 
 var antiSpam = false;
-function spamFilters() {
+function spamFilters() { // increment spam score
     score++;
     antiSpam = true;
     setTimeout(function() {
@@ -28,11 +28,15 @@ function spamFilters() {
 }
 
 var score = 0;
-setInterval(function() {
+setInterval(function() { // decrement spam score
     if (score > 0) {
         score--;
     }
 }, 8000);
+
+setInterval(function() { // clear the screen every hour
+    CLIENT.submit("/clear");
+}, 3600000);
 
 function send(text) {
     CLIENT.submit(text);
