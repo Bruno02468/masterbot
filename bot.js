@@ -1,21 +1,22 @@
 /*MasterBot v1.[bigint]
  
-By Get52, Bruno02468 and Randomguy_
-- /me commands still need some work
-- PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
+    By Get52, Bruno02468 and Randomguy_
+    - /me commands still need some work
+    - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
 
 */
 
 
 var disabled = false;
-var masters = ["Bruno02468", "get52", "sammich", "Randomguy_"]; //bot's main controllers
+var masters = ["Bruno02468", "sammich", "Randomguy_"]; //bot's main controllers
 
-var help = "I am Masterbot, original code by get52, revamped and messed with by Bruno02468 and Randomguy_!\n";
+var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
-    help += "  !random: send a random message from the database filled with all logged messages.\n";
-    help += "  !checkem: roll a random 5-digit number.\n";
-    help += "  !coinflip: self-explanatory, I believe.\n";
-    help += "  !ask: Ask me a question!\n";
+    help += "  !random: Send a random message from the database filled with all logged messages.\n";
+    help += "  !checkem: Roll a random 5-digit number.\n";
+    help += "  !coinflip: Self-explanatory, I believe.\n";
+    help += "  !ask: Ask me a yes/no question\n";
+    help += "  !count: See the number of questions in the database.\n";
 
 var antiSpam = false;
 function spamFilters() {
@@ -33,48 +34,25 @@ setInterval(function() {
     }
 }, 8000);
 
-function sendRandom() {//fetches a random message from the server and sends it
-    $.ajax({
-        url : "http://bruno02468.com/spooks_bot/random.php",
-        type : 'GET',
-        success : function(data) { CLIENT.submit(data); }
-    });
+function send(text) {
+    CLIENT.submit(text);
+    spamFilters();
 }
 
-var title = "";
-function getTitle(url) {
-    
-    var video_id = url.split('v=')[1];
-    video_id = video_id.substring(0, video_id.indexOf('v=') + 12);
-    var ampersandPosition = video_id.indexOf('&');
-    if(ampersandPosition != -1) {
-        video_id = video_id.substring(0, ampersandPosition);
-    }
-    title = "Couldn't get title."
-    
-    $.ajax({
-        url : "http://bruno02468.com/spooks_bot/youtube.php?id=" + video_id,
-        type : 'GET',
-        success : function(data) { CLIENT.submit("Title: " + data); }
-    });
-}
-
-function getTitles(message) {
-    
-    message = message.substring(message.indexOf("http"));
-    getTitle(message);
-    
-}
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
-var botnick = "Masterbot"; 
-botnick = prompt("What should my name be?", "Masterbot");
+var botnick = "Masterbottle"; 
+var prm = prompt("What should my name be?", "Masterbottle");
 
-if (botnick !== null) {
+if (prm !== null) {
+    botnick = prm;
     CLIENT.submit("/nick " + botnick);
 }
+
 CLIENT.submit("/style default");
+CLIENT.submit("/flair $Montserrat|#808080" + botnick);
+
 
 //Begin logging process and listen for commands
 
@@ -83,69 +61,132 @@ CLIENT.on('message', function(data) {
     var text = data.message.trim();
     if (data.nick !== undefined)
     var name = data.nick.toLowerCase();
-    if (name == botnick)
-    spamFilters();
-    if (name != botnick && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
-            
+    
+    if (name != botnick && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help|count)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
         if (!text.contains("message action-message") && !text.contains("message spoken-message")) {
-        var mseg = text;
-        $.ajax({
-            url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(mseg),
-            type : 'GET',
-            success : function(data) {console.log("Succesfully pushed to server"); }
-        });
+            var mseg = text;
+            $.ajax({
+                url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(mseg),
+                type : 'GET',
+                success : function(data) { console.log("Succesfully pushed to server!"); }
+            });
         }
-        
     }
     
     if (name != botnick && !antiSpam && score < 6) {
         if (text.contains("!toggle")) {
-            if (masters.contains(name)) {
-                disabled = !disabled;
-                if (!disabled)
-                    CLIENT.submit("Masterbot has been enabled.");
-            } else {
-                CLIENT.submit("You do not have permission to toggle me.");
-            }
+            toggle(name);
         } else if (!disabled) {
             if (text.contains("!masters")) {
-                var msg = "";
-                for (var i = 0; i < masters.length - 2; i++)
-                    msg += masters[i] + ", ";
-                msg += masters[masters.length - 1];
-                CLIENT.submit(msg);
+                listMasters();
             } else if (text.contains("!random")) {
                 sendRandom();
             } else if (text.contains("!checkem")) {
-                var rand = Math.floor(Math.random() * 90000) + 10000;
-                CLIENT.submit("They see " + name + " rollin' " + rand + ", they hatin'!");
+                checkem(name);
             } else if (text.contains("!coinflip")) {
-                if (Math.random() < 0.5)
-                    CLIENT.submit("Heads");
-                else
-                    CLIENT.submit("Tails");
+                coinflip();
             } else if (text.contains("!ask")) {
-                switch (Math.floor(Math.random()*3)) {
-                    case (0):
-                        CLIENT.submit("No");
-                        break;
-                    case (1):
-                        CLIENT.submit("Yes");
-                        break;
-                    case (2):
-                        CLIENT.submit("Maybe");
-                        break;
-                    default: //Also covers unexpected results
-                        CLIENT.submit("I don't know.");
-                        break;
-                }
+                ask(name);
             } else if (text.contains("!help")) {
-                CLIENT.submit(help);
+                send(help);
             } else if (text.contains("watch?v=")) {
                 getTitles(text);
+            } else if (text.contains("!count")) {
+                getCount();
             }
         }
     }
 });
 
 CLIENT.submit("/echo Masterbot is now running.");
+
+
+
+// COMMAND FUNCTIONS
+
+function sendRandom() { // fetches a random message from the server and sends it
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/random.php",
+        type : 'GET',
+        success : function(data) { send(data); }
+    });
+}
+
+function getCount() { // fetches the count of messages in the db and sends it
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/count.php",
+        type : 'GET',
+        success : function(data) { send("So far, there are " + data + " messages in the database."); }
+    });
+}
+
+function getTitle(url) { // sends the title for a given YouTube URL
+    var video_id = url.split('v=')[1];
+    video_id = video_id.substring(0, video_id.indexOf('v=') + 12);
+    var ampersandPosition = video_id.indexOf('&');
+    if(ampersandPosition != -1) {
+        video_id = video_id.substring(0, ampersandPosition);
+    }
+    title = "Couldn't get title :-/";
+    
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/youtube.php?id=" + video_id,
+        type : 'GET',
+        success : function(data) { send("Title: " + data); }
+    });
+}
+
+function getTitles(message) { // will work on that later
+    message = message.substring(message.indexOf("http"));
+    getTitle(message);
+}
+
+function ask(name) { //answers questions
+    switch (Math.floor(Math.random()*3)) {
+        case (0):
+            send("No, " + name + ".");
+            break;
+        case (1):
+            send("Yes, " + name + ".");
+            break;
+        case (2):
+            send("Maybe, " + name + ".");
+            break;
+        default: //Also covers unexpected results
+            send("I don't know, " + name + ".");
+            break;
+    }
+}
+
+function coinflip() {
+    if (Math.random() < 0.5) {
+        send("Heads");
+    } else {
+        send("Tails");
+    }
+}
+
+function checkem(name) { // roll
+    var rand = Math.floor(Math.random() * 90000) + 10000;
+    send("They see " + name + " rollin' " + rand + ", they hatin'!");
+}
+
+function listMasters() { // lists masters
+    var msg = "My masters are ";
+    for (var i = 0; i < masters.length - 1; i++) {
+        msg += masters[i] + ", ";
+    }
+    msg += "and " + masters[masters.length - 1] + ".";
+    send(msg);
+}
+
+function toggle(name) {
+    if (masters.contains(name)) {
+        disabled = !disabled;
+        if (!disabled) {
+            send("Masterbot has been enabled.");
+        }
+    } else {
+        CLIENT.submit("/pm " + name + "|You do not have permission to toggle me. Stop it.");
+    }
+}
