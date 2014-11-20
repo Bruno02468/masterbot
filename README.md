@@ -1,9 +1,6 @@
-masterbot
+Masterbot
 =========
 
-Spooks bot for keks.
-
-To use, just copy the contents of bookmark.txt to a bookmark's URL and click it when on Spooks.
-That's the easiest way.
-
-We're done here.
+It's a bot designed to run on the Spooks webchat and do several sorts of things.
+If you don't know what Spooks is or don't have my authorization, do not run this code.
+Otherwise, you can find me on Spooks to learn more about the bot.
