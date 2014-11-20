@@ -9,7 +9,7 @@
 
 var disabled = false;
 var answering = true;
-var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000"]; //bot's main controllers
+var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mishashule"]; //bot's main controllers
 
 var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
