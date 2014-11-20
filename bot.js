@@ -1,6 +1,6 @@
-/*MasterBot v1.[bigint]
+/*  Masterbot v1.[bigint]
  
-    By Get52, Bruno02468 and Randomguy_
+    By get52, Bruno02468 and Randomguy_
     - /me commands still need some work
     - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
 
@@ -14,7 +14,7 @@ var answering = true;
 
 var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mishashule", "get52"]; // people who can control the bot
 
-var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
+var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
     help += "  !random: Send a random message from the database filled with all logged messages.\n";
     help += "  !roll: Roll a random 5-digit number.\n";
@@ -29,7 +29,7 @@ function spamFilters() { // Increment spam score
     antiSpam = true;
     setTimeout(function() {
         antiSpam = false;
-    }, 650);
+    }, 700);
 }
 
 var score = 0;
@@ -44,7 +44,7 @@ setInterval(function() { // Clear the screen every hour
 }, 3600000);
 
 function send(text) {
-    if (!antiSpam && score < 6) {
+    if (!antiSpam && score < 6 && !disabled) {
         CLIENT.submit(text);
         spamFilters();
     }
@@ -77,7 +77,7 @@ CLIENT.on('message', function(data) {
     var name = data.nick.toLowerCase();
     trueMessage = text.substring(text.indexOf(" ") + 1); // cuts off style
     
-    if (name !== botnick.toLowerCase() && !disabled) {
+    if (name !== botnick.toLowerCase()) {
         
         //COMMAND HANDLERS
         if (text.contains("!toggle")) {
@@ -113,7 +113,7 @@ CLIENT.on('message', function(data) {
         
 });
 
-CLIENT.submit("/echo Masterbot is now running.");
+CLIENT.submit("/echo #greenMasterbot is now running.");
 
 
 
@@ -142,12 +142,12 @@ function getTitle(url) { // Sends the title for a given YouTube URL
     if(ampersandPosition != -1) {
         video_id = video_id.substring(0, ampersandPosition);
     }
-    title = "Couldn't get title :-/";
+    title = "#redCouldn't get title :-/";
     
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/youtube.php?id=" + video_id,
         type : 'GET',
-        success : function(data) { send("Title: " + data); }
+        success : function(data) { send("#cyanTitle: " + data); }
     });
 }
 
@@ -159,25 +159,25 @@ function getTitles(message) { // Will work on that later...
 function ask(name) { // Answers questions
     switch (Math.floor(Math.random()*3)) {
         case (0):
-            send("No, " + name + ".");
+            send("#redNo, " + name + ".");
             break;
         case (1):
-            send("Yes, " + name + ".");
+            send("#greenYes, " + name + ".");
             break;
         case (2):
-            send("Maybe, " + name + ".");
+            send("#yellowMaybe, " + name + ".");
             break;
         default: // Also covers unexpected results
-            send("I don't know, " + name + ".");
+            send("#orangeI don't know, " + name + ".");
             break;
     }
 }
 
 function coinflip() { // Self-explanatory
     if (Math.random() < 0.5) {
-        send("Heads");
+        send("#orangeHeads");
     } else {
-        send("Tails");
+        send("#orangeTails");
     }
 }
 
@@ -196,11 +196,11 @@ function roll(name) { // Rollin'
     if (quads) { lucky = " #greendat /!!/+quads"; }
     if (quints) { lucky = " #greendat /!!/+q/+u/+i/+n/+t/+s"; }
     
-    send("They see " + name + " rollin' " + rand + ", they hatin'" + lucky + "!");
+    send("#orangeThey see " + name + " rollin' " + rand + ", they hatin'" + lucky + "!");
 }
 
 function listMasters() { // Lists masters
-    var msg = "My masters are ";
+    var msg = "#orangeMy masters are ";
     for (var i = 0; i < masters.length - 1; i++) {
         msg += masters[i] + ", ";
     }
@@ -212,23 +212,25 @@ function toggle(name) { // Toggles the bot
     if (masters.indexOf(name) > -1) {
         disabled = !disabled;
         if (!disabled) {
-            send("Masterbot has been enabled.");
+            send("#greenMasterbot now enabled.");
+        } else {
+            CLIENT.submit("#redMasterbot now disabled.");
         }
     } else {
-        CLIENT.submit("/pm " + name + "|You do not have permission to toggle me. Stop it.");
+        CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle me. Stop it.");
     }
 }
 
 function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random message sending
     if (masters.indexOf(name) > -1) {
         if (answering) {
-            send("Question answering now disabled.");
+            send("#redQuestion answering now disabled.");
             answering = false;
         } else {
-            send("Question answering now enabled.");
+            send("#greenQuestion answering now enabled.");
             answering = true;
         }
     } else {
-        CLIENT.submit("/pm " + name + "|You do not have permission to do this. Stop it.");
+        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do this. Stop it.");
     }
 }
