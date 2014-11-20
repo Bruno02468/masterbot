@@ -66,7 +66,7 @@ CLIENT.on('message', function(data) {
     if (data.nick !== undefined)
     var name = data.nick.toLowerCase();
     
-    if (name != botnick && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help|count)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
+    if (name !== botnick.toLowerCase() && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help|count)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
         if (!text.contains("message action-message") && !text.contains("message spoken-message")) {
             var mseg = text;
             $.ajax({
@@ -77,7 +77,7 @@ CLIENT.on('message', function(data) {
         }
     }
     
-    if (name != botnick && !antiSpam && score < 6) {
+    if (name !== botnick.toLowerCase() && !antiSpam && score < 6) {
         if (text.contains("!toggle")) {
             toggle(name);
         } else if (!disabled) {
@@ -85,6 +85,7 @@ CLIENT.on('message', function(data) {
                 listMasters();
             } else if (text.contains("!random") || text.slice(-1) == "?") {
                 sendRandom();
+                console.log(botnick + name);
             } else if (text.contains("!checkem")) {
                 checkem(name);
             } else if (text.contains("!coinflip")) {
