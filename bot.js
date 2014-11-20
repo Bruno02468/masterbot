@@ -8,7 +8,8 @@
 
 
 var disabled = false;
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy"]; //bot's main controllers
+var answering = true;
+var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000"]; //bot's main controllers
 
 var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
@@ -83,9 +84,8 @@ CLIENT.on('message', function(data) {
         } else if (!disabled) {
             if (text.contains("!masters")) {
                 listMasters();
-            } else if (text.contains("!random") || text.slice(-1) == "?") {
+            } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
                 sendRandom();
-                console.log(botnick + name);
             } else if (text.contains("!checkem")) {
                 checkem(name);
             } else if (text.contains("!coinflip")) {
@@ -98,6 +98,8 @@ CLIENT.on('message', function(data) {
                 getTitles(text);
             } else if (text.contains("!count")) {
                 getCount();
+            } else if (text.contains("!trigger")) {
+                toggleTrigger(name);
             }
         }
     }
@@ -186,12 +188,26 @@ function listMasters() { // lists masters
 }
 
 function toggle(name) {
-    if (masters.contains(name)) {
+    if (masters.indexOf(name) > -1) {
         disabled = !disabled;
         if (!disabled) {
             send("Masterbot has been enabled.");
         }
     } else {
         CLIENT.submit("/pm " + name + "|You do not have permission to toggle me. Stop it.");
+    }
+}
+
+function toggleTrigger(name) {
+    if (masters.indexOf(name) > -1) {
+        if (answering) {
+            send("Question answering been disabled.");
+            answering = false;
+        } else {
+            send("Question answering has been enabled.");
+            answering = true;
+        }
+    } else {
+        CLIENT.submit("/pm " + name + "|You do not have permission to do this. Stop it.");
     }
 }
