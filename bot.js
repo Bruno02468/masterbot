@@ -17,7 +17,7 @@ var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mi
 var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
     help += "  !random: Send a random message from the database filled with all logged messages.\n";
-    help += "  !checkem: Roll a random 5-digit number.\n";
+    help += "  !roll: Roll a random 5-digit number.\n";
     help += "  !coinflip: Self-explanatory, I believe.\n";
     help += "  !ask: Ask me a yes/no question\n";
     help += "  !count: See the number of questions in the database.\n";
@@ -86,8 +86,8 @@ CLIENT.on('message', function(data) {
             listMasters();
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
             sendRandom();
-        } else if (text.contains("!checkem")) {
-            checkem(name);
+        } else if (text.contains("!roll")) {
+            roll(name);
         } else if (text.contains("!coinflip")) {
             coinflip();
         } else if (text.contains("!ask")) {
@@ -181,9 +181,22 @@ function coinflip() { // Self-explanatory
     }
 }
 
-function checkem(name) { // Rollin'
+function roll(name) { // Rollin'
     var rand = Math.floor(Math.random() * 90000) + 10000;
-    send("They see " + name + " rollin' " + rand + ", they hatin'!");
+    var strn = "" + rand;
+    
+    var dubs = (strn[4] == strn[3]);
+    var trips = (dubs && strn[3] == strn[2]);
+    var quads = (trips && strn[2] == strn[1]);
+    var quints = (quads && strn[1] == strn[0]);
+    
+    var lucky = "";
+    if (dubs) { lucky = " #greendat dubs"; }
+    if (trips) { lucky = " #greendat /!trips"; }
+    if (quads) { lucky = " #greendat /!!/+quads"; }
+    if (quints) { lucky = " #greendat /!!/+q/+u/+i/+n/+t/+s"; }
+    
+    send("They see " + name + " rollin' " + rand + ", they hatin'" + lucky + "!");
 }
 
 function listMasters() { // Lists masters
