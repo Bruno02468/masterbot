@@ -7,9 +7,12 @@
 */
 
 
+// Defining some basic functions and variables
+
 var disabled = false;
 var answering = true;
-var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mishashule"]; //bot's main controllers
+
+var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mishashule"]; // people who can control the bot
 
 var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
@@ -18,6 +21,7 @@ var help = "I am Masterbot, original code by get52, completely revamped by Bruno
     help += "  !coinflip: Self-explanatory, I believe.\n";
     help += "  !ask: Ask me a yes/no question\n";
     help += "  !count: See the number of questions in the database.\n";
+
 
 var antiSpam = false;
 function spamFilters() { // increment spam score
@@ -40,12 +44,17 @@ setInterval(function() { // clear the screen every hour
 }, 3600000);
 
 function send(text) {
-    CLIENT.submit(text);
-    spamFilters();
+    if (!antiSpam && score < 6) {
+        CLIENT.submit(text);
+        spamFilters();
+    }
 }
 
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+
+
+// Username popup and flair setter
 
 var botnick = "Masterbottle"; 
 var prm = prompt("What should my name be?", "Masterbottle");
@@ -59,7 +68,7 @@ CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
 
 
-//Begin logging process and listen for commands
+// Begin logging process and listen for commands
 
 CLIENT.on('message', function(data) {
     var r = $('#messages').children().slice(-1)[0].outerHTML.search(/message (personal-message|general-message|error-message|note-message|system-message)/g);
@@ -67,41 +76,55 @@ CLIENT.on('message', function(data) {
     if (data.nick !== undefined)
     var name = data.nick.toLowerCase();
     
-    if (name !== botnick.toLowerCase() && r == -1 && text.search(/(!(masterbot|masters|toggle|random|checkem|coinflip|ask|help|count)|masterbot is now running\.)/gi) == -1 && text.length <= 175) {
-        if (!text.contains("message action-message") && !text.contains("message spoken-message")) {
-            var mseg = text;
+    var isCommand = false;
+    trueMessage = text.substring(text.indexOf(" ") + 1); // cuts off style
+    
+    if (name !== botnick.toLowerCase()) {
+        
+        //COMMAND HANDLERS
+        if (text.contains("!toggle")) {
+            toggle(name);
+            isCommand = true;
+        } else if (!disabled) {
+            if (text.contains("!masters")) {
+                listMasters();
+                isCommand = true;
+            } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
+                sendRandom();
+                isCommand = true;
+            } else if (text.contains("!checkem")) {
+                checkem(name);
+                isCommand = true;
+            } else if (text.contains("!coinflip")) {
+                coinflip();
+                isCommand = true;
+            } else if (text.contains("!ask")) {
+                ask(name);
+                isCommand = true;
+            } else if (text.contains("!help")) {
+                send(help);
+                isCommand = true;
+            } else if (text.contains("watch?v=")) {
+                getTitles(text);
+                isCommand = true;
+            } else if (text.contains("!count")) {
+                getCount();
+                isCommand = true;
+            } else if (text.contains("!trigger")) {
+                toggleTrigger(name);
+                isCommand = true;
+            }
+        }
+        
+        //LOGGER
+        if (!isCommand && r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             $.ajax({
-                url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(mseg),
+                url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
                 type : 'GET',
                 success : function(data) { console.log("Succesfully pushed to server!"); }
             });
         }
-    }
-    
-    if (name !== botnick.toLowerCase() && !antiSpam && score < 6) {
-        if (text.contains("!toggle")) {
-            toggle(name);
-        } else if (!disabled) {
-            if (text.contains("!masters")) {
-                listMasters();
-            } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
-                sendRandom();
-            } else if (text.contains("!checkem")) {
-                checkem(name);
-            } else if (text.contains("!coinflip")) {
-                coinflip();
-            } else if (text.contains("!ask")) {
-                ask(name);
-            } else if (text.contains("!help")) {
-                send(help);
-            } else if (text.contains("watch?v=")) {
-                getTitles(text);
-            } else if (text.contains("!count")) {
-                getCount();
-            } else if (text.contains("!trigger")) {
-                toggleTrigger(name);
-            }
-        }
+        
     }
 });
 
@@ -165,7 +188,7 @@ function ask(name) { //answers questions
     }
 }
 
-function coinflip() {
+function coinflip() { // self-explanatory
     if (Math.random() < 0.5) {
         send("Heads");
     } else {
@@ -187,7 +210,7 @@ function listMasters() { // lists masters
     send(msg);
 }
 
-function toggle(name) {
+function toggle(name) { // toggles the bot
     if (masters.indexOf(name) > -1) {
         disabled = !disabled;
         if (!disabled) {
@@ -198,7 +221,7 @@ function toggle(name) {
     }
 }
 
-function toggleTrigger(name) {
+function toggleTrigger(name) { // toggle "?" in the end trigger for random messages
     if (masters.indexOf(name) > -1) {
         if (answering) {
             send("Question answering been disabled.");
