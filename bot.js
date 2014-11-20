@@ -12,7 +12,7 @@
 var disabled = false;
 var answering = true;
 
-var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mishashule"]; // people who can control the bot
+var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mishashule", "get52"]; // people who can control the bot
 
 var help = "I am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
@@ -209,10 +209,10 @@ function toggle(name) { // Toggles the bot
 function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random message sending
     if (masters.indexOf(name) > -1) {
         if (answering) {
-            send("Question answering been disabled.");
+            send("Question answering now disabled.");
             answering = false;
         } else {
-            send("Question answering has been enabled.");
+            send("Question answering now enabled.");
             answering = true;
         }
     } else {
