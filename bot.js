@@ -24,7 +24,7 @@ var help = "I am Masterbot, original code by get52, completely revamped by Bruno
 
 
 var antiSpam = false;
-function spamFilters() { // increment spam score
+function spamFilters() { // Increment spam score
     score++;
     antiSpam = true;
     setTimeout(function() {
@@ -33,13 +33,13 @@ function spamFilters() { // increment spam score
 }
 
 var score = 0;
-setInterval(function() { // decrement spam score
+setInterval(function() { // Decrement spam score
     if (score > 0) {
         score--;
     }
 }, 8000);
 
-setInterval(function() { // clear the screen every hour
+setInterval(function() { // Clear the screen every hour
     CLIENT.submit("/clear");
 }, 3600000);
 
@@ -75,57 +75,42 @@ CLIENT.on('message', function(data) {
     var text = data.message.trim();
     if (data.nick !== undefined)
     var name = data.nick.toLowerCase();
-    
-    var isCommand = false;
     trueMessage = text.substring(text.indexOf(" ") + 1); // cuts off style
     
-    if (name !== botnick.toLowerCase()) {
+    if (name !== botnick.toLowerCase() && !disabled) {
         
         //COMMAND HANDLERS
         if (text.contains("!toggle")) {
             toggle(name);
-            isCommand = true;
-        } else if (!disabled) {
-            if (text.contains("!masters")) {
-                listMasters();
-                isCommand = true;
-            } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
-                sendRandom();
-                isCommand = true;
-            } else if (text.contains("!checkem")) {
-                checkem(name);
-                isCommand = true;
-            } else if (text.contains("!coinflip")) {
-                coinflip();
-                isCommand = true;
-            } else if (text.contains("!ask")) {
-                ask(name);
-                isCommand = true;
-            } else if (text.contains("!help")) {
-                send(help);
-                isCommand = true;
-            } else if (text.contains("watch?v=")) {
-                getTitles(text);
-                isCommand = true;
-            } else if (text.contains("!count")) {
-                getCount();
-                isCommand = true;
-            } else if (text.contains("!trigger")) {
-                toggleTrigger(name);
-                isCommand = true;
-            }
-        }
-        
-        //LOGGER
-        if (!isCommand && r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
+        } else if (text.contains("!masters")) {
+            listMasters();
+        } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
+            sendRandom();
+        } else if (text.contains("!checkem")) {
+            checkem(name);
+        } else if (text.contains("!coinflip")) {
+            coinflip();
+        } else if (text.contains("!ask")) {
+            ask(name);
+        } else if (text.contains("!help")) {
+            send(help);
+        } else if (text.contains("watch?v=")) {
+            getTitles(text);
+        } else if (text.contains("!count")) {
+            getCount();
+        } else if (text.contains("!trigger")) {
+            toggleTrigger(name);
+        } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
+            // Logger
             $.ajax({
                 url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
                 type : 'GET',
                 success : function(data) { console.log("Succesfully pushed to server!"); }
             });
         }
-        
+            
     }
+        
 });
 
 CLIENT.submit("/echo Masterbot is now running.");
@@ -134,7 +119,7 @@ CLIENT.submit("/echo Masterbot is now running.");
 
 // COMMAND FUNCTIONS
 
-function sendRandom() { // fetches a random message from the server and sends it
+function sendRandom() { // Fetches a random message from the server and sends it
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/random.php",
         type : 'GET',
@@ -142,7 +127,7 @@ function sendRandom() { // fetches a random message from the server and sends it
     });
 }
 
-function getCount() { // fetches the count of messages in the db and sends it
+function getCount() { // Fetches the count of messages in the db and sends it
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/count.php",
         type : 'GET',
@@ -150,7 +135,7 @@ function getCount() { // fetches the count of messages in the db and sends it
     });
 }
 
-function getTitle(url) { // sends the title for a given YouTube URL
+function getTitle(url) { // Sends the title for a given YouTube URL
     var video_id = url.split('v=')[1];
     video_id = video_id.substring(0, video_id.indexOf('v=') + 12);
     var ampersandPosition = video_id.indexOf('&');
@@ -166,12 +151,12 @@ function getTitle(url) { // sends the title for a given YouTube URL
     });
 }
 
-function getTitles(message) { // will work on that later
+function getTitles(message) { // Will work on that later...
     message = message.substring(message.indexOf("http"));
     getTitle(message);
 }
 
-function ask(name) { //answers questions
+function ask(name) { // Answers questions
     switch (Math.floor(Math.random()*3)) {
         case (0):
             send("No, " + name + ".");
@@ -182,13 +167,13 @@ function ask(name) { //answers questions
         case (2):
             send("Maybe, " + name + ".");
             break;
-        default: //Also covers unexpected results
+        default: // Also covers unexpected results
             send("I don't know, " + name + ".");
             break;
     }
 }
 
-function coinflip() { // self-explanatory
+function coinflip() { // Self-explanatory
     if (Math.random() < 0.5) {
         send("Heads");
     } else {
@@ -196,12 +181,12 @@ function coinflip() { // self-explanatory
     }
 }
 
-function checkem(name) { // roll
+function checkem(name) { // Rollin'
     var rand = Math.floor(Math.random() * 90000) + 10000;
     send("They see " + name + " rollin' " + rand + ", they hatin'!");
 }
 
-function listMasters() { // lists masters
+function listMasters() { // Lists masters
     var msg = "My masters are ";
     for (var i = 0; i < masters.length - 1; i++) {
         msg += masters[i] + ", ";
@@ -210,7 +195,7 @@ function listMasters() { // lists masters
     send(msg);
 }
 
-function toggle(name) { // toggles the bot
+function toggle(name) { // Toggles the bot
     if (masters.indexOf(name) > -1) {
         disabled = !disabled;
         if (!disabled) {
@@ -221,7 +206,7 @@ function toggle(name) { // toggles the bot
     }
 }
 
-function toggleTrigger(name) { // toggle "?" in the end trigger for random messages
+function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random message sending
     if (masters.indexOf(name) > -1) {
         if (answering) {
             send("Question answering been disabled.");
