@@ -83,7 +83,7 @@ CLIENT.on('message', function(data) {
         } else if (!disabled) {
             if (text.contains("!masters")) {
                 listMasters();
-            } else if (text.contains("!random")) {
+            } else if (text.contains("!random") || text.slice(-1) == "?") {
                 sendRandom();
             } else if (text.contains("!checkem")) {
                 checkem(name);
