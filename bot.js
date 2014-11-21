@@ -16,11 +16,14 @@ var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mi
 
 var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
-    help += "  !random: Send a random message from the database filled with all logged messages.\n";
-    help += "  !roll: Roll a random 5-digit number.\n";
-    help += "  !coinflip: Self-explanatory, I believe.\n";
-    help += "  !ask: Ask me a yes/no question\n";
-    help += "  !count: See the number of questions in the database.\n";
+    help += "         !random: Send a random message from the database filled with all logged messages.\n";
+    help += "         !roll: Roll a random 5-digit number.\n";
+    help += "         !coinflip: Self-explanatory, I believe.\n";
+    help += "         !ask: Ask me a yes/no question\n";
+    help += "         !count: See the number of messages in the database.\n";
+    help += "         !search [query]: Search for a random message containing your query in the database.\n";
+    help += "         !lookup [query]: Detailed version of !search.\n";
+    help += "         !pick [x]: Outputs the message number x the database.";
 
 
 var antiSpam = false;
@@ -104,6 +107,12 @@ CLIENT.on('message', function(data) {
             toggleTrigger(name);
         } else if (text.contains("!insult")) {
             insult(argumentString);
+        } else if (text.contains("!search")) {
+            search(argumentString, true);
+        } else if (text.contains("!lookup")) {
+            search(argumentString, false);
+        } else if (text.contains("!pick")) {
+            pick(argumentString, true);
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logger
             $.ajax({
@@ -244,5 +253,26 @@ function insult(what) {
         url : "http://bruno02468.com/spooks_bot/api.py/insult",
         type : 'GET',
         success : function(data) { send(what + ", " + data.toLowerCase()); }
+    });
+}
+
+function search(query, silent) {
+    var s = "";
+    if (silent) {
+        s = "&silent";
+    }
+    
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/search.php?q=" + encodeURIComponent(query) + s,
+        type : 'GET',
+        success : function(data) { send(data); }
+    });
+}
+
+function pick(line) {
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/pick.php?line=" + encodeURIComponent(line),
+        type : 'GET',
+        success : function(data) { send(data); }
     });
 }
