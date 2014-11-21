@@ -76,6 +76,8 @@ CLIENT.on('message', function(data) {
     if (data.nick !== undefined)
     var name = data.nick.toLowerCase();
     trueMessage = text.substring(text.indexOf(" ") + 1); // cuts off style
+    argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
+    arguments = argumentString.split(" ");
     
     if (name !== botnick.toLowerCase()) {
         
@@ -100,6 +102,8 @@ CLIENT.on('message', function(data) {
             getCount();
         } else if (text.contains("!trigger")) {
             toggleTrigger(name);
+        } else if (text.contains("!insult")) {
+            insult(argumentString);
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logger
             $.ajax({
@@ -233,4 +237,12 @@ function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random mess
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to do this. Stop it.");
     }
+}
+
+function insult(what) {
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/api.py/insult",
+        type : 'GET',
+        success : function(data) { send(what + ", " + data); }
+    });
 }
