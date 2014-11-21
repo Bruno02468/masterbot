@@ -243,6 +243,6 @@ function insult(what) {
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/api.py/insult",
         type : 'GET',
-        success : function(data) { send(what + ", " + data); }
+        success : function(data) { send(what + ", " + data.toLowerCase()); }
     });
 }
