@@ -78,7 +78,7 @@ CLIENT.on('message', function(data) {
     var text = data.message.trim();
     if (data.nick !== undefined)
     var name = data.nick;
-    trueMessage = parser.removeHTML(parser.parse(text)); // cuts off style
+    var trueMessage = parser.removeHTML(parser.parse(text)); // cuts off style
     trueMessage = trueMessage.trim(); // sammich ain't breaking my stuff!
     argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
     arguments = argumentString.split(" ");
