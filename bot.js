@@ -1,4 +1,4 @@
-/*  Masterbot v1.[bigint]
+/*  Masterbot v2.[bigint]
  
     By get52, Bruno02468 and Randomguy_
     - /me commands still need some work
@@ -12,7 +12,7 @@
 var disabled = false;
 var answering = true;
 
-var masters = ["bruno02468", "sammich", "randomguy_", "mr. guy", "anon2000", "mishashule", "get52"]; // people who can control the bot
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "anon2000", "Mishashule", "get52"]; // people who can control the bot
 
 var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
     help += "Commands:\n";
@@ -77,12 +77,13 @@ CLIENT.on('message', function(data) {
     var r = $('#messages').children().slice(-1)[0].outerHTML.search(/message (personal-message|general-message|error-message|note-message|system-message)/g);
     var text = data.message.trim();
     if (data.nick !== undefined)
-    var name = data.nick.toLowerCase();
-    trueMessage = text.substring(text.indexOf(" ") + 1); // cuts off style
+    var name = data.nick;
+    trueMessage = parser.removeHTML(parser.parse(text)); // cuts off style
+    trueMessage = trueMessage.trim(); // sammich ain't breaking my stuff!
     argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
     arguments = argumentString.split(" ");
     
-    if (name !== botnick.toLowerCase()) {
+    if (name !== botnick) {
         
         //COMMAND HANDLERS
         if (text.contains("!toggle")) {
@@ -114,7 +115,7 @@ CLIENT.on('message', function(data) {
         } else if (text.contains("!pick")) {
             pick(argumentString, true);
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
-            // Logger
+            // Logging messages to my server :3
             $.ajax({
                 url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
                 type : 'GET',
