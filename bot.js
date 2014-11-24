@@ -89,8 +89,6 @@ CLIENT.on('message', function(data) {
             toggle(name);
         } else if (text.contains("!masters")) {
             listMasters();
-        } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
-            sendRandom();
         } else if (text.contains("!roll")) {
             roll(name);
         } else if (text.contains("!coinflip")) {
@@ -115,6 +113,8 @@ CLIENT.on('message', function(data) {
             search(argumentString, false);
         } else if (text.contains("!pick")) {
             pick(argumentString, true);
+        } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
+            sendRandom();
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
             $.ajax({
@@ -282,17 +282,18 @@ function pick(line) {
 function image(spooky) { // Thanks, Mr. Guy!
     $.getJSON("http://api.reddit.com/r/" + spooky + "/hot.json?limit=100").success(function(response) {
         resp = response.data.children;
-        var valid = []
+        var valid = [];
         $.map(resp, function(item){
-            if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
-                valid.push(item)
-                });
-        if(valid.length == 0){
-            send("#redNo images could be found for '" + spooky + "'!");
-            return;
-        }
+            if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url)) {
+                valid.push(item);
+            }
+        });
         var randomIndex = Math.floor(Math.random() * valid.length);
         var item = valid[randomIndex];
-        send("\\" + item.data.title + "\n" + item.data.url);
+        if (valid.length == 0 || item.data.url == "") {
+            send("#redPlease type something that makes sense, dummy!");
+        } else {
+            send("\\" + item.data.title + "\n" + item.data.url);
+        }
     });
 }
