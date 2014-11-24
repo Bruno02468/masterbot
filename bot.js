@@ -3,7 +3,6 @@
     By get52, Bruno02468 and Randomguy_
     - /me commands still need some work
     - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
-
 */
 
 
@@ -24,6 +23,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !search [query]: Search for a random message containing your query in the database.\n";
     help += "         !lookup [query]: Detailed version of !search.\n";
     help += "         !pick [x]: Outputs the message number x the database.";
+    help += "         !image [x]: Shows an image from a subreddit of your choosing.";
 
 
 var antiSpam = false;
@@ -108,7 +108,9 @@ CLIENT.on('message', function(data) {
             toggleTrigger(name);
         } else if (text.contains("!insult")) {
             insult(argumentString);
-        } else if (text.contains("!search")) {
+        } else if (text.contains("!image")) {
+            image(argumentString);
+        }else if (text.contains("!search")) {
             search(argumentString, true);
         } else if (text.contains("!lookup")) {
             search(argumentString, false);
@@ -116,11 +118,6 @@ CLIENT.on('message', function(data) {
             pick(argumentString, true);
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
-            $.ajax({
-                url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
-                type : 'GET',
-                success : function(data) { console.log("Succesfully pushed to server!"); }
-            });
         }
             
     }
@@ -277,3 +274,21 @@ function pick(line) {
         success : function(data) { send(data); }
     });
 }
+
+function image(spooky){
+    $.getJSON("http://api.reddit.com/r/" + spooky + "/hot.json?limit=100").success(function(response) {
+            resp = response.data.children;
+            var valid = []
+            $.map(resp, function(item){
+                if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
+                    valid.push(item)
+                    });
+            if(valid.length==0){
+                send("No images could be found");
+                return;
+            }
+            var randomIndex = Math.floor(Math.random() * valid.length);
+            var item = valid[randomIndex];
+            send("\\"+item.data.title+"\n"+item.data.url)
+        }
+    )};
