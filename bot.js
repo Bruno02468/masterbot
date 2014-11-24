@@ -22,7 +22,9 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !search [query]: Search for a random message containing your query in the database.\n";
     help += "         !lookup [query]: Detailed version of !search.\n";
     help += "         !pick [x]: Outputs the message number x the database.\n";
-    help += "         !image [x]: Shows an image from a subreddit of your choosing.";
+    help += "         !image [x]: Shows an image from a subreddit of your choosing.\n";
+    help += "         !define [x]: Defines a word.\n";
+    help += "         !roulette [x]: Plays russian roulette with [x] ammount of bullets.\n";
 
 
 var antiSpam = false;
@@ -107,6 +109,10 @@ CLIENT.on('message', function(data) {
             insult(argumentString);
         } else if (text.contains("!image")) {
             image(argumentString);
+        } else if (text.contains("!roulette")) {
+            roulette(argumentString);
+        } else if (text.contains("!define")) {
+            define(argumentString);
         } else if (text.contains("!search")) {
             search(argumentString, true);
         } else if (text.contains("!lookup")) {
@@ -304,3 +310,26 @@ function image(spooky) { // Thanks, Mr. Guy!
         send(message);
     }
 }
+
+function roulette(bullets) {
+    var theone = Math.floor(Math.random() * 6)
+    if (bullets > 6) {
+        CLIENT.submit("#red Too many bullets. Max is 6.")
+    } else if (theone <= bullets - 1) {
+        CLIENT.submit("#redBang! You're dead.")
+    } else {
+        CLIENT.submit("#greenYou got lucky.")
+    }
+}
+
+function define(word) {
+    $.getJSON("http://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5")
+        .success(function(data) {
+            if (data[0] === undefined) {
+                send("#redNo definition could be found.");
+            } else {
+                send("#green" + data[0].text)
+            }
+            return;
+        })
+};
