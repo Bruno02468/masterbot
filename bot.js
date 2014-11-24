@@ -25,6 +25,8 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !image [x]: Shows an image from a subreddit of your choosing.\n";
     help += "         !define [x]: Defines a word.\n";
     help += "         !roulette [x]: Plays russian roulette with [x] ammount of bullets.\n";
+    help += "         !weather [city, country/state]: Tells the current weather of the location.\n";
+    help += "         !iploc [ip or url]: Locates an IP or url.\n";
 
 
 var antiSpam = false;
@@ -113,6 +115,10 @@ CLIENT.on('message', function(data) {
             roulette(argumentString);
         } else if (text.contains("!define")) {
             define(argumentString);
+        } else if (text.contains("!weather")) {
+            weather(argumentString);
+        } else if (text.contains("!iploc")) {
+            iploc(argumentString);
         } else if (text.contains("!search")) {
             search(argumentString, true);
         } else if (text.contains("!lookup")) {
@@ -331,5 +337,17 @@ function define(word) {
                 send("#green" + data[0].text)
             }
             return;
+        })
+};
+
+function weather(location) {
+ $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" +encodeURIComponent(location) + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").success(function(data) {
+  CLIENT.submit('The current weather in ' + location + ' is ' + data.query.results.channel.item.condition.temp + ' degrees, and it looks ' + data.query.results.channel.item.condition.text + ".");
+ })
+}
+
+function iploc(ip) {
+        $.getJSON("https://freegeoip.net/json/" + ip).success(function(data) {
+            CLIENT.submit("The location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".")
         })
 };
