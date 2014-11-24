@@ -1,7 +1,6 @@
 /*  Masterbot v2.[bigint]
  
-    By get52, Bruno02468 and Randomguy_
-    - /me commands still need some work
+    By get52, Bruno02468, Randomguy_ and Mr. Guy!
     - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
 */
 
@@ -13,7 +12,7 @@ var answering = true;
 
 var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "anon2000", "Mishashule", "get52"]; // people who can control the bot
 
-var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468 and Randomguy_!\n";
+var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
     help += "Commands:\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
     help += "         !roll: Roll a random 5-digit number.\n";
@@ -22,7 +21,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !count: See the number of messages in the database.\n";
     help += "         !search [query]: Search for a random message containing your query in the database.\n";
     help += "         !lookup [query]: Detailed version of !search.\n";
-    help += "         !pick [x]: Outputs the message number x the database.";
+    help += "         !pick [x]: Outputs the message number x the database.\n";
     help += "         !image [x]: Shows an image from a subreddit of your choosing.";
 
 
@@ -110,7 +109,7 @@ CLIENT.on('message', function(data) {
             insult(argumentString);
         } else if (text.contains("!image")) {
             image(argumentString);
-        }else if (text.contains("!search")) {
+        } else if (text.contains("!search")) {
             search(argumentString, true);
         } else if (text.contains("!lookup")) {
             search(argumentString, false);
@@ -118,6 +117,11 @@ CLIENT.on('message', function(data) {
             pick(argumentString, true);
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
+            $.ajax({
+                url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
+                type : 'GET',
+                success : function(data) { console.log("Succesfully pushed to server!"); }
+            });
         }
             
     }
@@ -275,20 +279,20 @@ function pick(line) {
     });
 }
 
-function image(spooky){
+function image(spooky) { // Thanks, Mr. Guy!
     $.getJSON("http://api.reddit.com/r/" + spooky + "/hot.json?limit=100").success(function(response) {
-            resp = response.data.children;
-            var valid = []
-            $.map(resp, function(item){
-                if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
-                    valid.push(item)
-                    });
-            if(valid.length==0){
-                send("No images could be found");
-                return;
-            }
-            var randomIndex = Math.floor(Math.random() * valid.length);
-            var item = valid[randomIndex];
-            send("\\"+item.data.title+"\n"+item.data.url)
+        resp = response.data.children;
+        var valid = []
+        $.map(resp, function(item){
+            if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
+                valid.push(item)
+                });
+        if(valid.length == 0){
+            send("#redNo images could be found for '" + spooky + "'!");
+            return;
         }
-    )};
+        var randomIndex = Math.floor(Math.random() * valid.length);
+        var item = valid[randomIndex];
+        send("\\" + item.data.title + "\n" + item.data.url);
+    });
+}
