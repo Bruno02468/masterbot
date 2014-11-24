@@ -1,4 +1,4 @@
-/*  Masterbot v2.[bigint]
+/*  Masterbot v3.[bigint]
  
     By get52, Bruno02468, Randomguy_ and Mr. Guy!
     - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
@@ -280,20 +280,24 @@ function pick(line) {
 }
 
 function image(spooky) { // Thanks, Mr. Guy!
-    $.getJSON("http://api.reddit.com/r/" + spooky + "/hot.json?limit=100").success(function(response) {
-        resp = response.data.children;
-        var valid = [];
-        $.map(resp, function(item){
-            if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url)) {
-                valid.push(item);
+    try {
+        $.getJSON("http://api.reddit.com/r/" + spooky + "/hot.json?limit=100").success(function(response) {
+            resp = response.data.children;
+            var valid = [];
+            $.map(resp, function(item){
+                if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url)) {
+                    valid.push(item);
+                }
+            });
+            var randomIndex = Math.floor(Math.random() * valid.length);
+            var item = valid[randomIndex];
+            if (valid.length == 0 || item.data.url == "") {
+                send("#redNo images found for '" + spooky + "'!");
+            } else {
+                send("\\" + item.data.title + "\n" + item.data.url);
             }
         });
-        var randomIndex = Math.floor(Math.random() * valid.length);
-        var item = valid[randomIndex];
-        if (valid.length == 0 || item.data.url == "") {
-            send("#redPlease type something that makes sense, dummy!");
-        } else {
-            send("\\" + item.data.title + "\n" + item.data.url);
-        }
-    });
+    } catch (err) {
+        send("#redPlease type in something that makes sense, dummy!");
+    }
 }
