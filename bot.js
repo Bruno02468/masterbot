@@ -280,6 +280,7 @@ function pick(line) {
 }
 
 function image(spooky) { // Thanks, Mr. Guy!
+    var message = "#redPlease type in something that makes sense, dummy!";
     try {
         $.getJSON("http://api.reddit.com/r/" + spooky + "/hot.json?limit=100").success(function(response) {
             resp = response.data.children;
@@ -292,12 +293,14 @@ function image(spooky) { // Thanks, Mr. Guy!
             var randomIndex = Math.floor(Math.random() * valid.length);
             var item = valid[randomIndex];
             if (valid.length == 0 || item.data.url == "") {
-                send("#redNo images found for '" + spooky + "'!");
+                message = "#redNo images found for '" + spooky + "'!";
             } else {
-                send("\\" + item.data.title + "\n" + item.data.url);
+                message = "\\" + item.data.title + "\n" + item.data.url;
             }
         });
     } catch (err) {
-        send("#redPlease type in something that makes sense, dummy!");
+        message = "#redPlease type in something that makes sense, dummy!";
+    } finally {
+        send(message);
     }
 }
