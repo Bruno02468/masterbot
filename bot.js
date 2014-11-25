@@ -356,7 +356,7 @@ function iploc(ip) {
     $.getJSON("https://freegeoip.net/json/" + ip)
         .success(function(data) {
             console.log(data);
-            send("#cyanThe location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
+            send("#cyanThe location of the IP " + ip + " is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
         }).fail(function() {
             send("#redNothing found for that IP.");
         }
