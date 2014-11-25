@@ -289,33 +289,33 @@ function pick(line) {
     });
 }
 
-function image(spooky){
+function image(spooky) {
     $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
 	.done(function(response) {
             resp = response.data.children;
             var valid = []
             $.map(resp, function(item){
                 if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
-                    valid.push(item)
-                    });
+                    valid.push(item);
+                });
             if(valid.length==0){
-                send("No images could be found");
+                send("#redNo images could be found");
                 return;
             }
             var randomIndex = Math.floor(Math.random() * valid.length);
             var item = valid[randomIndex];
-            send("\\"+item.data.title+"\n"+item.data.url)
-        }
-    )
+            send("\\"+item.data.title+"\n"+item.data.url);
+        })
 	.fail(function(){
-		send("#redNothing there.")
-		})
-	};
+	    send("#redNothing there.");
+	}
+    );
+}
 
 function roulette(bullets) {
     var theone = Math.floor(Math.random() * 6)
     if (bullets > 6) {
-        CLIENT.submit("#red Too many bullets. Max is 6.")
+        CLIENT.submit("#redToo many bullets. Max is 6.")
     } else if (theone <= bullets - 1) {
         CLIENT.submit("#redBang! You're dead.")
     } else {
@@ -333,16 +333,16 @@ function define(word) {
             }
             return;
         })
-};
+}
 
 function weather(loc) {
- $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").success(function(data) {
-  CLIENT.submit('The current weather in ' + loc + ' is ' + data.query.results.channel.item.condition.temp + ' degrees, and it looks ' + data.query.results.channel.item.condition.text + ".");
- })
+    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").success(function(data) {
+        CLIENT.submit('The current weather in ' + loc + ' is ' + data.query.results.channel.item.condition.temp + ' degrees, and it looks ' + data.query.results.channel.item.condition.text + ".");
+    })
 }
 
 function iploc(ip) {
-        $.getJSON("https://freegeoip.net/json/" + ip).success(function(data) {
-            CLIENT.submit("The location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".")
-        })
-};
+    $.getJSON("https://freegeoip.net/json/" + ip).success(function(data) {
+        CLIENT.submit("The location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".")
+    })
+}
