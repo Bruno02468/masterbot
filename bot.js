@@ -26,7 +26,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !define [word]: Defines a word.\n";
     help += "         !roulette [n]: Plays russian roulette with n ammount of bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
-	help += "         !TIL: Gives a random fact. Learn something new!\n";
+    help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.";
 
 
