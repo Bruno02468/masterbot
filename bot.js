@@ -355,8 +355,11 @@ function weather(loc) {
 function iploc(ip) {
     $.getJSON("https://freegeoip.net/json/" + ip)
         .success(function(data) {
-            console.log(data);
-            send("#cyanThe location of the IP " + ip + " is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
+            if (data.city != "" && data.region_code != "" && data.country_name != "") {
+                send("#cyanThe location of the IP " + ip + " is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
+            } else {
+                send("#redInvalid IP '" + ip + "' or location unavailable.");
+            }
         }).fail(function() {
             send("#redNothing found for that IP.");
         }
