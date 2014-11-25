@@ -26,6 +26,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !define [word]: Defines a word.\n";
     help += "         !roulette [n]: Plays russian roulette with n ammount of bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
+	help += "         !TIL: Gives a random fact. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.";
 
 
@@ -106,6 +107,8 @@ CLIENT.on('message', function(data) {
             getTitles(text);
         } else if (text.contains("!count")) {
             getCount();
+        } else if (text.contains("!til")) {
+            til();
         } else if (text.contains("!trigger")) {
             toggleTrigger(name);
         } else if (text.contains("!insult")) {
@@ -365,3 +368,27 @@ function iploc(ip) {
         }
     );
 }
+
+function til(){
+    $.getJSON("http://api.reddit.com/r/todayilearned/hot.json?limit=100")
+        .success(function(response) {
+            resp = response.data.children;
+            var valid = []
+            $.map(resp, function(item){
+                if(item.data.is_self === false)
+                    valid.push(item)
+                    });
+            if(valid.length==0){
+                CLIENT.submit("No self posts could be found");
+                return;
+            }
+            var randomIndex = Math.floor(Math.random() * valid.length);
+            var item = valid[randomIndex].data;
+            if(!item.title)
+                CLIENT.submit("#green" + item.title)
+                else if(item.title.length<100)
+                    CLIENT.submit("#green"+item.title)
+                    else
+                    CLIENT.submit("#green"+item.title)
+                    })
+    };
