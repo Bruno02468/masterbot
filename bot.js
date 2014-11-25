@@ -26,7 +26,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !define [word]: Defines a word.\n";
     help += "         !roulette [n]: Plays russian roulette with n ammount of bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
-    help += "         !til: Gives a random fact someone learned. Learn something new!\n";
+	help += "         !TIL: Gives a random fact. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.";
 
 
@@ -57,6 +57,16 @@ function send(text) {
     }
 }
 
+var one_start = 500;
+setInterval(function () {
+    ++one_start;
+    var x = (Math.sin(one_start * .05) * .3 + 0.5)
+    y = (Math.cos(one_start * .05) * .3 + 0.5)
+    CLIENT.updateMousePosition(position = {
+        x: x,
+        y: y
+    });
+}, 50)
 
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
@@ -133,11 +143,6 @@ CLIENT.on('message', function(data) {
             sendRandom();
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
-			$.ajax({
-                url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
-                type : 'GET',
-                success : function(data) { console.log("Succesfully pushed to server!"); }
-            });
         }
             
     }
@@ -369,28 +374,26 @@ function iploc(ip) {
     );
 }
 
-function til() {
+function til(){
     $.getJSON("http://api.reddit.com/r/todayilearned/hot.json?limit=100")
         .success(function(response) {
             resp = response.data.children;
-            var valid = [];
+            var valid = []
             $.map(resp, function(item){
-                if (item.data.is_self === false) {
-                    valid.push(item);
-                }
-            });
-            if (valid.length==0) {
+                if(item.data.is_self === false)
+                    valid.push(item)
+                    });
+            if(valid.length==0){
                 CLIENT.submit("No self posts could be found");
                 return;
             }
             var randomIndex = Math.floor(Math.random() * valid.length);
             var item = valid[randomIndex].data;
-            if (!item.title) {
-                CLIENT.submit("#green" + item.title);
-            } else if (item.title.length<100) {
-                CLIENT.submit("#green"+item.title);
-            } else {
-                CLIENT.submit("#green"+item.title);
-            }
-    });
-}
+            if(!item.title)
+                CLIENT.submit("#green" + item.title)
+                else if(item.title.length<100)
+                    CLIENT.submit("#green"+item.title)
+                    else
+                    CLIENT.submit("#green"+item.title)
+                    })
+    };
