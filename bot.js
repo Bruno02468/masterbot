@@ -72,7 +72,7 @@ if (prm !== null) {
 
 CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
-CLIENT.submit("#greenMasterbot now running.");
+CLIENT.submit("/echo #greenMasterbot now running.");
 
 
 // Begin logging process and listen for commands
