@@ -342,9 +342,9 @@ function weather(loc) {
         if (data.query.results.channel.item.condition.temp != "") {
             var farenheit = data.query.results.channel.item.condition.temp;
             var celsius = (farenheit - 32) * (5 / 9);
-            msg = '#cyanThe current temperature in ' + loc + ' is ' + farenheit + ' ºF or ' + Math.floor(celsius) + ' ºC, and current weather is: ' + data.query.results.channel.item.condition.text + ".");
+            msg = '#cyanThe current temperature in ' + loc + ' is ' + farenheit + ' ºF or ' + Math.floor(celsius) + ' ºC, and current weather is: ' + data.query.results.channel.item.condition.text + ".";
         } else {
-            msg = "#redNothing found for given location!");
+            msg = "#redNothing found for given location!";
         }
     });
     send(msg);
