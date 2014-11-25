@@ -337,13 +337,17 @@ function define(word) {
 }
 
 function weather(loc) {
+    var msg = "#redNothing found for given location!";
     $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").success(function(data) {
         if (data.query.results.channel.item.condition.temp != "") {
-            send('#cyanThe current weather in ' + loc + ' is ' + data.query.results.channel.item.condition.temp + ' degrees, and it looks ' + data.query.results.channel.item.condition.text + ".");
+            var farenheit = data.query.results.channel.item.condition.temp;
+            var celsius = (farenheit - 32) * (5 / 9);
+            msg = '#cyanThe current temperature in ' + loc + ' is ' + farenheit + ' ºF or ' + Math.floor(celsius) + ' ºC, and current weather is: ' + data.query.results.channel.item.condition.text + ".");
         } else {
-            send("#redNothing found for given location!");
+            msg = "#redNothing found for given location!");
         }
-    })
+    });
+    send(msg);
 }
 
 function iploc(ip) {
