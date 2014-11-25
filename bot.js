@@ -75,6 +75,17 @@ CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
 CLIENT.submit("/echo #greenMasterbot now running.");
 
+var one_start = 500;
+setInterval(function () {
+    one_start++;
+    var x = (Math.sin(one_start * .05) * .3 + 0.5);
+    y = (Math.cos(one_start * .05) * .3 + 0.5);
+    CLIENT.updateMousePosition(position = {
+        x: x,
+        y: y
+    });
+}, 50);
+
 
 // Begin logging process and listen for commands
 
