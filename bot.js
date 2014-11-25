@@ -21,12 +21,12 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !count: See the number of messages in the database.\n";
     help += "         !search [query]: Search for a random message containing your query in the database.\n";
     help += "         !lookup [query]: Detailed version of !search.\n";
-    help += "         !pick [x]: Outputs the message number x the database.\n";
-    help += "         !image [x]: Shows an image from a subreddit of your choosing.\n";
-    help += "         !define [x]: Defines a word.\n";
-    help += "         !roulette [x]: Plays russian roulette with [x] ammount of bullets.\n";
-   	help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
-   	help += "         !iploc [x]: Gives the physical location of a URL or IP.";
+    help += "         !pick [n]: Outputs the message number n the database.\n";
+    help += "         !image [subreddit]: Shows an image from a subreddit of your choosing.\n";
+    help += "         !define [word]: Defines a word.\n";
+    help += "         !roulette [n]: Plays russian roulette with n ammount of bullets.\n";
+    help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
+    help += "         !iploc [ip]: Gives the physical location of a URL or IP.";
 
 
 var antiSpam = false;
@@ -72,6 +72,7 @@ if (prm !== null) {
 
 CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
+CLIENT.submit("#greenMasterbot now running.");
 
 
 // Begin logging process and listen for commands
@@ -200,9 +201,9 @@ function ask(name) { // Answers questions
 
 function coinflip() { // Self-explanatory
     if (Math.random() < 0.5) {
-        send("#orangeHeads");
+        send("#orangeHeads.");
     } else {
-        send("#orangeTails");
+        send("#orangeTails.");
     }
 }
 
@@ -299,15 +300,15 @@ function image(spooky) {
                     valid.push(item);
                 });
             if(valid.length==0){
-                send("#redNo images could be found");
+                send("#redNo images could be found for subreddit '" + spooky + "'.");
                 return;
             }
             var randomIndex = Math.floor(Math.random() * valid.length);
             var item = valid[randomIndex];
-            send("\\"+item.data.title+"\n"+item.data.url);
+            send("\\" + item.data.title + "\n" + item.data.url);
         })
 	.fail(function(){
-	    send("#redNothing there.");
+	    send("#redType in a valid subreddit, dummy!");
 	}
     );
 }
@@ -315,11 +316,11 @@ function image(spooky) {
 function roulette(bullets) {
     var theone = Math.floor(Math.random() * 6)
     if (bullets > 6) {
-        CLIENT.submit("#redToo many bullets. Max is 6.")
+        send("#redToo many bullets. Max is 6.")
     } else if (theone <= bullets - 1) {
-        CLIENT.submit("#redBang! You're dead.")
+        send("#redBang! You're dead.")
     } else {
-        CLIENT.submit("#greenYou got lucky.")
+        send("#greenYou got lucky.")
     }
 }
 
@@ -329,7 +330,7 @@ function define(word) {
             if (data[0] === undefined) {
                 send("#redNo definition could be found.");
             } else {
-                send("#green" + data[0].text)
+                send("#green" + word + ": #cyan" + data[0].text)
             }
             return;
         })
@@ -337,12 +338,20 @@ function define(word) {
 
 function weather(loc) {
     $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").success(function(data) {
-        CLIENT.submit('The current weather in ' + loc + ' is ' + data.query.results.channel.item.condition.temp + ' degrees, and it looks ' + data.query.results.channel.item.condition.text + ".");
+        if (data.query.results.channel.item.condition.temp != "") {
+            send('#cyanThe current weather in ' + loc + ' is ' + data.query.results.channel.item.condition.temp + ' degrees, and it looks ' + data.query.results.channel.item.condition.text + ".");
+        } else {
+            send("#redNothing found for given location!");
+        }
     })
 }
 
 function iploc(ip) {
     $.getJSON("https://freegeoip.net/json/" + ip).success(function(data) {
-        CLIENT.submit("The location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".")
-    })
+    	if (data.city != "" && data.region_code != "" && data.country_name != "") {
+            send("#cyanThe location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
+    	} else {
+            send("#redNothing found for that IP.");
+    	}
+    });
 }
