@@ -25,6 +25,8 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !image [x]: Shows an image from a subreddit of your choosing.\n";
     help += "         !define [x]: Defines a word.\n";
     help += "         !roulette [x]: Plays russian roulette with [x] ammount of bullets.\n";
+   	help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
+   	help += "         !iploc [x]: Gives the physical location of a URL or IP.";
 
 
 var antiSpam = false;
@@ -113,6 +115,10 @@ CLIENT.on('message', function(data) {
             roulette(argumentString);
         } else if (text.contains("!define")) {
             define(argumentString);
+        } else if (text.contains("!weather")) {
+            weather(argumentString);
+        } else if (text.contains("!iploc")) {
+            iploc(argumentString);
         } else if (text.contains("!search")) {
             search(argumentString, true);
         } else if (text.contains("!lookup")) {
@@ -123,7 +129,7 @@ CLIENT.on('message', function(data) {
             sendRandom();
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
-            $.ajax({
+			$.ajax({
                 url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
                 type : 'GET',
                 success : function(data) { console.log("Succesfully pushed to server!"); }
@@ -133,8 +139,6 @@ CLIENT.on('message', function(data) {
     }
         
 });
-
-CLIENT.submit("/echo #greenMasterbot is now running.");
 
 
 
@@ -285,31 +289,28 @@ function pick(line) {
     });
 }
 
-function image(spooky) { // Thanks, Mr. Guy!
-    var message = "#redPlease type in something that makes sense, dummy!";
-    try {
-        $.getJSON("http://api.reddit.com/r/" + spooky + "/hot.json?limit=100").success(function(response) {
+function image(spooky){
+    $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
+	.done(function(response) {
             resp = response.data.children;
-            var valid = [];
+            var valid = []
             $.map(resp, function(item){
-                if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url)) {
-                    valid.push(item);
-                }
-            });
+                if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
+                    valid.push(item)
+                    });
+            if(valid.length==0){
+                send("No images could be found");
+                return;
+            }
             var randomIndex = Math.floor(Math.random() * valid.length);
             var item = valid[randomIndex];
-            if (valid.length == 0 || item.data.url == "") {
-                message = "#redNo images found for '" + spooky + "'!";
-            } else {
-                message = "\\" + item.data.title + "\n" + item.data.url;
-            }
-        });
-    } catch (err) {
-        message = "#redPlease type in something that makes sense, dummy!";
-    } finally {
-        send(message);
-    }
-}
+            send("\\"+item.data.title+"\n"+item.data.url)
+        }
+    )
+	.fail(function(){
+		send("#redNothing there.")
+		})
+	};
 
 function roulette(bullets) {
     var theone = Math.floor(Math.random() * 6)
@@ -323,7 +324,7 @@ function roulette(bullets) {
 }
 
 function define(word) {
-    $.getJSON("http://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5")
+    $.getJSON("https://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5")
         .success(function(data) {
             if (data[0] === undefined) {
                 send("#redNo definition could be found.");
@@ -331,5 +332,17 @@ function define(word) {
                 send("#green" + data[0].text)
             }
             return;
+        })
+};
+
+function weather(loc) {
+ $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").success(function(data) {
+  CLIENT.submit('The current weather in ' + loc + ' is ' + data.query.results.channel.item.condition.temp + ' degrees, and it looks ' + data.query.results.channel.item.condition.text + ".");
+ })
+}
+
+function iploc(ip) {
+        $.getJSON("https://freegeoip.net/json/" + ip).success(function(data) {
+            CLIENT.submit("The location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".")
         })
 };
