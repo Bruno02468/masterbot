@@ -369,26 +369,28 @@ function iploc(ip) {
     );
 }
 
-function til(){
+function til() {
     $.getJSON("http://api.reddit.com/r/todayilearned/hot.json?limit=100")
         .success(function(response) {
             resp = response.data.children;
-            var valid = []
+            var valid = [];
             $.map(resp, function(item){
-                if(item.data.is_self === false)
-                    valid.push(item)
-                    });
-            if(valid.length==0){
+                if (item.data.is_self === false) {
+                    valid.push(item);
+                }
+            });
+            if (valid.length==0) {
                 CLIENT.submit("No self posts could be found");
                 return;
             }
             var randomIndex = Math.floor(Math.random() * valid.length);
             var item = valid[randomIndex].data;
-            if(!item.title)
-                CLIENT.submit("#green" + item.title)
-                else if(item.title.length<100)
-                    CLIENT.submit("#green"+item.title)
-                    else
-                    CLIENT.submit("#green"+item.title)
-                    })
-    };
+            if (!item.title) {
+                CLIENT.submit("#green" + item.title);
+            } else if (item.title.length<100) {
+                CLIENT.submit("#green"+item.title);
+            } else {
+                CLIENT.submit("#green"+item.title);
+            }
+    });
+}
