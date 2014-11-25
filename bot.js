@@ -292,7 +292,7 @@ function pick(line) {
 
 function image(spooky) {
     $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
-	.done(function(response) {
+        .done(function(response) {
             resp = response.data.children;
             var valid = []
             $.map(resp, function(item){
@@ -306,10 +306,9 @@ function image(spooky) {
             var randomIndex = Math.floor(Math.random() * valid.length);
             var item = valid[randomIndex];
             send("\\" + item.data.title + "\n" + item.data.url);
-        })
-	.fail(function(){
-	    send("#redType in a valid subreddit, dummy!");
-	}
+        }).fail(function(){
+            send("#redType in a valid subreddit, dummy!");
+        }
     );
 }
 
@@ -330,32 +329,36 @@ function define(word) {
             if (data[0] === undefined) {
                 send("#redNo definition could be found.");
             } else {
-                send("#green" + word + ": #cyan" + data[0].text)
+                send("#blue" + word + ": #cyan" + data[0].text)
             }
             return;
-        })
+        }
+    );
 }
 
 function weather(loc) {
-    var msg = "#redNothing found for given location!";
-    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys").success(function(data) {
-        if (data.query.results.channel.item.condition.temp != "") {
-            var farenheit = data.query.results.channel.item.condition.temp;
-            var celsius = (farenheit - 32) * (5 / 9);
-            msg = '#cyanThe current temperature in ' + loc + ' is ' + farenheit + ' ºF or ' + Math.floor(celsius) + ' ºC, and current weather is: ' + data.query.results.channel.item.condition.text + ".";
-        } else {
-            msg = "#redNothing found for given location!";
+    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
+        .success(function(data) {
+            if (data.query.results !== null) {
+                var farenheit = data.query.results.channel.item.condition.temp;
+                var celsius = (farenheit - 32) * (5 / 9);
+                send('#cyanThe current temperature in ' + loc + ' is ' + farenheit + ' ºF or ' + Math.floor(celsius) + ' ºC, and current weather is: ' + data.query.results.channel.item.condition.text + ".");
+            } else {
+                send("#redNothing found for given location!");
+            }
+        }).fail(function() {
+            send("#redNothing found for given location!");
         }
-    });
-    send(msg);
+    );
 }
 
 function iploc(ip) {
-    $.getJSON("https://freegeoip.net/json/" + ip).success(function(data) {
-    	if (data.city != "" && data.region_code != "" && data.country_name != "") {
+    $.getJSON("https://freegeoip.net/json/" + ip)
+        .success(function(data) {
+            console.log(data);
             send("#cyanThe location of that IP is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
-    	} else {
+        }).fail(function() {
             send("#redNothing found for that IP.");
-    	}
-    });
+        }
+    );
 }
