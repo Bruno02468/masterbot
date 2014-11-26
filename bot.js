@@ -28,7 +28,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
-	help += "         !quote [ip]: Returns a quote from the selected subreddit.";
+    help += "         !quote [subreddit]: Returns a quote from the selected subreddit.";
 
 
 var antiSpam = false;
@@ -170,7 +170,7 @@ function sendRandom() { // Fetches a random message from the server and sends it
     });
 }
 
-function getCount() { // Fetches the count of messages in the db and sends it
+function getCount() { // Fetches the count of logged messages and sends it
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/count.php",
         type : 'GET',
@@ -178,25 +178,27 @@ function getCount() { // Fetches the count of messages in the db and sends it
     });
 }
 
-function getTitle(url) { // Sends the title for a given YouTube URL
-    var video_id = url.split('v=')[1];
-    video_id = video_id.substring(0, video_id.indexOf('v=') + 12);
-    var ampersandPosition = video_id.indexOf('&');
-    if(ampersandPosition != -1) {
-        video_id = video_id.substring(0, ampersandPosition);
-    }
-    title = "#redCouldn't get title :-/";
-    
+function getTitle(url) { // Sends the title for a given YouTube video ID
+    var video_id = url.substring(url.indexOf("v=") + 2, url.indexOf("v=") + 13);
+    console.log("looking for id '" + video_id +  "'");
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/youtube.php?id=" + video_id,
         type : 'GET',
-        success : function(data) { send("#cyanTitle: " + data); }
+        success : function(data) { CLIENT.submit("#cyanTitle: " + data); }
     });
 }
 
-function getTitles(message) { // Will work on that later...
-    message = message.substring(message.indexOf("http"));
-    getTitle(message);
+function getTitles(message) { // Look for the titles of  YouTube videos in the messages
+    var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/gim;
+    var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gim;
+    var urls = message.match(urlpattern);
+    console.log(urls);
+    for (c in urls) {
+        var id = urls[c].match(idpattern)[0];
+        if (id !== undefined) {
+            getTitle(id);
+        }
+    }
 }
 
 function ask(name) { // Answers questions
@@ -278,7 +280,7 @@ function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random mess
     }
 }
 
-function insult(what) {
+function insult(what) { // Insult someone
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/api.py/insult",
         type : 'GET',
@@ -286,7 +288,7 @@ function insult(what) {
     });
 }
 
-function search(query, silent) {
+function search(query, silent) { // Query the database
     var s = "";
     if (silent) {
         s = "&silent";
@@ -299,7 +301,7 @@ function search(query, silent) {
     });
 }
 
-function pick(line) {
+function pick(line) { // Look up line from the database
     $.ajax({
         url : "http://bruno02468.com/spooks_bot/pick.php?line=" + encodeURIComponent(line),
         type : 'GET',
@@ -307,7 +309,7 @@ function pick(line) {
     });
 }
 
-function image(spooky) {
+function image(spooky) { // Gets a random image from a subreddit
     $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
         .done(function(response) {
             resp = response.data.children;
@@ -329,7 +331,7 @@ function image(spooky) {
     );
 }
 
-function roulette(bullets) {
+function roulette(bullets) { // Roulette function
     var theone = Math.floor(Math.random() * 6)
     if (bullets > 6) {
         send("#redToo many bullets. Max is 6.")
@@ -340,7 +342,7 @@ function roulette(bullets) {
     }
 }
 
-function define(word) {
+function define(word) { // Gets definition of a word
     $.getJSON("https://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5")
         .success(function(data) {
             if (data[0] === undefined) {
@@ -353,7 +355,7 @@ function define(word) {
     );
 }
 
-function weather(loc) {
+function weather(loc) { // Gets weather for a location
     $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
         .success(function(data) {
             if (data.query.results !== null) {
@@ -369,7 +371,7 @@ function weather(loc) {
     );
 }
 
-function iploc(ip) {
+function iploc(ip) { // Gets location of IP
     $.getJSON("https://freegeoip.net/json/" + ip)
         .success(function(data) {
             if (data.city != "" && data.region_code != "" && data.country_name != "") {
@@ -383,7 +385,7 @@ function iploc(ip) {
     );
 }
 
-function til() {
+function til() { // Says something someone has leanred today
     $.getJSON("http://api.reddit.com/r/todayilearned/hot.json?limit=100")
         .success(function(response) {
             resp = response.data.children;
@@ -409,7 +411,7 @@ function til() {
     });
 }
 
-function quote(sub) {
+function quote(sub) { // Looks for a quote in a subreddit
     $.getJSON("http://api.reddit.com/r/" + sub + "/hot.json?limit=100").success(function (response) {
         resp = response.data.children;
         var valid = [];
@@ -419,7 +421,7 @@ function quote(sub) {
             }
         });
         if (valid.length == 0) {
-            CLIENT.submit("No self posts could be found");
+            CLIENT.submit("#redNo posts could be found.");
             return;
         }
         var randomIndex = Math.floor(Math.random() * valid.length);
@@ -434,4 +436,4 @@ function quote(sub) {
             }
         }
     });
-};
+}
