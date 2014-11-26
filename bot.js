@@ -27,7 +27,8 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !roulette [n]: Plays russian roulette with n ammount of bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
-    help += "         !iploc [ip]: Gives the physical location of a URL or IP.";
+    help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
+	help += "         !quote [ip]: Returns a quote from the selected subreddit.";
 
 
 var antiSpam = false;
@@ -132,6 +133,8 @@ CLIENT.on('message', function(data) {
             define(argumentString);
         } else if (text.contains("!weather")) {
             weather(argumentString);
+        } else if (text.contains("!quote")) {
+            quote(argumentString);
         } else if (text.contains("!iploc")) {
             iploc(argumentString);
         } else if (text.contains("!search")) {
@@ -405,3 +408,30 @@ function til() {
             }
     });
 }
+
+function quote(sub) {
+    $.getJSON("http://api.reddit.com/r/" + sub + "/hot.json?limit=100").success(function (response) {
+        resp = response.data.children;
+        var valid = [];
+        $.map(resp, function (item) {
+            if (item.data.selftext.length < 300) {
+                valid.push(item);
+            }
+        });
+        if (valid.length == 0) {
+            CLIENT.submit("No self posts could be found");
+            return;
+        }
+        var randomIndex = Math.floor(Math.random() * valid.length);
+        var item = valid[randomIndex].data;
+        if (!item.selftext) {
+            CLIENT.submit(item.title);
+        } else {
+            if (item.selftext.length < 350) {
+                CLIENT.submit("\\" + item.title + "\n" + item.selftext);
+            } else {
+                CLIENT.submit("\\" + item.title + "\nRead More: " + item.url);
+            }
+        }
+    });
+};
