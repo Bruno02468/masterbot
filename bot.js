@@ -28,7 +28,8 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
-    help += "         !quote [subreddit]: Returns a quote from the selected subreddit.";
+    help += "         !quote [subreddit]: Returns a quote from the selected subreddit.\n";
+	help += "         !get msg: Retrieves the /msg.";
 
 
 var antiSpam = false;
@@ -121,6 +122,8 @@ CLIENT.on('message', function(data) {
             getCount();
         } else if (text.contains("!til")) {
             til();
+        } else if (text.contains("!get msg")) {
+            getMsg();
         } else if (text.contains("!trigger")) {
             toggleTrigger(name);
         } else if (text.contains("!insult")) {
@@ -436,4 +439,10 @@ function quote(sub) { // Looks for a quote in a subreddit
             }
         }
     });
+}
+
+function getMsg() {
+    msg = document.getElementById("sam").childNodes[0].childNodes[0].childNodes[0].innerHTML;
+	//amidoinitrite
+    send("The current /msg is set to: #2CE72C" + msg);
 }
