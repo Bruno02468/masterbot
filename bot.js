@@ -451,7 +451,7 @@ function getMsg() {
     if (sam === null) {
         send("#redThere is currently no /msg set, it seems.");
     } else {
-        var msg = escapeForSending(sam.childNodes[0].childNodes[0].childNodes[0].innerHTML);
+        var msg = escapeForSending(sam.childNodes[0].childNodes[0].childNodes[0].innerHTML).trim();
         send("The current /msg is set to: \"" + msg + "\".");
     }
 }
