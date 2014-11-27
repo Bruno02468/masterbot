@@ -29,7 +29,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
     help += "         !quote [subreddit]: Returns a quote from the selected subreddit.\n";
-	help += "         !get msg: Retrieves the /msg.";
+    help += "         !get msg: Retrieves the current /msg.";
 
 
 var antiSpam = false;
@@ -57,6 +57,11 @@ function send(text) {
         CLIENT.submit(text);
         spamFilters();
     }
+}
+
+function escapeForSending(string) {
+	var pat = /\/(?:.)/gi;
+	return string.replace(pat, "\\/");
 }
 
 
@@ -442,7 +447,11 @@ function quote(sub) { // Looks for a quote in a subreddit
 }
 
 function getMsg() {
-    msg = document.getElementById("sam").childNodes[0].childNodes[0].childNodes[0].innerHTML;
-	//amidoinitrite
-    send("The current /msg is set to: #2CE72C" + msg);
+    var sam = document.getElementById("sam");
+    if (sam === null) {
+        send("#redThere is currently no /msg set, it seems.");
+    } else {
+        var msg = escapeForSending(sam.childNodes[0].childNodes[0].childNodes[0].innerHTML);
+        send("The current /msg is set to: \"" + msg + "\".");
+    }
 }
