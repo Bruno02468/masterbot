@@ -1,4 +1,4 @@
-/*  Masterbot v3.[bigint]
+/*  Masterbot v4.[bigint]
  
     By get52, Bruno02468, Randomguy_ and Mr. Guy!
     - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
@@ -24,7 +24,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !pick [n]: Outputs the message number n the database.\n";
     help += "         !image [subreddit]: Shows an image from a subreddit of your choosing.\n";
     help += "         !define [word]: Defines a word.\n";
-    help += "         !roulette [n]: Plays russian roulette with n ammount of bullets.\n";
+    help += "         !roulette [n]: Plays russian roulette with n bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
