@@ -10,10 +10,11 @@
 var disabled = false;
 var answering = true;
 
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "anon2000", "Mishashule", "get52"]; // people who can control the bot
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "anon2000", "Mishashule", "get52"]; // People who can control the bot
 
 var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
     help += "Commands:\n";
+    help += "         !help: Get some help when using the bot!\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
     help += "         !roll: Roll a random 5-digit number.\n";
     help += "         !coinflip: Self-explanatory, I believe.\n";
@@ -55,7 +56,7 @@ setInterval(function() { // Clear the screen every hour
 }, 3600000);
 
 function send(text) {
-    if (!antiSpam && score < 6 && !disabled) {
+    if (!antiSpam && score < 7 && !disabled) {
         CLIENT.submit(text);
         spamFilters();
     }
@@ -126,6 +127,8 @@ CLIENT.on('message', function(data) {
         } else if (text.contains("!ask")) {
             ask(name);
         } else if (text.contains("!help")) {
+            CLIENT.submit("/pm " + name + "|" + help);
+        } else if (text.contains("!shouthelp")) {
             send(help);
         } else if (text.contains("watch?v=")) {
             getTitles(text);
