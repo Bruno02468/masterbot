@@ -29,7 +29,9 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
     help += "         !quote [subreddit]: Returns a quote from the selected subreddit.\n";
-    help += "         !get msg: Retrieves the current /msg.";
+    help += "         !get msg: Retrieves the current /msg.\n";
+    help += "         !stream: Download the Spooks Radio .pls!\n";
+    help += "         !songname: See what's currently blasting on Spooks Radio!";
 
 
 var antiSpam = false;
@@ -159,6 +161,8 @@ CLIENT.on('message', function(data) {
             pick(argumentString, true);
         } else if (text.contains("!songname")) {
             songname();
+        } else if (text.contains("!stream")) {
+            send("#cyanSpooks Radio Stream: http://216.170.123.121:8000/listen.pls?sid=1");
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
             sendRandom();
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
