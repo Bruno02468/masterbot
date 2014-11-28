@@ -65,7 +65,8 @@ function escapeForSending(string) {
 }
 
 
-String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+// Case insensitive string lookup function
+String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.toLowerCase()) != -1; };
 
 
 // Username popup and flair setter
@@ -83,14 +84,17 @@ CLIENT.submit("/flair $Montserrat|#808080" + botnick);
 CLIENT.submit("/echo #greenMasterbot now running.");
 
 var one_start = 500;
+var cursor = true;
 setInterval(function () {
-    one_start++;
-    var x = (Math.sin(one_start * .05) * .3 + 0.5);
-    y = (Math.cos(one_start * .05) * .3 + 0.5);
-    CLIENT.updateMousePosition(position = {
-        x: x,
-        y: y
-    });
+    if (cursor) {
+        one_start++;
+        var x = (Math.sin(one_start * .05) * .3 + 0.5);
+        y = (Math.cos(one_start * .05) * .3 + 0.5);
+        CLIENT.updateMousePosition(position = {
+            x: x,
+            y: y
+        });
+    }
 }, 50);
 
 
@@ -149,6 +153,8 @@ CLIENT.on('message', function(data) {
             search(argumentString, true);
         } else if (text.contains("!lookup")) {
             search(argumentString, false);
+        } else if (text.contains("!cursor")) {
+            toggleCursor(name);
         } else if (text.contains("!pick")) {
             pick(argumentString, true);
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
@@ -453,5 +459,18 @@ function getMsg() {
     } else {
         var msg = escapeForSending(sam.childNodes[0].childNodes[0].childNodes[0].innerHTML).trim();
         send("The current /msg is set to: \"" + msg + "\".");
+    }
+}
+
+function toggleCursor(name) { // Toggles the bot
+    if (masters.indexOf(name) > -1) {
+        cursor = !cursor;
+        if (cursor) {
+            send("#greenAuto move cursor now enabled.");
+        } else {
+            CLIENT.submit("#redAuto move cursor now disabled.");
+        }
+    } else {
+        CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle the automatic movement of the cursor. Stop it.");
     }
 }
