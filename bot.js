@@ -157,6 +157,8 @@ CLIENT.on('message', function(data) {
             toggleCursor(name);
         } else if (text.contains("!pick")) {
             pick(argumentString, true);
+        } else if (text.contains("!songname")) {
+            songname();
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
             sendRandom();
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
@@ -473,4 +475,18 @@ function toggleCursor(name) { // Toggles the bot
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle the automatic movement of the cursor. Stop it.");
     }
+}
+
+function songname() { // Gets  current song in Spooks Radio
+    $.ajax({
+        url : "http://bruno02468.com/spooks_bot/songname.php",
+        type : 'GET',
+        success : function(data) {
+            if (data !== "") {
+                send("#cyanCurrent song playing: " + data);
+            } else {
+                send("#redNo song playing, or radio is down.");
+            }
+        }
+    });
 }
