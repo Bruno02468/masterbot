@@ -10,7 +10,7 @@
 var disabled = false;
 var answering = true;
 
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "anon2000", "Mishashule", "get52"]; // People who can control the bot
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "get52", "InfraRaven"]; // People who can control the bot
 
 var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
     help += "Commands:\n";
@@ -312,16 +312,20 @@ function insult(what) { // Insult someone
 }
 
 function search(query, silent) { // Query the database
-    var s = "";
-    if (silent) {
-        s = "&silent";
+    if (query.contains("mish")) {
+    	send("#redMish is a butt-hurt, spoiled little bitch and you can't search anything related to him.");
+    } else {
+        var s = "";
+        if (silent) {
+            s = "&silent";
+        }
+        
+        $.ajax({
+            url : "http://bruno02468.com/spooks_bot/search.php?q=" + encodeURIComponent(query) + s,
+            type : 'GET',
+            success : function(data) { send(data); }
+        });
     }
-    
-    $.ajax({
-        url : "http://bruno02468.com/spooks_bot/search.php?q=" + encodeURIComponent(query) + s,
-        type : 'GET',
-        success : function(data) { send(data); }
-    });
 }
 
 function pick(line) { // Look up line from the database
