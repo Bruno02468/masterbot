@@ -8,9 +8,9 @@
 // Defining some basic functions and variables
 
 var disabled = false;
-var answering = true;
+var answering = false;
 
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "get52", "InfraRaven"]; // People who can control the bot
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "get52", "InfraRaven", "Kevin"]; // People who can control the bot
 
 var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
     help += "Commands:\n";
