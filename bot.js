@@ -12,7 +12,7 @@ var answering = false;
 
 var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "get52", "InfraRaven", "Kevin"]; // People who can control the bot
 
-var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
+var help =  "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
@@ -63,8 +63,8 @@ function send(text) {
 }
 
 function escapeForSending(string) {
-	var pat = /\/(?:.)/gi;
-	return string.replace(pat, "\\/");
+    var pat = /\/(?:.)/gi;
+    return string.replace(pat, "\\/");
 }
 
 
@@ -75,7 +75,7 @@ String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.
 // Username popup and flair setter
 
 var botnick = "Masterbottle"; 
-var prm = prompt("What should my name be?", "Masterbottle");
+var prm = prompt("What should my name be?", botnick);
 
 if (prm !== null) {
     botnick = prm;
@@ -85,6 +85,8 @@ if (prm !== null) {
 CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
 CLIENT.submit("/echo #greenMasterbot now running.");
+
+// Mouse bot -- possibly future-proofing AFK detection?
 
 var one_start = 500;
 var cursor = true;
@@ -170,8 +172,8 @@ CLIENT.on('message', function(data) {
             sendRandom();
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
-			$.ajax({
-                url : "http://bruno02468.com/spooks_bot/push.php?p=spooky&m=" + encodeURIComponent(text),
+            $.ajax({
+                url : "http://bruno02468.com/masterbot/api.php?action=log&msg=" + encodeURIComponent(text),
                 type : 'GET',
                 success : function(data) { console.log("Succesfully pushed to server!"); }
             });
@@ -187,7 +189,7 @@ CLIENT.on('message', function(data) {
 
 function sendRandom() { // Fetches a random message from the server and sends it
     $.ajax({
-        url : "http://bruno02468.com/spooks_bot/random.php",
+        url : "http://bruno02468.com/masterbot/api.php?action=random",
         type : 'GET',
         success : function(data) { send(data); }
     });
@@ -195,7 +197,7 @@ function sendRandom() { // Fetches a random message from the server and sends it
 
 function getCount() { // Fetches the count of logged messages and sends it
     $.ajax({
-        url : "http://bruno02468.com/spooks_bot/count.php",
+        url : "http://bruno02468.com/masterbot/api.php?action=count",
         type : 'GET',
         success : function(data) { send("So far, there are " + data + " messages in the database."); }
     });
@@ -205,7 +207,7 @@ function getTitle(url) { // Sends the title for a given YouTube video ID
     var video_id = url.substring(url.indexOf("v=") + 2, url.indexOf("v=") + 13);
     console.log("looking for id '" + video_id +  "'");
     $.ajax({
-        url : "http://bruno02468.com/spooks_bot/youtube.php?id=" + video_id,
+        url : "http://bruno02468.com/masterbot/api.php?=action=youtube&id=" + video_id,
         type : 'GET',
         success : function(data) { CLIENT.submit("#cyanTitle: " + data); }
     });
@@ -313,7 +315,7 @@ function insult(what) { // Insult someone
 
 function search(query, silent) { // Query the database
     if (query.contains("mish")) {
-    	send("#redMish is a butt-hurt, spoiled little bitch and you can't search anything related to him.");
+        send("#redMish is a butt-hurt, spoiled little bitch and you can't search anything related to him.");
     } else {
         var s = "";
         if (silent) {

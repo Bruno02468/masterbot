@@ -11,7 +11,7 @@
     
     function req($str) {
         if (!isset($_GET[$str])) {
-            die("Variable " . $str . " is needed for this request.");
+            die("GET variable \"" . $str . "\" is needed for this request.");
         } else {
             return $_GET[$str];
         }
@@ -20,12 +20,34 @@
     // Checking for malformed requests
     
     $action = req("action");
+    $logfile = "/home/bruno/Apache/masterbot.log";
     
+    // Logging to server
     if ($action == "log") {
-        $msg = req("msg");
-        
+        $msg = req("msg") . "\n";
+        file_put_contents($logfile, $msg, FILE_APPEND | LOCK_EX);
+        die();
     }
     
+    // Fetching random message
+    if ($action == "random") {
+        $f_contents = file($logfile);
+        $line = $f_contents[array_rand($f_contents)];
+        die($line);
+    }
     
+    // Fetching message count
+    if ($action == "random") {
+        $f_contents = file($logfile);
+        die(count($f_contents));
+    }
+    
+    // Fetching YouTube video title from ID
+    if ($action == "youtube") {
+        $id = req("id");
+        $xmlInfoVideo = simplexml_load_file("https://gdata.youtube.com/feeds/api/videos/" . $id . "?v=2&fields=title");
+        foreach($xmlInfoVideo->children() as $title) { $videoTitle = strtoupper((string) $title); }
+        die($videoTitle);
+    }
     
 ?>
