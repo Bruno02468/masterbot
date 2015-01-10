@@ -10,26 +10,26 @@
 var disabled = false;
 var answering = false;
 
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin"]; // People who can control the bot
+// People who can control the bot
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
 
 var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
+    help += "         !count: See the number of messages in the database.\n";
+    help += "         !pick [n]: Outputs the message number n the database.\n";
     help += "         !checkem: Roll a random 5-digit number.\n";
     help += "         !coinflip: Self-explanatory, I believe.\n";
     help += "         !ask: Ask me a yes/no question\n";
-    help += "         !count: See the number of messages in the database.\n";
-    help += "         !pick [n]: Outputs the message number n the database.\n";
     help += "         !image [subreddit]: Shows an image from a subreddit of your choosing.\n";
+    help += "         !quote [subreddit]: Returns a quote from the selected subreddit.\n";
     help += "         !define [word]: Defines a word.\n";
     help += "         !roulette [n]: Plays russian roulette with n bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
-    help += "         !quote [subreddit]: Returns a quote from the selected subreddit.\n";
     help += "         !get msg: Retrieves the current /msg.\n";
-    help += "         !stream: Download the Spooks Radio .pls!";
 
 // Anti-spam variables
 var antiSpam = false;
@@ -77,22 +77,18 @@ String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.
 
 
 // Username popup and flair setter
-
 var botnick = "Masterbottle"; 
 var prm = prompt("What should my name be?", botnick);
-
 if (prm !== null) {
     botnick = prm;
     CLIENT.submit("/nick " + botnick);
 }
-
 CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
 CLIENT.submit("/safe");
 CLIENT.submit("/echo #greenMasterbot now running.");
 
 // Mouse bot -- possibly future-proofing AFK detection?
-
 var one_start = 500;
 var cursor = true;
 setInterval(function () {
@@ -109,7 +105,6 @@ setInterval(function () {
 
 
 // Begin logging process and listen for commands
-
 CLIENT.on('message', function(data) {
     var r = $('#messages').children().slice(-1)[0].outerHTML.search(/message (personal-message|general-message|error-message|note-message|system-message)/g);
     var text = data.message.trim();
@@ -430,7 +425,8 @@ function til() {
     });
 }
 
-function quote(sub) { // Looks for a quote in a subreddit
+// Looks for a quote in a subreddit
+function quote(sub) {
     $.getJSON("http://api.reddit.com/r/" + sub + "/hot.json?limit=100").success(function (response) {
         resp = response.data.children;
         var valid = [];
