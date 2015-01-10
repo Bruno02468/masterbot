@@ -266,7 +266,7 @@ function roll(name) {
     if (quads) { lucky = " /!!/+quads"; }
     if (quints) { lucky = " /!!/+q/+u/+i/+n/+t/+s"; }
     
-    send("#orangeThey see " + name + " rollin' " + rand + ", check 'em" + lucky + "!");
+    send("#orangeThey see " + name + " rollin' " + rand + ", check 'em" + lucky + "#orange!");
 }
 
 // Lists masters
