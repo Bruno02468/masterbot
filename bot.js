@@ -261,10 +261,10 @@ function roll(name) {
     var quints = (quads && strn[1] == strn[0]);
     
     var lucky = "";
-    if (dubs) { lucky = " dat #greendubs"; }
-    if (trips) { lucky = " dat /!trips"; }
-    if (quads) { lucky = " dat /!!/+quads"; }
-    if (quints) { lucky = " dat /!!/+q/+u/+i/+n/+t/+s"; }
+    if (dubs) { lucky = " #greendubs"; }
+    if (trips) { lucky = " /!trips"; }
+    if (quads) { lucky = " /!!/+quads"; }
+    if (quints) { lucky = " /!!/+q/+u/+i/+n/+t/+s"; }
     
     send("#orangeThey see " + name + " rollin' " + rand + ", check 'em" + lucky + "!");
 }
