@@ -48,17 +48,14 @@
     // Fetching YouTube video title from ID
     if ($action == "youtube") {
         $id = req("id");
-        try {
-            $xmlInfoVideo = simplexml_load_file("https://gdata.youtube.com/feeds/api/videos/" . $id . "?v=2&fields=title");
-            foreach($xmlInfoVideo->children() as $title) { $videoTitle = strtoupper((string) $title); }
-            die($videoTitle);
-        } catch (Exception $e) {
-            die("#redUnable to find title for that video.");
-        }
-        die("#redUnable to find title for that video.");
+        $url = "http://gdata.youtube.com/feeds/api/videos/". $id;
+        $doc = new DOMDocument;
+        $doc->load($url);
+        $title = $doc->getElementsByTagName("title")->item(0)->nodeValue;
+        die($title);
     }
     
-    // Fetching  specific line
+    // Fetching a specific line
     if ($action == "pick") {
         $id = req("id") + 1;
         $file = file($logfile);
