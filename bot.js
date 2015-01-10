@@ -86,6 +86,7 @@ if (prm !== null) {
 CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
 CLIENT.submit("/safe");
+CLIENT.submit("/mute");
 CLIENT.submit("/echo #greenMasterbot now running.");
 
 // Mouse bot -- possibly future-proofing AFK detection?
