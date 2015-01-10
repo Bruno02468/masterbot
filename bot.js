@@ -1,4 +1,4 @@
-/*  Masterbot v4.[bigint]
+/*  Masterbot v5.[bigint]
  
     By get52, Bruno02468, Randomguy_ and Mr. Guy!
     - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
@@ -16,7 +16,7 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
-    help += "         !roll: Roll a random 5-digit number.\n";
+    help += "         !checkem: Roll a random 5-digit number.\n";
     help += "         !coinflip: Self-explanatory, I believe.\n";
     help += "         !ask: Ask me a yes/no question\n";
     help += "         !count: See the number of messages in the database.\n";
@@ -31,9 +31,12 @@ var help = "#cyanI am Masterbot, original code by get52, completely revamped by 
     help += "         !get msg: Retrieves the current /msg.\n";
     help += "         !stream: Download the Spooks Radio .pls!";
 
-
+// Anti-spam variables
 var antiSpam = false;
-function spamFilters() { // Increment spam score
+var score = 0;
+
+// Increment spam score
+function spamFilters() {
     score++;
     antiSpam = true;
     setTimeout(function() {
@@ -41,17 +44,20 @@ function spamFilters() { // Increment spam score
     }, 700);
 }
 
-var score = 0;
-setInterval(function() { // Decrement spam score
+
+// Decrement spam score
+setInterval(function() {
     if (score > 0) {
         score--;
     }
 }, 8000);
 
-setInterval(function() { // Clear the screen every hour
+// Clear the screen every hour
+setInterval(function() {
     CLIENT.submit("/clear");
 }, 3600000);
 
+// Send and trigger anti-spam
 function send(text) {
     if (!antiSpam && score < 7 && !disabled) {
         CLIENT.submit(text);
@@ -59,6 +65,7 @@ function send(text) {
     }
 }
 
+// Escaping strings
 function escapeForSending(string) {
     var pat = /\/(?:.)/gi;
     return string.replace(pat, "\\/");
@@ -81,6 +88,7 @@ if (prm !== null) {
 
 CLIENT.submit("/style default");
 CLIENT.submit("/flair $Montserrat|#808080" + botnick);
+CLIENT.submit("/safe");
 CLIENT.submit("/echo #greenMasterbot now running.");
 
 // Mouse bot -- possibly future-proofing AFK detection?
@@ -119,7 +127,7 @@ CLIENT.on('message', function(data) {
             toggle(name);
         } else if (text.contains("!masters")) {
             listMasters();
-        } else if (text.contains("!roll")) {
+        } else if (text.contains("!checkem")) {
             roll(name);
         } else if (text.contains("!coinflip")) {
             coinflip();
@@ -176,7 +184,9 @@ CLIENT.on('message', function(data) {
 
 // COMMAND FUNCTIONS
 
-function sendRandom() { // Fetches a random message from the server and sends it
+
+// Fetches a random message from the server and sends it
+function sendRandom() {
     $.ajax({
         url : "http://bruno02468.com/masterbot/api.php?action=random",
         type : 'GET',
@@ -184,7 +194,8 @@ function sendRandom() { // Fetches a random message from the server and sends it
     });
 }
 
-function getCount() { // Fetches the count of logged messages and sends it
+// Fetches the count of logged messages and sends it
+function getCount() {
     $.ajax({
         url : "http://bruno02468.com/masterbot/api.php?action=count",
         type : 'GET',
@@ -192,17 +203,19 @@ function getCount() { // Fetches the count of logged messages and sends it
     });
 }
 
-function getTitle(url) { // Sends the title for a given YouTube video ID
+// Sends the title for a given YouTube video ID
+function getTitle(url) {
     var video_id = url.substring(url.indexOf("v=") + 2, url.indexOf("v=") + 13);
     console.log("looking for id '" + video_id +  "'");
     $.ajax({
-        url : "http://bruno02468.com/masterbot/api.php?=action=youtube&id=" + video_id,
+        url : "http://bruno02468.com/masterbot/api.php?action=youtube&id=" + video_id,
         type : 'GET',
         success : function(data) { CLIENT.submit("#cyanTitle: " + data); }
     });
 }
 
-function getTitles(message) { // Look for the titles of  YouTube videos in the messages
+// Look for the titles of  YouTube videos in the messages
+function getTitles(message) {
     var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/gim;
     var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gim;
     var urls = message.match(urlpattern);
@@ -215,7 +228,8 @@ function getTitles(message) { // Look for the titles of  YouTube videos in the m
     }
 }
 
-function ask(name) { // Answers questions
+// Answers questions
+function ask(name) {
     switch (Math.floor(Math.random()*3)) {
         case (0):
             send("#redNo, " + name + ".");
@@ -232,7 +246,8 @@ function ask(name) { // Answers questions
     }
 }
 
-function coinflip() { // Self-explanatory
+// Self-explanatory
+function coinflip() {
     if (Math.random() < 0.5) {
         send("#orangeHeads.");
     } else {
@@ -240,7 +255,8 @@ function coinflip() { // Self-explanatory
     }
 }
 
-function roll(name) { // Rollin'
+// Rollin'
+function roll(name) {
     var rand = Math.floor(Math.random() * 90000) + 10000;
     var strn = "" + rand;
     
@@ -255,10 +271,11 @@ function roll(name) { // Rollin'
     if (quads) { lucky = " dat /!!/+quads"; }
     if (quints) { lucky = " dat /!!/+q/+u/+i/+n/+t/+s"; }
     
-    send("#orangeThey see " + name + " rollin' " + rand + ", they hatin'" + lucky + "!");
+    send("#orangeThey see " + name + " rollin' " + rand + ", check 'em" + lucky + "!");
 }
 
-function listMasters() { // Lists masters
+// Lists masters
+function listMasters() {
     var msg = "#orangeMy masters are ";
     for (var i = 0; i < masters.length - 1; i++) {
         msg += masters[i] + ", ";
@@ -267,7 +284,8 @@ function listMasters() { // Lists masters
     send(msg);
 }
 
-function toggle(name) { // Toggles the bot
+// Toggles the bot
+function toggle(name) {
     if (masters.indexOf(name) > -1) {
         disabled = !disabled;
         if (!disabled) {
@@ -280,7 +298,8 @@ function toggle(name) { // Toggles the bot
     }
 }
 
-function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random message sending
+// Toggles "?"-in-the-end trigger for random message sending
+function toggleTrigger(name) {
     if (masters.indexOf(name) > -1) {
         if (answering) {
             send("#redQuestion answering now disabled.");
@@ -294,24 +313,8 @@ function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random mess
     }
 }
 
-/*function search(query, silent) { // Query the database
-    if (query.contains("mish")) {
-        send("#redMish is a butt-hurt, spoiled little bitch and you can't search anything related to him.");
-    } else {
-        var s = "";
-        if (silent) {
-            s = "&silent";
-        }
-        
-        $.ajax({
-            url : "http://bruno02468.com/spooks_bot/search.php?q=" + encodeURIComponent(query) + s,
-            type : 'GET',
-            success : function(data) { send(data); }
-        });
-    }
-}*/
-
-function pick(line) { // Look up line from the database
+// Look up line from the database
+function pick(line) {
     $.ajax({
         url : "http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line),
         type : 'GET',
@@ -319,7 +322,8 @@ function pick(line) { // Look up line from the database
     });
 }
 
-function image(spooky) { // Gets a random image from a subreddit
+// Gets a random image from a subreddit
+function image(spooky) {
     $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
         .done(function(response) {
             resp = response.data.children;
@@ -341,7 +345,8 @@ function image(spooky) { // Gets a random image from a subreddit
     );
 }
 
-function roulette(bullets) { // Roulette function
+// Roulette function
+function roulette(bullets) {
     var theone = Math.floor(Math.random() * 6)
     if (bullets > 6) {
         send("#redToo many bullets. Max is 6.")
@@ -352,7 +357,8 @@ function roulette(bullets) { // Roulette function
     }
 }
 
-function define(word) { // Gets definition of a word
+// Gets definition of a word
+function define(word) {
     $.getJSON("https://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5")
         .success(function(data) {
             if (data[0] === undefined) {
@@ -365,7 +371,8 @@ function define(word) { // Gets definition of a word
     );
 }
 
-function weather(loc) { // Gets weather for a location
+// Gets weather for a location
+function weather(loc) {
     $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
         .success(function(data) {
             if (data.query.results !== null) {
@@ -381,7 +388,8 @@ function weather(loc) { // Gets weather for a location
     );
 }
 
-function iploc(ip) { // Gets location of IP
+// Gets location of IP
+function iploc(ip) {
     $.getJSON("https://freegeoip.net/json/" + ip)
         .success(function(data) {
             if (data.city != "" && data.region_code != "" && data.country_name != "") {
@@ -395,7 +403,8 @@ function iploc(ip) { // Gets location of IP
     );
 }
 
-function til() { // Says something someone has leanred today
+// Says something someone has leanred today
+function til() {
     $.getJSON("http://api.reddit.com/r/todayilearned/hot.json?limit=100")
         .success(function(response) {
             resp = response.data.children;
@@ -448,6 +457,7 @@ function quote(sub) { // Looks for a quote in a subreddit
     });
 }
 
+// Crazy function to get the current /msg
 function getMsg() {
     var sam = document.getElementById("sam");
     if (sam === null) {
@@ -458,7 +468,8 @@ function getMsg() {
     }
 }
 
-function toggleCursor(name) { // Toggles the bot
+// Toggles the bot
+function toggleCursor(name) {
     if (masters.indexOf(name) > -1) {
         cursor = !cursor;
         if (cursor) {
