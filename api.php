@@ -40,9 +40,9 @@
     }
     
     // Fetching message count
-    if ($action == "random") {
+    if ($action == "count") {
         $f_contents = file($logfile);
-        die(count($f_contents));
+        echo count($f_contents);
     }
     
     // Fetching YouTube video title from ID
