@@ -1,1 +1,1 @@
-javascript: var request = null;request = new XMLHttpRequest();request.open("GET", "http://bruno02468.com/spooks_bot/script.php", false);request.send(null);var script = request.responseText;eval(script);console.log("Booted up from run script successfully!");
+javascript: var request = null;request = new XMLHttpRequest();request.open("GET", "http://bruno02468.com/masterbot/script.php", false);request.send(null);var script = request.responseText;eval(script);console.log("Booted up from run script successfully!");
