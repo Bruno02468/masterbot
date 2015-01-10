@@ -10,9 +10,9 @@
 var disabled = false;
 var answering = false;
 
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "get52", "InfraRaven", "Kevin"]; // People who can control the bot
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin"]; // People who can control the bot
 
-var help =  "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
+var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
@@ -20,8 +20,6 @@ var help =  "#cyanI am Masterbot, original code by get52, completely revamped by
     help += "         !coinflip: Self-explanatory, I believe.\n";
     help += "         !ask: Ask me a yes/no question\n";
     help += "         !count: See the number of messages in the database.\n";
-    help += "         !search [query]: Search for a random message containing your query in the database.\n";
-    help += "         !lookup [query]: Detailed version of !search.\n";
     help += "         !pick [n]: Outputs the message number n the database.\n";
     help += "         !image [subreddit]: Shows an image from a subreddit of your choosing.\n";
     help += "         !define [word]: Defines a word.\n";
@@ -31,8 +29,7 @@ var help =  "#cyanI am Masterbot, original code by get52, completely revamped by
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
     help += "         !quote [subreddit]: Returns a quote from the selected subreddit.\n";
     help += "         !get msg: Retrieves the current /msg.\n";
-    help += "         !stream: Download the Spooks Radio .pls!\n";
-    help += "         !songname: See what's currently blasting on Spooks Radio!";
+    help += "         !stream: Download the Spooks Radio .pls!";
 
 
 var antiSpam = false;
@@ -142,8 +139,6 @@ CLIENT.on('message', function(data) {
             getMsg();
         } else if (text.contains("!trigger")) {
             toggleTrigger(name);
-        } else if (text.contains("!insult")) {
-            insult(argumentString);
         } else if (text.contains("!image")) {
             image(argumentString);
         } else if (text.contains("!roulette")) {
@@ -156,16 +151,10 @@ CLIENT.on('message', function(data) {
             quote(argumentString);
         } else if (text.contains("!iploc")) {
             iploc(argumentString);
-        } else if (text.contains("!search")) {
-            search(argumentString, true);
-        } else if (text.contains("!lookup")) {
-            search(argumentString, false);
         } else if (text.contains("!cursor")) {
             toggleCursor(name);
         } else if (text.contains("!pick")) {
             pick(argumentString, true);
-        } else if (text.contains("!songname")) {
-            songname();
         } else if (text.contains("!stream")) {
             send("#cyanSpooks Radio Stream: http://216.170.123.121:8000/listen.pls?sid=1");
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
@@ -305,15 +294,7 @@ function toggleTrigger(name) { // Toggles "?"-in-the-end trigger for random mess
     }
 }
 
-function insult(what) { // Insult someone
-    $.ajax({
-        url : "http://bruno02468.com/spooks_bot/api.py/insult",
-        type : 'GET',
-        success : function(data) { send(what + ", " + data.toLowerCase()); }
-    });
-}
-
-function search(query, silent) { // Query the database
+/*function search(query, silent) { // Query the database
     if (query.contains("mish")) {
         send("#redMish is a butt-hurt, spoiled little bitch and you can't search anything related to him.");
     } else {
@@ -328,11 +309,11 @@ function search(query, silent) { // Query the database
             success : function(data) { send(data); }
         });
     }
-}
+}*/
 
 function pick(line) { // Look up line from the database
     $.ajax({
-        url : "http://bruno02468.com/spooks_bot/pick.php?line=" + encodeURIComponent(line),
+        url : "http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line),
         type : 'GET',
         success : function(data) { send(data); }
     });
@@ -488,18 +469,4 @@ function toggleCursor(name) { // Toggles the bot
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle the automatic movement of the cursor. Stop it.");
     }
-}
-
-function songname() { // Gets  current song in Spooks Radio
-    $.ajax({
-        url : "http://bruno02468.com/spooks_bot/songname.php",
-        type : 'GET',
-        success : function(data) {
-            if (data !== "") {
-                send("#cyanCurrent song playing: " + data);
-            } else {
-                send("#redNo song playing, or radio is down.");
-            }
-        }
-    });
 }

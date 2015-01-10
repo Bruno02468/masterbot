@@ -9,6 +9,10 @@
      * Author: Bruno02468
      */
     
+    // Bypassing same-origin policy
+    header("Access-Control-Allow-Origin: *");
+    
+    // Requiring GET variables, VERY useful function
     function req($str) {
         if (!isset($_GET[$str])) {
             die("GET variable \"" . $str . "\" is needed for this request.");
@@ -17,8 +21,7 @@
         }
     }
     
-    // Checking for malformed requests
-    
+    // basic variables
     $action = req("action");
     $logfile = "/home/bruno/Apache/masterbot.log";
     
@@ -45,9 +48,26 @@
     // Fetching YouTube video title from ID
     if ($action == "youtube") {
         $id = req("id");
-        $xmlInfoVideo = simplexml_load_file("https://gdata.youtube.com/feeds/api/videos/" . $id . "?v=2&fields=title");
-        foreach($xmlInfoVideo->children() as $title) { $videoTitle = strtoupper((string) $title); }
-        die($videoTitle);
+        try {
+            $xmlInfoVideo = simplexml_load_file("https://gdata.youtube.com/feeds/api/videos/" . $id . "?v=2&fields=title");
+            foreach($xmlInfoVideo->children() as $title) { $videoTitle = strtoupper((string) $title); }
+            die($videoTitle);
+        } catch (Exception $e) {
+            die("#redUnable to find title for that video.");
+        }
+        die("#redUnable to find title for that video.");
+    }
+    
+    // Fetching  specific line
+    if ($action == "pick") {
+        $id = req("id") + 1;
+        $file = file($logfile);
+        $c = count($file);
+        if ($id > $c or $id <= 0) {
+            die("#redBad index, max!");
+        } else {
+            die($file[$id]);
+        }
     }
     
 ?>
