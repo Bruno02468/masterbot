@@ -12,8 +12,9 @@ var answering = false;
 
 // People who can control the bot
 var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
+var permabanned = ["gaybutts", "get52"];
 
-var help = "#cyanI am Masterbot, original code by get52, completely revamped by Bruno02468, Mr. Guy and Randomguy_!\n";
+var help = "#cyanI am Masterbot, a creation of Bruno02468, Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
@@ -71,6 +72,10 @@ function escapeForSending(string) {
     return string.replace(pat, "\\/");
 }
 
+// Banning the perma-banned
+for (var i in permabanned) {
+    CLIENT.submit("/block " + permabanned[i]);
+}
 
 // Case insensitive string lookup function
 String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.toLowerCase()) != -1; };
@@ -153,6 +158,10 @@ CLIENT.on('message', function(data) {
             weather(argumentString);
         } else if (text.contains("!quote")) {
             quote(argumentString);
+        } else if (text.contains("!block")) {
+            blockban(name, argumentString);
+        } else if (text.contains("!unblock")) {
+            unblockban(name, argumentString);
         } else if (text.contains("!iploc")) {
             iploc(argumentString);
         } else if (text.contains("!cursor")) {
@@ -293,6 +302,27 @@ function toggle(name) {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle me. Stop it.");
     }
 }
+
+// Block someone from using the bot
+function blockban(name, target) {
+    if (masters.indexOf(name) > -1) {
+        CLIENT.submit("#redMaster " + name + " has blocked " + target + " from using the bot.");
+        CLIENT.submit("/block " + target);
+    } else {
+        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
+    }
+}
+
+// Unblock someone from using the bot
+function unblockban(name, target) {
+    if (masters.indexOf(name) > -1) {
+        CLIENT.submit("/unblock " + target);
+        CLIENT.submit("#greenMaster " + name + " has unblocked " + target + " from using the bot.");
+    } else {
+        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
+    }
+}
+
 
 // Toggles "?"-in-the-end trigger for random message sending
 function toggleTrigger(name) {
