@@ -1,20 +1,34 @@
-/*  Masterbot v5.[bigint]
- 
-    By get52, Bruno02468, Randomguy_ and Mr. Guy!
-    - PLEASE EDIT THE HELP VARIABLE ACCORDINGLY IN CASE YOU CHANGE COMMANDS ~ Bruno
-*/
+/* +=========================================================================+
+ * |                                                                         |
+ * |              Masterbot, the coolest Spooks bot!                         |
+ * |                                                                         |
+ * |      Main programmer: Bruno02468                                        |
+ * |    Other programmers: Randomguy and Mr. Guy                             |
+ * |              License: GNU GPLv3                                         |
+ * |                                                                         |
+ * |                                                                         |
+ * |    Do not run this code under any circumstances.                        |
+ * |                                                                         |
+ * |    Also, please edit the help variable accordingly                      |
+ * |    in case you change commands.                                         |
+ * |                                                                         |
+ * |    Thanks.                                                              |
+ * |                                                                         |
+ * |       ~ Bruno02468                                                      |
+ * |                                                                         |
+ * +=========================================================================+
+ */
 
 
 // Defining some basic functions and variables
-
 var disabled = false;
 var answering = false;
 
 // People who can control the bot
 var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
-var permabanned = ["gaybutts", "get52", "DoomsdayMuffinz"];
+var permabanned = ["gaybutts", "get52", "DoomsdayMuffinz", "SickNick"];
 
-var help = "#cyanI am Masterbot, a creation of Bruno02468, Randomguy and Mr. Guy!\n";
+var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
     help += "         !random: Send a random message from the database filled with all logged messages.\n";
@@ -81,7 +95,7 @@ for (var i in permabanned) {
 String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.toLowerCase()) != -1; };
 
 
-// Username popup and flair setter
+// Username popup and flair setter, basic setup
 var botnick = "Masterbottle"; 
 var prm = prompt("What should my name be?", botnick);
 if (prm !== null) {
@@ -186,9 +200,9 @@ CLIENT.on('message', function(data) {
 });
 
 
-
-// COMMAND FUNCTIONS
-
+// ==============================
+// |     COMMAND FUNCTIONS      |
+// ==============================
 
 // Fetches a random message from the server and sends it
 function sendRandom() {
@@ -251,7 +265,7 @@ function ask(name) {
     }
 }
 
-// Self-explanatory
+// Coin flippin'
 function coinflip() {
     if (Math.random() < 0.5) {
         send("#orangeHeads.");
@@ -270,13 +284,14 @@ function roll(name) {
     var quads = (trips && strn[2] == strn[1]);
     var quints = (quads && strn[1] == strn[0]);
     
-    var lucky = "";
-    if (dubs) { lucky = " #greendubs"; }
-    if (trips) { lucky = " /!trips"; }
-    if (quads) { lucky = " /!!/+quads"; }
-    if (quints) { lucky = " /!!/+q/+u/+i/+n/+t/+s"; }
+    var lucky = ", check those ";
+    if (quints) { lucky += "/!!/+q/+u/+i/+n/+t/+s"; }
+    else if (quads) { lucky += "/!!/+quads"; }
+    else if (trips) { lucky += "/!trips"; }
+    else if (dubs) { lucky += "#greendubs"; }
+    else { lucky = ""; }
     
-    send("#orangeThey see " + name + " rollin' " + rand + ", check 'em" + lucky + "#orange!");
+    send("#orange" + name + " rolled " + rand + lucky + "#orange!");
 }
 
 // Lists masters
