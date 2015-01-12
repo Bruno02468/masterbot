@@ -45,14 +45,15 @@
         echo count($f_contents);
     }
     
-    // Fetching YouTube video title from ID
+    // Fetching YouTube video title and thumbnail from ID
     if ($action == "youtube") {
         $id = req("id");
         $url = "http://gdata.youtube.com/feeds/api/videos/". $id;
         $doc = new DOMDocument;
         $doc->load($url);
         $title = $doc->getElementsByTagName("title")->item(0)->nodeValue;
-        die($title);
+        $thumb = "\nhttps://img.youtube.com/vi/" . $id . "/default.jpg";
+        die($title . $thumb);
     }
     
     // Fetching a specific line
