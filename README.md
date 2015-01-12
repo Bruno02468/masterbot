@@ -38,9 +38,9 @@ All the code here is licensed under the GNU General Public License v3.
 
 
 
-&nbsp; Thanks
+&nbsp; &nbsp; Thanks for your time.
 
 
 
 
-&nbsp; &nbsp;~ Bruno02468
+&nbsp; &nbsp; &nbsp; &nbsp; ~ Bruno02468
