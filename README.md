@@ -18,6 +18,6 @@ You can NOT:
 
 All the code here is licensed under the GNU General Public License v3.
 
-    Thanks.
+  Thanks
 
-        ~ Bruno02468
+   ~ Bruno02468
