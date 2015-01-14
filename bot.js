@@ -45,7 +45,8 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
     help += "         !get msg: Retrieves the current /msg.\n";
-
+    help += "         !radio: Retrieves the URL for the Spooks Radio Stream.\n";
+    help += "         !track: See what's currently blasting on Spooks Radio!";
 // Anti-spam variables
 var antiSpam = false;
 var score = 0;
@@ -180,6 +181,10 @@ CLIENT.on('message', function(data) {
             iploc(argumentString);
         } else if (text.contains("!cursor")) {
             toggleCursor(name);
+        } else if (text.contains("!radio")) {
+            send("#cyanYou can listen to Spooks Radio here: http://spooksradio.tk");
+        } else if (text.contains("!track")) {
+            getSong();
         } else if (text.contains("!pick")) {
             pick(argumentString, true);
         } else if (text.contains("!stream")) {
@@ -522,4 +527,14 @@ function toggleCursor(name) {
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle the automatic movement of the cursor. Stop it.");
     }
+}
+
+// Say the current track on Spooks Radio
+function getSong() {
+    var request = null;
+    request = new XMLHttpRequest();
+    request.open("GET", "http://spooksradio.tk/currentsong_bruno.php", false);
+    request.send(null);
+    var songname = request.responseText;
+    send("#cyanSpooks Radio is currently playing " + songname + ".");
 }
