@@ -81,6 +81,15 @@ function send(text) {
     }
 }
 
+// Fetching something via AJAX
+function ajaxGet(url) {
+    var request = null;
+    request = new XMLHttpRequest();
+    request.open("GET", url, false);
+    request.send(null);
+    return request.responseText;
+}
+
 // Escaping strings
 function escapeForSending(string) {
     var pat = /\/(?:.)/gi;
@@ -211,31 +220,20 @@ CLIENT.on('message', function(data) {
 
 // Fetches a random message from the server and sends it
 function sendRandom() {
-    $.ajax({
-        url : "http://bruno02468.com/masterbot/api.php?action=random",
-        type : 'GET',
-        success : function(data) { send(data); }
-    });
+    send(ajaxGet("http://bruno02468.com/masterbot/api.php?action=random"));
 }
 
 // Fetches the count of logged messages and sends it
 function getCount() {
-    $.ajax({
-        url : "http://bruno02468.com/masterbot/api.php?action=count",
-        type : 'GET',
-        success : function(data) { send("So far, there are " + data + " messages in the database."); }
-    });
+    var data = ajaxGet("http://bruno02468.com/masterbot/api.php?action=count");
+    send("So far, there are " + data + " messages in the database.");
 }
 
 // Sends the title for a given YouTube video ID
 function getTitle(url) {
     var video_id = url.substring(url.indexOf("v=") + 2, url.indexOf("v=") + 13);
-    console.log("looking for id '" + video_id +  "'");
-    $.ajax({
-        url : "http://bruno02468.com/masterbot/api.php?action=youtube&id=" + video_id,
-        type : 'GET',
-        success : function(data) { CLIENT.submit("#cyanTitle: " + data); }
-    });
+    var data = ajaxGet("http://bruno02468.com/masterbot/api.php?action=youtube&id=" + video_id);
+    CLIENT.submit("#cyanTitle: " + data);
 }
 
 // Look for the titles of  YouTube videos in the messages
@@ -361,11 +359,7 @@ function toggleTrigger(name) {
 
 // Look up line from the database
 function pick(line) {
-    $.ajax({
-        url : "http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line),
-        type : 'GET',
-        success : function(data) { send(data); }
-    });
+    send(getAjax("http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line)));
 }
 
 // Gets a random image from a subreddit
@@ -531,10 +525,6 @@ function toggleCursor(name) {
 
 // Say the current track on Spooks Radio
 function getSong() {
-    var request = null;
-    request = new XMLHttpRequest();
-    request.open("GET", "http://spooksradio.tk/currentsong_bruno.php", false);
-    request.send(null);
-    var songname = request.responseText;
+    ajaxGet("http://spooksradio.tk/currentsong_bruno.php");
     send("#cyanSpooks Radio is currently playing " + songname + ".");
 }
