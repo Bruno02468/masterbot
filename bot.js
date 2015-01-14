@@ -537,7 +537,7 @@ function getSong() {
 
 // I'd just like to interject for a moment...
 function interject(s) {
-    s = s.trim();
+    s = escapeForSending(s.trim());
     if (!s || s == "!interject") {
         s = "Linux";
     }
