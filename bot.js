@@ -525,6 +525,9 @@ function toggleCursor(name) {
 
 // Say the current track on Spooks Radio
 function getSong() {
-    ajaxGet("http://spooksradio.tk/currentsong_bruno.php");
+    var songname = ajaxGet("http://spooksradio.tk/currentsong_bruno.php");
+    if (!songname) {
+        songname = "nothing at the moment";
+    }
     send("#cyanSpooks Radio is currently playing " + songname + ".");
 }
