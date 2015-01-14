@@ -106,14 +106,14 @@ String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.
 
 
 // Username popup and flair setter, basic setup
-var botnick = "Masterbottle"; 
+var botnick = "Masterbot"; 
 var prm = prompt("What should my name be?", botnick);
 if (prm !== null) {
     botnick = prm;
     CLIENT.submit("/nick " + botnick);
 }
 CLIENT.submit("/style default");
-CLIENT.submit("/flair $Montserrat|#808080" + botnick);
+CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
 CLIENT.submit("/safe");
 CLIENT.submit("/mute");
 CLIENT.submit("/echo #greenMasterbot now running.");
@@ -359,7 +359,7 @@ function toggleTrigger(name) {
 
 // Look up line from the database
 function pick(line) {
-    send(getAjax("http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line)));
+    send(ajaxGet("http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line)));
 }
 
 // Gets a random image from a subreddit
