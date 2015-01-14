@@ -58,13 +58,13 @@
     
     // Fetching a specific line
     if ($action == "pick") {
-        $id = req("id") + 1;
+        $id = req("id");
         $file = file($logfile);
         $c = count($file);
         if ($id > $c or $id <= 0) {
-            die("#redBad index, max!");
+            die("#redBad index, man!");
         } else {
-            die($file[$id]);
+            die($file[$id-1]);
         }
     }
     
