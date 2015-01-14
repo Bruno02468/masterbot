@@ -46,7 +46,8 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
     help += "         !get msg: Retrieves the current /msg.\n";
     help += "         !radio: Retrieves the URL for the Spooks Radio Stream.\n";
-    help += "         !track: See what's currently blasting on Spooks Radio!";
+    help += "         !track: See what's currently blasting on Spooks Radio!\n";
+    help += "         !interject [something]: I'd just like to interject for a moment...";
 // Anti-spam variables
 var antiSpam = false;
 var score = 0;
