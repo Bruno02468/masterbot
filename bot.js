@@ -198,6 +198,8 @@ CLIENT.on('message', function(data) {
             pick(argumentString, true);
         } else if (text.contains("!stream")) {
             send("#cyanSpooks Radio Stream: http://216.170.123.121:8000/listen.pls?sid=1");
+        } else if (text.contains("!interject")) {
+            interject(argumentString);
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
             sendRandom();
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
@@ -530,4 +532,14 @@ function getSong() {
         songname = "nothing at the moment";
     }
     send("#cyanSpooks Radio is currently playing " + songname + ".");
+}
+
+// I'd just like to interject for a moment...
+function interject(s) {
+    s = s.trim();
+    if (!s || s == "!interject") {
+        s = "Linux";
+    }
+    var quote = "/%I'd just like to interject for a moment. What you’re referring to as " + s + ", is in fact, GNU\/" + s + ", or as I’ve recently taken to calling it, GNU plus " + s + ".";
+    send(quote);
 }
