@@ -47,6 +47,7 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !get msg: Retrieves the current /msg.\n";
     help += "         !radio: Retrieves the URL for the Spooks Radio Stream.\n";
     help += "         !track: See what's currently blasting on Spooks Radio!\n";
+    help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
     help += "         !interject [something]: I'd just like to interject for a moment...";
 // Anti-spam variables
 var antiSpam = false;
@@ -199,6 +200,8 @@ CLIENT.on('message', function(data) {
             pick(argumentString, true);
         } else if (text.contains("!stream")) {
             send("#cyanSpooks Radio Stream: http://216.170.123.121:8000/listen.pls?sid=1");
+        } else if (text.contains("!frame")) {
+            frame(argumentString); 
         } else if (text.contains("!interject")) {
             interject(argumentString);
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
@@ -544,3 +547,10 @@ function interject(s) {
     var quote = "/%I'd just like to interject for a moment. What you’re referring to as " + s + ", is in fact, GNU\/" + s + ", or as I’ve recently taken to calling it, GNU plus " + s + ".";
     send(quote);
 }
+
+// Put stuff in the frame
+function frame(url) {
+    var theme = "url(" + url + ") 37.5% 10% / 25% 80% no-repeat, url(http://fc03.deviantart.net/fs70/i/2013/059/f/b/wall_frame_2_by_collect_and_creat-d5whjgt.png) center / cover no-repeat #fff";
+    send("/theme " + theme);
+}
+
