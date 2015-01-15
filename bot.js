@@ -48,6 +48,7 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !radio: Retrieves the URL for the Spooks Radio Stream.\n";
     help += "         !track: See what's currently blasting on Spooks Radio!\n";
     help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
+    help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
     help += "         !interject [something]: I'd just like to interject for a moment...";
 // Anti-spam variables
 var antiSpam = false;
@@ -202,6 +203,8 @@ CLIENT.on('message', function(data) {
             send("#cyanSpooks Radio Stream: http://216.170.123.121:8000/listen.pls?sid=1");
         } else if (text.contains("!frame")) {
             frame(argumentString); 
+        } else if (text.contains("!corkboard")) {
+            corkboard(argumentString); 
         } else if (text.contains("!interject")) {
             interject(argumentString);
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
@@ -551,6 +554,11 @@ function interject(s) {
 // Put stuff in the frame
 function frame(url) {
     var theme = "url(" + url + ") 37.5% 10% / 25% 80% no-repeat, url(http://fc03.deviantart.net/fs70/i/2013/059/f/b/wall_frame_2_by_collect_and_creat-d5whjgt.png) center / cover no-repeat #fff";
-    send("/theme " + theme);
+    CLIENT.submit("/theme " + theme);
 }
 
+// Put stuff in a corkboard
+function corkboard(url) {
+    var theme = "url(http://www.clker.com/cliparts/B/V/P/X/Z/e/thumbtack-pushpin-2-hi.png) center 50px / auto 10% no-repeat, url(" + url + ") center 20px / auto 90% no-repeat, url(https://articulate-heroes.s3.amazonaws.com/uploads/attachment/attachment_url/7026/notice%2Bboard%2B_a_.png?dl=true) center / cover no-repeat #111";
+    CLIENT.submit("/theme " + theme); 
+}
