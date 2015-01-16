@@ -553,7 +553,7 @@ function interject(s) {
 
 // Put stuff in the frame
 function frame(url) {
-    var theme = "url(" + url + ") 37.5% 10% / 25% 80% no-repeat, url(http://fc03.deviantart.net/fs70/i/2013/059/f/b/wall_frame_2_by_collect_and_creat-d5whjgt.png) center / cover no-repeat #fff";
+    var theme = "url(http://media.giphy.com/media/yxVRJ0GrnlW2FrjzsQ/giphy.gif) 75% 35% / 10% 10% no-repeat, url(http://fc03.deviantart.net/fs70/i/2013/059/f/b/wall_frame_2_by_collect_and_creat-d5whjgt.png) center / cover no-repeat, url(" + url + ") 37.5% 0% / 30% 90% no-repeat #000";
     CLIENT.submit("/theme " + theme);
 }
 
