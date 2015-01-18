@@ -139,14 +139,14 @@ setInterval(function () {
 
 // Begin logging process and listen for commands
 CLIENT.on('message', function(data) {
-    var r = $('#messages').children().slice(-1)[0].outerHTML.search(/message (personal-message|general-message|error-message|note-message|system-message)/g);
     var text = data.message.trim();
     if (data.nick !== undefined)
     var name = data.nick;
-    var trueMessage = parser.removeHTML(parser.parse(text)); // cuts off style
-    trueMessage = trueMessage.trim(); // sammich ain't breaking my stuff!
+    var trueMessage = parser.removeHTML(parser.parse(text));
+    trueMessage = trueMessage.trim();
     argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
-    arguments = argumentString.split(" ");
+    var argumentsArray = argumentString.split(" ");
+
     
     if (name !== botnick) {
         
