@@ -146,7 +146,10 @@ CLIENT.on('message', function(data) {
     trueMessage = trueMessage.trim();
     argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
     var argumentsArray = argumentString.split(" ");
-
+    
+    var r = $('#messages').children().slice(-1)[0].outerHTML.search(
+    /message (personal-message|general-message|error-message|note-message|system-message)/g
+    );
     
     if (name !== botnick) {
         
