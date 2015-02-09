@@ -49,6 +49,7 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !track: See what's currently blasting on Spooks Radio!\n";
     help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
     help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
+	help += "         !translate-[fr, ru, sp, gr, ch] [stuff]: Translate something from English to French, Russian, Spanish, Greek, or Chinese.\n";
     help += "         !interject [something]: I'd just like to interject for a moment...";
 // Anti-spam variables
 var antiSpam = false;
@@ -212,7 +213,17 @@ CLIENT.on('message', function(data) {
             interject(argumentString);
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
             sendRandom();
-        } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
+        } else if (text.contains("!translate-fr")) {
+            translate("fr", argumentString);
+        } else if (text.contains("!translate-ru")) {
+            translate("ru", argumentString);
+        } else if (text.contains("!translate-sp")) {
+            translate("es", argumentString);
+        } else if (text.contains("!translate-ch")) {
+            translate("zh", argumentString);
+        } else if (text.contains("!translate-gr")) {
+            translate("el", argumentString);
+        }else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
             $.ajax({
                 url : "http://bruno02468.com/masterbot/api.php?action=log&msg=" + encodeURIComponent(text),
@@ -564,4 +575,11 @@ function frame(url) {
 function corkboard(url) {
     var theme = "url(http://www.clker.com/cliparts/B/V/P/X/Z/e/thumbtack-pushpin-2-hi.png) center 50px / auto 10% no-repeat, url(" + url + ") center 20px / auto 90% no-repeat, url(https://articulate-heroes.s3.amazonaws.com/uploads/attachment/attachment_url/7026/notice%2Bboard%2B_a_.png?dl=true) center / cover no-repeat #111";
     CLIENT.submit("/theme " + theme); 
+}
+
+function translate(lang, stuff) {
+    $.getJSON("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20150209T041526Z.00e0389b9281a02f.a79c46b2b222abe4cb25dee77e00b4567c4171be&lang=en-" + lang + "&text=" + encodeURIComponent(stuff)).success(function(response) {
+        resp = response.text
+        send("#green" + stuff + " in " + lang + " is: \"" + resp + "\"")
+    })
 }
