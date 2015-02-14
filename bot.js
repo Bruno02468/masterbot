@@ -26,7 +26,7 @@ var answering = false;
 
 // People who can control the bot
 var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
-var permabanned = ["gaybutts", "DoomsdayMuffinz", "Anonymous"];
+var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "anon2000"];
 
 var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
@@ -111,11 +111,6 @@ CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
 CLIENT.submit("/safe");
 CLIENT.submit("/mute");
 
-// Banning the perma-banned
-for (var i in permabanned) {
-    CLIENT.submit("/block " + permabanned[i]);
-}
-
 // All set up
 CLIENT.submit("/echo #greenMasterbot now running.");
 
@@ -139,7 +134,7 @@ setInterval(function () {
 CLIENT.on('message', function(data) {
     var text = data.message.trim();
     if (data.nick !== undefined)
-    var name = data.nick;
+        var name = data.nick;
     var trueMessage = parser.removeHTML(parser.parse(text));
     trueMessage = trueMessage.trim();
     argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
@@ -149,7 +144,7 @@ CLIENT.on('message', function(data) {
     /message (personal-message|general-message|error-message|note-message|system-message)/g
     );
     
-    if (name !== botnick) {
+    if (name !== botnick && !(banned.indexOf(name) > -1)) {
         
         //COMMAND HANDLERS
         if (text.contains("!toggle")) {
@@ -344,8 +339,12 @@ function toggle(name) {
 // Block someone from using the bot
 function blockban(name, target) {
     if (masters.indexOf(name) > -1) {
-        CLIENT.submit("#redMaster " + name + " has blocked " + target + " from using the bot.");
-        CLIENT.submit("/block " + target);
+    	if (!(banned.indexOf(name) > -1)) {
+            CLIENT.submit("#redMaster " + name + " has blocked " + target + " from using the bot.");
+            banned.push(name);
+    	} else {
+    	    CLIENT.submit("#redMaster " + name + ", that user is already blocked.");
+    	}
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
     }
@@ -354,8 +353,13 @@ function blockban(name, target) {
 // Unblock someone from using the bot
 function unblockban(name, target) {
     if (masters.indexOf(name) > -1) {
-        CLIENT.submit("/unblock " + target);
-        CLIENT.submit("#greenMaster " + name + " has unblocked " + target + " from using the bot.");
+        var ind = banned.indexOf(name);
+        if (ind > -1) {
+            CLIENT.submit("#greenMaster " + name + " has unblocked " + target + " from using the bot.");
+            banned.splice(ind, 1);
+        } else {
+            CLIENT.submit("#redMaster " + name + ", that user is not blocked.");
+        }
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
     }
