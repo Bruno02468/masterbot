@@ -201,6 +201,8 @@ CLIENT.on('message', function(data) {
             frame(argumentString); 
         } else if (text.contains("!corkboard")) {
             corkboard(argumentString); 
+        } else if (text.contains("!banlist")) {
+            banlist(name);
         } else if (text.contains("!interject")) {
             interject(argumentString);
         } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
@@ -339,9 +341,9 @@ function toggle(name) {
 // Block someone from using the bot
 function blockban(name, target) {
     if (masters.indexOf(name) > -1) {
-    	if (!(banned.indexOf(name) > -1)) {
+    	if (!(banned.indexOf(target) > -1)) {
             CLIENT.submit("#redMaster " + name + " has blocked " + target + " from using the bot.");
-            banned.push(name);
+            banned.push(target);
     	} else {
     	    CLIENT.submit("#redMaster " + name + ", that user is already blocked.");
     	}
@@ -353,7 +355,7 @@ function blockban(name, target) {
 // Unblock someone from using the bot
 function unblockban(name, target) {
     if (masters.indexOf(name) > -1) {
-        var ind = banned.indexOf(name);
+        var ind = banned.indexOf(target);
         if (ind > -1) {
             CLIENT.submit("#greenMaster " + name + " has unblocked " + target + " from using the bot.");
             banned.splice(ind, 1);
@@ -365,6 +367,14 @@ function unblockban(name, target) {
     }
 }
 
+// List blocked users
+function banlist(name) {
+    if (masters.indexOf(name) > -1) {
+        CLIENT.submit("/pm " + name + "|#cyanBan list: [" + banned + "].");
+    } else {
+        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
+    }
+}
 
 // Toggles "?"-in-the-end trigger for random message sending
 function toggleTrigger(name) {
