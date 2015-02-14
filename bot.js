@@ -26,7 +26,7 @@ var answering = false;
 
 // People who can control the bot
 var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
-var permabanned = ["gaybutts", "DoomsdayMuffinz"];
+var permabanned = ["gaybutts", "DoomsdayMuffinz", "Anonymous"];
 
 var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
@@ -100,26 +100,23 @@ function escapeForSending(string) {
     return string.replace(pat, "\\/");
 }
 
+// Case insensitive string lookup function
+String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.toLowerCase()) != -1; };
+
+// Username popup and flair setter, basic setup
+var botnick = "Masterbot";
+CLIENT.submit("/nick " + botnick);
+CLIENT.submit("/style  ");
+CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
+CLIENT.submit("/safe");
+CLIENT.submit("/mute");
+
 // Banning the perma-banned
 for (var i in permabanned) {
     CLIENT.submit("/block " + permabanned[i]);
 }
 
-// Case insensitive string lookup function
-String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.toLowerCase()) != -1; };
-
-
-// Username popup and flair setter, basic setup
-var botnick = "Masterbot"; 
-var prm = prompt("What should my name be?", botnick);
-if (prm !== null) {
-    botnick = prm;
-    CLIENT.submit("/nick " + botnick);
-}
-CLIENT.submit("/style default");
-CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
-CLIENT.submit("/safe");
-CLIENT.submit("/mute");
+// All set up
 CLIENT.submit("/echo #greenMasterbot now running.");
 
 // Mouse bot -- possibly future-proofing AFK detection?
