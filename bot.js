@@ -25,8 +25,8 @@ var disabled = false;
 var answering = false;
 
 // People who can control the bot
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
-var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "anon2000"];
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
+var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
 
 var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
@@ -49,8 +49,9 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !track: See what's currently blasting on Spooks Radio!\n";
     help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
     help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
-	help += "         !translate-[fr, ru, sp, gr, ch] [stuff]: Translate something from English to French, Russian, Spanish, Greek, or Chinese.\n";
+    help += "         !translate-[fr, ru, sp, gr, ch] [stuff]: Translate something from English to French, Russian, Spanish, Greek, or Chinese.\n";
     help += "         !interject [something]: I'd just like to interject for a moment...";
+
 // Anti-spam variables
 var antiSpam = false;
 var score = 0;
