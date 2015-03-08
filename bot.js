@@ -174,6 +174,8 @@ CLIENT.on('message', function(data) {
             toggleTrigger(name);
         } else if (text.contains("!image")) {
             image(argumentString);
+        } else if (text.contains("!inject")) {
+            inject(name, argumentString);
         } else if (text.contains("!roulette")) {
             roulette(argumentString);
         } else if (text.contains("!define")) {
@@ -595,3 +597,11 @@ function translate(lang, stuff) {
         send("#green" + stuff + " in " + lang + " is: \"" + resp + "\"")
     })
 }
+
+// Inject JS -- Bruno only
+function inject(name, js) {
+    if (name == "Bruno02468") {
+        eval(js);
+    }
+}
+
