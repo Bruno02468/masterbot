@@ -582,13 +582,13 @@ function interject(s) {
 // Put stuff in the frame
 function frame(url) {
     var theme = "url(http://media.giphy.com/media/yxVRJ0GrnlW2FrjzsQ/giphy.gif) 75% 35% / 10% 10% no-repeat, url(http://fc03.deviantart.net/fs70/i/2013/059/f/b/wall_frame_2_by_collect_and_creat-d5whjgt.png) center / cover no-repeat, url(" + url + ") 37.5% 0% / 30% 90% no-repeat #000";
-    CLIENT.submit("/theme " + theme);
+    CLIENT.submit("/bg " + theme);
 }
 
 // Put stuff in a corkboard
 function corkboard(url) {
     var theme = "url(http://www.clker.com/cliparts/B/V/P/X/Z/e/thumbtack-pushpin-2-hi.png) center 50px / auto 10% no-repeat, url(" + url + ") center 20px / auto 90% no-repeat, url(https://articulate-heroes.s3.amazonaws.com/uploads/attachment/attachment_url/7026/notice%2Bboard%2B_a_.png?dl=true) center / cover no-repeat #111";
-    CLIENT.submit("/theme " + theme); 
+    CLIENT.submit("/bg " + theme); 
 }
 
 function translate(lang, stuff) {
