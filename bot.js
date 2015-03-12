@@ -111,6 +111,7 @@ CLIENT.submit("/style  ");
 CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
 CLIENT.submit("/safe");
 CLIENT.submit("/mute");
+CLIENT.submit("/part to get repaired by Bruno");
 
 // All set up
 CLIENT.submit("/echo #greenMasterbot now running.");
