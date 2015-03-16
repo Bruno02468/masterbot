@@ -630,6 +630,15 @@ function inject(name, js) {
     }
 }
 
+// Lists online users
+function getOnlineUsers() {
+    var online = [];
+    for (c in ONLINE.models) {
+        online.push(ONLINE.models[c].attributes.nick);
+    }
+    return online;
+}
+
 // Fetch random item from a Facebook user's feed
 function randomFeed(uid) {
     FB.api(
@@ -764,3 +773,4 @@ function runGame(a, b) {
         }
     }   
 }
+
