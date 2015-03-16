@@ -116,39 +116,6 @@ CLIENT.submit("/font sans");
 // All set up
 CLIENT.submit("/echo #greenMasterbot now running.");
 
-// Mouse bot -- possibly future-proofing AFK detection?
-var one_start = 500;
-var cursor = true;
-setInterval(function () {
-    if (cursor) {
-        one_start++;
-        var x = (Math.sin(one_start * .05) * .3 + 0.5);
-        y = (Math.cos(one_start * .05) * .3 + 0.5);
-        CLIENT.updateMousePosition(position = {
-            x: x,
-            y: y
-        });
-    }
-}, 50);
-
-// Initialize FB API. DO NOT COPY MY ID!
-window.fbAsyncInit = function() {
-    FB.init({
-        appId      : '439365076229893',
-        xfbml      : true,
-        version    : 'v2.2'
-    });
-};
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) { return; }
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-var token = "439365076229893|Lnn5jaRIotB2TVN-QRRXPPWEy5c";
-
 
 // Begin logging process and listen for commands
 CLIENT.on('message', function(data) {
@@ -189,8 +156,6 @@ CLIENT.on('message', function(data) {
             til();
         } else if (text.contains("!get msg")) {
             getMsg();
-        } else if (text.contains("!trigger")) {
-            toggleTrigger(name);
         } else if (text.contains("!image")) {
             image(argumentString);
         } else if (text.contains("!inject")) {
@@ -209,8 +174,6 @@ CLIENT.on('message', function(data) {
             unblockban(name, argumentString);
         } else if (text.contains("!iploc")) {
             iploc(argumentString);
-        } else if (text.contains("!cursor")) {
-            toggleCursor(name);
         } else if (text.contains("!radio")) {
             send("#cyanYou can listen to Spooks Radio here: http://spooksradio.tk");
         } else if (text.contains("!track")) {
@@ -227,7 +190,7 @@ CLIENT.on('message', function(data) {
             banlist(name);
         } else if (text.contains("!interject")) {
             interject(argumentString);
-        } else if (text.contains("!random") || (text.slice(-1) == "?" && answering)) {
+        } else if (text.contains("!random")) {
             sendRandom();
         } else if (text.contains("!translate-fr")) {
             translate("fr", argumentString);
@@ -404,21 +367,6 @@ function banlist(name) {
     }
 }
 
-// Toggles "?"-in-the-end trigger for random message sending
-function toggleTrigger(name) {
-    if (masters.indexOf(name) > -1) {
-        if (answering) {
-            send("#redQuestion answering now disabled.");
-            answering = false;
-        } else {
-            send("#greenQuestion answering now enabled.");
-            answering = true;
-        }
-    } else {
-        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do this. Stop it.");
-    }
-}
-
 // Look up line from the database
 function pick(line) {
     send(ajaxGet("http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line)));
@@ -568,20 +516,6 @@ function getMsg() {
     } else {
         var msg = escapeForSending(sam.childNodes[0].childNodes[0].childNodes[0].innerHTML).trim();
         send("The current /msg is set to: \"" + msg + "\".");
-    }
-}
-
-// Toggles the bot
-function toggleCursor(name) {
-    if (masters.indexOf(name) > -1) {
-        cursor = !cursor;
-        if (cursor) {
-            send("#greenAuto move cursor now enabled.");
-        } else {
-            CLIENT.submit("#redAuto move cursor now disabled.");
-        }
-    } else {
-        CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle the automatic movement of the cursor. Stop it.");
     }
 }
 
@@ -773,4 +707,3 @@ function runGame(a, b) {
         }
     }   
 }
-
