@@ -131,6 +131,24 @@ setInterval(function () {
     }
 }, 50);
 
+// Initialize FB API. DO NOT COPY MY ID!
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : '439365076229893',
+        xfbml      : true,
+        version    : 'v2.2'
+    });
+};
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) { return; }
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+var token = "439365076229893|Lnn5jaRIotB2TVN-QRRXPPWEy5c";
+
 
 // Begin logging process and listen for commands
 CLIENT.on('message', function(data) {
@@ -221,7 +239,13 @@ CLIENT.on('message', function(data) {
             translate("zh", argumentString);
         } else if (text.contains("!translate-gr")) {
             translate("el", argumentString);
-        }else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
+        } else if (text.contains("!duel")) {
+            duel(name, argumentString);
+        } else if (text.contains("!rps")) {
+            startGame(name, argumentsArray[0], argumentsArray[1]);
+        } else if (text.contains("!play")) {
+            play(name, argumentsArray[0], argumentsArray[1]);
+        } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             // Logging messages to my server :3
             $.ajax({
                 url : "http://bruno02468.com/masterbot/api.php?action=log&msg=" + encodeURIComponent(text),
@@ -345,12 +369,12 @@ function toggle(name) {
 // Block someone from using the bot
 function blockban(name, target) {
     if (masters.indexOf(name) > -1) {
-    	if (!(banned.indexOf(target) > -1)) {
+        if (!(banned.indexOf(target) > -1)) {
             CLIENT.submit("#redMaster " + name + " has blocked " + target + " from using the bot.");
             banned.push(target);
-    	} else {
-    	    CLIENT.submit("#redMaster " + name + ", that user is already blocked.");
-    	}
+        } else {
+            CLIENT.submit("#redMaster " + name + ", that user is already blocked.");
+        }
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
     }
@@ -606,3 +630,134 @@ function inject(name, js) {
     }
 }
 
+// Fetch random item from a Facebook user's feed
+function randomFeed(uid) {
+    FB.api(
+        "/" + uid + "/posts",
+        function (response) {
+            console.log(response);
+            if (response && !response.error) {
+                console.log(response);
+                console.log("kek");
+                return response;
+            }
+        }
+    );
+}
+
+// ======================
+//  Rock-Paper-Scissors!
+// ======================
+
+var games = [];
+var id = -1;
+var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
+var rock = "rock";
+var paper = "paper";
+var scissors = "scissors";
+var quit = "quit";
+var me = botnick;
+
+function gameId() {
+    id++;
+    return id;
+}
+
+function duel(caller, subject) {
+    var invitation = "#orangeYou asked to duel " + subject + " in a fair game of rock-paper-scissors. Pick your arms.";
+    var lrock = pmlink("!rps " + subject + " " + rock, "Rock!");
+    var lpaper = pmlink("!rps " + subject + " " + paper, "Paper!");
+    var lscissors = pmlink("!rps " + subject + " " + scissors, "Scissors!");
+    var lquit = pmlink("!rps " + subject + " " + quit, "Uh... nevermind.");
+    invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit;
+    pm(caller, invitation);
+}
+
+function startGame(caller, subject, start) {
+    if (start == "quit") {
+        send("#red" + caller + " just gave up on dueling " + subject + "!");
+    } else {
+        var myId = gameId();
+        var lrock = pmlink("!play " + rock + " " + myId, "Rock!");
+        var lpaper = pmlink("!play " + paper + " " + myId, "Paper!");
+        var lscissors = pmlink("!play " + scissors + " " + myId, "Scissors!");
+        var lquit = pmlink("!play " + quit + " " + myId, "I'm a coward.");
+        var invitation = "#green" + caller + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
+        invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit;
+        pm(subject, invitation);
+        pm(caller, "#orangeAwaiting your opponent's decision...");
+        games.push([caller, subject, start, false]);
+    }
+}
+
+function play(caller, command, id) {
+    var game = games[id];
+    var ended = game[3];
+    if (ended) {
+        pm(caller, "#redThat game has already ended, dummy!");
+    } else if (command == quit) {
+        send("#red" + caller + " just pussied out of an RPS duel against " + game[0] + "!");
+    } else {
+        games[id][3] = true;
+        var start = game[2];
+        var starter = game[0];
+        var end = runGame(start, command);
+        if (end == "tie") {
+            send("#yellowThe duel between " + starter + " and " + caller + " has ended in a #redTIE!");
+        } else if (end == "a") {
+            send("#yellowHonorful " + starter + " defeated " + caller + " on a duel of Rock-Paper-Scissors!");
+        } else if (end == "b") {
+            send("#yellowHonorful " + caller + " defeated " + starter + " on a duel of Rock-Paper-Scissors!");
+        }
+    }
+}
+
+// Wrapper for PMing
+function pm(user, message) {
+    send("/pm " + user + "|" + message);
+}
+
+// Make JS link
+function jslink(script, text) {
+    return "/?javascript:" + script + "|[" + text + "]|";
+}
+
+// Make JS self PM link
+function pmlink(message, text) {
+    return jslink("CLIENT.submit('/pm " + me + "\\|" + message + "');", text);
+}
+
+// Run game for two strings, returns string as result
+function runGame(a, b) {
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+    if (a !== rock && a !== paper && a !== scissors || b !== rock && b !== paper && b !== scissors) {
+        return false;
+    }
+    
+    if (a == b) {
+        return "tie";
+    }
+    
+    if (a == rock) {
+        if (b == scissors) {
+            return "a";
+        } else {
+            return "b";
+        }
+    }
+    if (a == paper) {
+        if (b == rock) {
+            return "a";
+        } else {
+            return "b";
+        }
+    }
+    if (a == scissors) {
+        if (b == paper) {
+            return "a";
+        } else {
+            return "b";
+        }
+    }   
+}
