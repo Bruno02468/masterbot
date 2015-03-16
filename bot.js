@@ -107,10 +107,10 @@ String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.
 // Username popup and flair setter, basic setup
 var botnick = "Masterbot";
 CLIENT.submit("/nick " + botnick);
-CLIENT.submit("/style  ");
+CLIENT.submit("/part to get repaired by Bruno");
+CLIENT.submit("/mask brunos.secret.bot.laboratory");
 CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
 CLIENT.submit("/safe");
-CLIENT.submit("/mute");
 CLIENT.submit("/font sans");
 
 // All set up
@@ -702,11 +702,15 @@ function play(caller, command, id) {
         var starter = game[0];
         var end = runGame(start, command);
         if (end == "tie") {
-            send("#yellowThe duel between " + starter + " and " + caller + " has ended in a #redTIE#yellow!");
-        } else if (end == "a") {
-            send("#yellowHonorful " + starter + " defeated " + caller + " on a duel of Rock-Paper-Scissors!");
-        } else if (end == "b") {
-            send("#yellowHonorful " + caller + " defeated " + starter + " on a duel of Rock-Paper-Scissors!");
+            send("#orangeThe duel between " + starter + " and " + caller + " has ended in a #redTIE#yellow!");
+        } else {
+            var winner = starter;
+            var loser = caller;
+            if (end == "b") {
+                winner = caller;
+                loser = starter;
+            }
+            send("#orangeHonorful /_" + winner + "| defeated /_" + loser + "| on a duel of Rock-Paper-Scissors!");
         }
     }
 }
