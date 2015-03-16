@@ -111,7 +111,7 @@ CLIENT.submit("/style  ");
 CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
 CLIENT.submit("/safe");
 CLIENT.submit("/mute");
-CLIENT.submit("/part to get repaired by Bruno");
+CLIENT.submit("/font sans");
 
 // All set up
 CLIENT.submit("/echo #greenMasterbot now running.");
@@ -685,7 +685,6 @@ function startGame(caller, subject, start) {
         var invitation = "#green" + caller + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
         invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit;
         pm(subject, invitation);
-        pm(caller, "#orangeAwaiting your opponent's decision...");
         games.push([caller, subject, start, false]);
     }
 }
@@ -696,14 +695,14 @@ function play(caller, command, id) {
     if (ended) {
         pm(caller, "#redThat game has already ended, dummy!");
     } else if (command == quit) {
-        send("#red" + caller + " just pussied out of an RPS duel against " + game[0] + "!");
+        send("#red" + caller + " just pussied out of a fair Rock-Paper-Scissors duel against " + game[0] + "!");
     } else {
         games[id][3] = true;
         var start = game[2];
         var starter = game[0];
         var end = runGame(start, command);
         if (end == "tie") {
-            send("#yellowThe duel between " + starter + " and " + caller + " has ended in a #redTIE!");
+            send("#yellowThe duel between " + starter + " and " + caller + " has ended in a #redTIE#yellow!");
         } else if (end == "a") {
             send("#yellowHonorful " + starter + " defeated " + caller + " on a duel of Rock-Paper-Scissors!");
         } else if (end == "b") {
