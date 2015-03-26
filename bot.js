@@ -209,12 +209,12 @@ CLIENT.on('message', function(data) {
         } else if (text.contains("!play")) {
             play(name, argumentsArray[0], argumentsArray[1]);
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
-            // Logging messages to my server :3
+            /* Logging messages to my server :3
             $.ajax({
                 url : "http://bruno02468.com/masterbot/api.php?action=log&msg=" + encodeURIComponent(text),
                 type : 'GET',
                 success : function(data) { console.log("Succesfully pushed to server!"); }
-            });
+            });*/
         }
             
     }
