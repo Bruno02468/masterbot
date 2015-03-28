@@ -31,7 +31,7 @@ var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
 var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
-    help += "         !random: Send a random message from the database filled with all logged messages.\n";
+    help += "         !random: Send a random message from the database filled with old messages.\n";
     help += "         !count: See the number of messages in the database.\n";
     help += "         !pick [n]: Outputs the message number n the database.\n";
     help += "         !checkem: Roll a random 5-digit number.\n";
@@ -50,7 +50,8 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
     help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
     help += "         !translate-[fr, ru, sp, gr, ch] [stuff]: Translate something from English to French, Russian, Spanish, Greek, or Chinese.\n";
-    help += "         !interject [something]: I'd just like to interject for a moment...";
+    help += "         !interject [something]: I'd just like to interject for a moment...\n";
+    help += "         !duel [username]: Get reusable links to duel someone in Rock-Paper-Scissors.";
 
 // Anti-spam variables
 var antiSpam = false;
@@ -107,11 +108,12 @@ String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.
 // Username popup and flair setter, basic setup
 var botnick = "Masterbot";
 CLIENT.submit("/nick " + botnick);
-CLIENT.submit("/part to get repaired by Bruno");
-CLIENT.submit("/mask brunos.secret.bot.laboratory");
-CLIENT.submit("/flair $Montserrat|#808080/^" + botnick);
 CLIENT.submit("/safe");
-CLIENT.submit("/font sans");
+CLIENT.set("part", "to get repaired by Bruno");
+CLIENT.set("mask", "brunos.secret.bot.laboratory");
+CLIENT.set("flair", "$Montserrat|#808080/^" + botnick);
+CLIENT.set("font", "sans");
+CLIENT.set("frame", "off");
 
 // All set up
 CLIENT.submit("/echo #greenMasterbot now running.");
@@ -210,6 +212,7 @@ CLIENT.on('message', function(data) {
             play(name, argumentsArray[0], argumentsArray[1]);
         } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
             /* Logging messages to my server :3
+             * DISABLD DUE TO POPULAR DEMAND D:
             $.ajax({
                 url : "http://bruno02468.com/masterbot/api.php?action=log&msg=" + encodeURIComponent(text),
                 type : 'GET',
@@ -534,7 +537,7 @@ function interject(s) {
     if (!s || s == "!interject") {
         s = "Linux";
     }
-    var quote = "/%I'd just like to interject for a moment. What you’re referring to as " + s + ", is in fact, GNU\/" + s + ", or as I’ve recently taken to calling it, GNU plus " + s + ".";
+    var quote = "/%I'd just like to interject for a moment. What you're referring to as " + s + ", is in fact, GNU\/" + s + ", or as I've recently taken to calling it, GNU plus " + s + ".";
     send(quote);
 }
 
