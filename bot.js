@@ -117,6 +117,7 @@ CLIENT.set("mask", "brunos.secret.bot.laboratory");
 CLIENT.set("flair", "$Montserrat|#808080/^" + botnick);
 CLIENT.set("font", "sans");
 CLIENT.set("frame", "off");
+CLIENT.set("mute", "on");
 
 // All set up
 CLIENT.submit("/echo #greenMasterbot now running.");
