@@ -13,10 +13,10 @@ You can:
     - Contribute code
     - Suggest changes
     - Use code from this bot
+    - Run a copy of this bot in your channel
+    - Have your own copy of the API and make changes to anything
 
 You can NOT:
-    - Make any calls whatsoever to my server (bruno02468.com) without authorization
-    - Run the bot without authorization, there's a copy running most of the time
     - Violate the license in any way
 
 
