@@ -25,7 +25,8 @@ var disabled = false;
 var answering = false;
 
 // People who can control the bot
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP", "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP",
+               "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
 var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
 
 var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
@@ -103,7 +104,9 @@ function escapeForSending(string) {
 }
 
 // Case insensitive string lookup function
-String.prototype.contains = function(it) { return this.toLowerCase().indexOf(it.toLowerCase()) != -1; };
+String.prototype.contains = function(it) { 
+    return this.toLowerCase().indexOf(it.toLowerCase()) != -1;
+};
 
 // Username popup and flair setter, basic setup
 var botnick = "Masterbot";
@@ -128,10 +131,6 @@ CLIENT.on('message', function(data) {
     trueMessage = trueMessage.trim();
     argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
     var argumentsArray = argumentString.split(" ");
-    
-    var r = $('#messages').children().slice(-1)[0].outerHTML.search(
-    /message (personal-message|general-message|error-message|note-message|system-message)/g
-    );
     
     if (name !== botnick && !(banned.indexOf(name) > -1)) {
         
@@ -210,14 +209,6 @@ CLIENT.on('message', function(data) {
             startGame(name, argumentsArray[0], argumentsArray[1]);
         } else if (text.contains("!play")) {
             play(name, argumentsArray[0], argumentsArray[1]);
-        } else if (r == -1 && !text.contains("message action-message") && !text.contains("message spoken-message") && trueMessage.length <= 175 && trueMessage.length > 3) {
-            /* Logging messages to my server :3
-             * DISABLD DUE TO POPULAR DEMAND D:
-            $.ajax({
-                url : "http://bruno02468.com/masterbot/api.php?action=log&msg=" + encodeURIComponent(text),
-                type : 'GET',
-                success : function(data) { console.log("Succesfully pushed to server!"); }
-            });*/
         }
             
     }
@@ -537,7 +528,7 @@ function interject(s) {
     if (!s || s == "!interject") {
         s = "Linux";
     }
-    var quote = "/%I'd just like to interject for a moment. What you're referring to as " + s + ", is in fact, GNU\/" + s + ", or as I've recently taken to calling it, GNU plus " + s + ".";
+    var quote = "/%I'd just like to interject for a moment. What you're referring to as " + s + " is, in fact, GNU\/" + s + ", or as I've recently taken to calling it, GNU plus " + s + ".";
     send(quote);
 }
 
