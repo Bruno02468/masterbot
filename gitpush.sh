@@ -1,5 +1,5 @@
 #!/bin/sh
 git add .
-git commit -am "Updated via script";
+git commit -am "$1"
 git push origin master
 echo "Done."

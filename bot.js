@@ -369,25 +369,27 @@ function pick(line) {
 
 // Gets a random image from a subreddit
 function image(spooky) {
-    $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
-        .done(function(response) {
-            resp = response.data.children;
-            var valid = []
-            $.map(resp, function(item){
-                if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
-                    valid.push(item);
-                });
-            if(valid.length==0){
-                send("#redNo images could be found for subreddit '" + spooky + "'.");
-                return;
+    if (!(spooky.contains("scat") || spooky.contains("poop") || spooky.contains("shit"))) {
+        $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
+            .done(function(response) {
+                resp = response.data.children;
+                var valid = []
+                $.map(resp, function(item){
+                    if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
+                        valid.push(item);
+                    });
+                if(valid.length==0){
+                    send("#redNo images could be found for subreddit '" + spooky + "'.");
+                    return;
+                }
+                var randomIndex = Math.floor(Math.random() * valid.length);
+                var item = valid[randomIndex];
+                send("\\" + item.data.title + "\n" + item.data.url);
+            }).fail(function(){
+                send("#redType in a valid subreddit, dummy!");
             }
-            var randomIndex = Math.floor(Math.random() * valid.length);
-            var item = valid[randomIndex];
-            send("\\" + item.data.title + "\n" + item.data.url);
-        }).fail(function(){
-            send("#redType in a valid subreddit, dummy!");
-        }
-    );
+        );
+    }
 }
 
 // Roulette function
