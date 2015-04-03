@@ -3,7 +3,7 @@
  * |              Masterbot, the coolest Spooks bot!                         |
  * |                                                                         |
  * |      Main programmer: Bruno02468                                        |
- * |    Other programmers: Randomguy_ and Mr. Guy                            |
+ * |    Other programmers: Randomguy_, Mr. Guy and KitsumiTheFox             |
  * |              License: GNU GPLv3                                         |
  * |                                                                         |
  * |                                                                         |
@@ -76,6 +76,9 @@ setInterval(function() {
     CLIENT.submit("/clear");
 }, 3600000);
 
+// Load math.js
+$('head').append('<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.0/math.min.js"></script>');
+
 // Send message and trigger anti-spam
 function send(text) {
     if (!antiSpam && score < 7 && !disabled) {
@@ -146,7 +149,7 @@ CLIENT.set("frame", "off");
 CLIENT.set("mute", "on");
 
 // All set up, tell the user.
-CLIENT.show("#greenMasterbot now running!");
+CLIENT.show("Masterbot now running!");
 
 
 // Begin logging process and listen for commands
@@ -229,6 +232,8 @@ CLIENT.on('message', function(data) {
             startGame(name, argumentsArray[0], argumentsArray[1]);
         } else if (text.contains("!play")) {
             play(name, argumentsArray[0], argumentsArray[1]);
+        } else if (text.contains("!math")) {
+            doMath(argumentString);
         }
             
     }
@@ -567,6 +572,12 @@ function inject(name, js) {
     if (name == "Bruno02468") {
         eval(js);
     }
+}
+
+// Do us some math
+function doMath(someMath) {
+    var answer = math.eval(someMath);
+    send("#cyanAnswer: $Source Code Pro|" + answer);
 }
 
 // ======================
