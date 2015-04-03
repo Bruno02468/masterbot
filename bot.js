@@ -33,9 +33,6 @@ var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
 var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
-    help += "         !random: Send a random message from the database filled with old messages.\n";
-    help += "         !count: See the number of messages in the database.\n";
-    help += "         !pick [n]: Outputs the message number n the database.\n";
     help += "         !checkem: Roll a random 5-digit number.\n";
     help += "         !coinflip: Self-explanatory, I believe.\n";
     help += "         !ask: Ask me a yes/no question.\n";
@@ -246,22 +243,12 @@ CLIENT.on('message', function(data) {
 // These are called when a user issues a command, to keep
 // the command handlers themselves short and clean.
 
-// Fetches a random message from the server and sends it
-function sendRandom() {
-    send(ajaxGet("http://bruno02468.com/masterbot/api.php?action=random"));
-}
-
-// Fetches the count of logged messages and sends it
-function getCount() {
-    var data = ajaxGet("http://bruno02468.com/masterbot/api.php?action=count");
-    send("So far, there are " + data + " messages in the database.");
-}
-
 // Sends the title for a given YouTube video ID
-function getTitle(url) {
-    var video_id = url.substring(url.indexOf("v=") + 2, url.indexOf("v=") + 13);
-    var data = ajaxGet("http://bruno02468.com/masterbot/api.php?action=youtube&id=" + video_id);
-    CLIENT.submit("#cyanTitle: " + data);
+function getTitle(id) {
+    var xml = ajaxGet("http://gdata.youtube.com/feeds/api/videos/" + id);
+    var parser = new DOMParser();
+    var xmlDocument = parser.parseFromString(xml, "text/xml");
+    CLIENT.submit("#cyanTitle: " + xmlDocument.getElementsByTagName("title")[0].innerHTML);
 }
 
 // Look for the titles of  YouTube videos in the messages
@@ -385,11 +372,6 @@ function banlist(name) {
     } else {
         CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
     }
-}
-
-// Look up line from the database
-function pick(line) {
-    send(ajaxGet("http://bruno02468.com/masterbot/api.php?action=pick&id=" + encodeURIComponent(line)));
 }
 
 // Gets a random image from a subreddit
