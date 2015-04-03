@@ -3,11 +3,13 @@
  * |              Masterbot, the coolest Spooks bot!                         |
  * |                                                                         |
  * |      Main programmer: Bruno02468                                        |
- * |    Other programmers: Randomguy and Mr. Guy                             |
+ * |    Other programmers: Randomguy_ and Mr. Guy                            |
  * |              License: GNU GPLv3                                         |
  * |                                                                         |
  * |                                                                         |
- * |    Do not run this code under any circumstances.                        |
+ * |    Do not run this code, instead, use the run script provided           |
+ * |    in the GitHub to make sure you're running the latest version.        |
+ * |                                                                         |
  * |                                                                         |
  * |    Also, please edit the help variable accordingly                      |
  * |    in case you change commands.                                         |
@@ -22,7 +24,6 @@
 
 // Defining some basic functions and variables
 var disabled = false;
-var answering = false;
 
 // People who can control the bot
 var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP",
@@ -37,20 +38,19 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !pick [n]: Outputs the message number n the database.\n";
     help += "         !checkem: Roll a random 5-digit number.\n";
     help += "         !coinflip: Self-explanatory, I believe.\n";
-    help += "         !ask: Ask me a yes/no question\n";
-    help += "         !image [subreddit]: Shows an image from a subreddit of your choosing.\n";
+    help += "         !ask: Ask me a yes/no question.\n";
+    help += "         !image [subreddit]: Shows an image from a subreddit of your choice.\n";
     help += "         !quote [subreddit]: Returns a quote from the selected subreddit.\n";
     help += "         !define [word]: Defines a word.\n";
     help += "         !roulette [n]: Plays russian roulette with n bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
-    help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
+//  help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
     help += "         !get msg: Retrieves the current /msg.\n";
     help += "         !radio: Retrieves the URL for the Spooks Radio Stream.\n";
     help += "         !track: See what's currently blasting on Spooks Radio!\n";
-    help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
-    help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
-    help += "         !translate-[fr, ru, sp, gr, ch] [stuff]: Translate something from English to French, Russian, Spanish, Greek, or Chinese.\n";
+//  help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
+//  help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
     help += "         !interject [something]: I'd just like to interject for a moment...\n";
     help += "         !duel [username]: Get reusable links to duel someone in Rock-Paper-Scissors.";
 
@@ -67,7 +67,6 @@ function spamFilters() {
     }, 700);
 }
 
-
 // Decrement spam score
 setInterval(function() {
     if (score > 0) {
@@ -80,7 +79,7 @@ setInterval(function() {
     CLIENT.submit("/clear");
 }, 3600000);
 
-// Send and trigger anti-spam
+// Send message and trigger anti-spam
 function send(text) {
     if (!antiSpam && score < 7 && !disabled) {
         CLIENT.submit(text);
@@ -88,7 +87,36 @@ function send(text) {
     }
 }
 
-// Fetching something via AJAX
+// Wrapper for PMing a user
+function pm(user, message) {
+    send("/pm " + user + "|" + message);
+}
+
+// Make a JS link
+function jslink(script, text) {
+    return "/?javascript:" + script + "|[" + text + "]|";
+}
+
+// Make a JS link to PM the current user something
+function pmlink(message, text) {
+    return jslink("CLIENT.submit('/pm " + botnick + "\\|" + message + "');", text);
+}
+
+// Lists online users
+function getOnlineUsers() {
+    var online = [];
+    for (c in ONLINE.models) {
+        online.push(ONLINE.models[c].attributes.nick);
+    }
+    return online;
+}
+
+// Check whether a user is online
+function isOnline(user) {    
+    return (getOnlineUsers().indexOf(user) > -1);
+}
+
+// Fetching something via a XMLHttpRequest
 function ajaxGet(url) {
     var request = null;
     request = new XMLHttpRequest();
@@ -99,7 +127,7 @@ function ajaxGet(url) {
 
 // Escaping strings
 function escapeForSending(string) {
-    var pat = /\/(?:.)/gi;
+    var pat = /\/(?:)/gi;
     return string.replace(pat, "\\/");
 }
 
@@ -110,7 +138,8 @@ String.prototype.contains = function(it) {
 
 // Username popup and flair setter, basic setup
 var botnick = "Masterbot";
-CLIENT.submit("/nick " + botnick);
+if (CLIENT.get("nick") !== botnick)
+    CLIENT.submit("/nick " + botnick);
 CLIENT.submit("/safe");
 CLIENT.set("part", "to get repaired by Bruno");
 CLIENT.set("mask", "brunos.secret.bot.laboratory");
@@ -119,8 +148,8 @@ CLIENT.set("font", "sans");
 CLIENT.set("frame", "off");
 CLIENT.set("mute", "on");
 
-// All set up
-CLIENT.submit("/echo #greenMasterbot now running.");
+// All set up, tell the user.
+CLIENT.show("#greenMasterbot now running!");
 
 
 // Begin logging process and listen for commands
@@ -136,6 +165,9 @@ CLIENT.on('message', function(data) {
     if (name !== botnick && !(banned.indexOf(name) > -1)) {
         
         //COMMAND HANDLERS
+        // name = the person who issued the command
+        // argumentString = everything after the command
+        // argumentsArray = all the whitespace-defined words after the command
         if (text.contains("!toggle")) {
             toggle(name);
         } else if (text.contains("!masters")) {
@@ -159,7 +191,7 @@ CLIENT.on('message', function(data) {
         } else if (text.contains("!get msg")) {
             getMsg();
         } else if (text.contains("!image")) {
-            image(argumentString);
+            image(argumentString, name);
         } else if (text.contains("!inject")) {
             inject(name, argumentString);
         } else if (text.contains("!roulette")) {
@@ -194,16 +226,6 @@ CLIENT.on('message', function(data) {
             interject(argumentString);
         } else if (text.contains("!random")) {
             sendRandom();
-        } else if (text.contains("!translate-fr")) {
-            translate("fr", argumentString);
-        } else if (text.contains("!translate-ru")) {
-            translate("ru", argumentString);
-        } else if (text.contains("!translate-sp")) {
-            translate("es", argumentString);
-        } else if (text.contains("!translate-ch")) {
-            translate("zh", argumentString);
-        } else if (text.contains("!translate-gr")) {
-            translate("el", argumentString);
         } else if (text.contains("!duel")) {
             duel(name, argumentString);
         } else if (text.contains("!rps")) {
@@ -220,6 +242,9 @@ CLIENT.on('message', function(data) {
 // ==============================
 // |     COMMAND FUNCTIONS      |
 // ==============================
+//
+// These are called when a user issues a command, to keep
+// the command handlers themselves short and clean.
 
 // Fetches a random message from the server and sends it
 function sendRandom() {
@@ -271,7 +296,7 @@ function ask(name) {
     }
 }
 
-// Coin flippin'
+// Coin flipping
 function coinflip() {
     if (Math.random() < 0.5) {
         send("#orangeHeads.");
@@ -368,7 +393,7 @@ function pick(line) {
 }
 
 // Gets a random image from a subreddit
-function image(spooky) {
+function image(spooky, caller) {
     if (!(spooky.contains("scat") || spooky.contains("poop") || spooky.contains("shit"))) {
         $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
             .done(function(response) {
@@ -379,14 +404,14 @@ function image(spooky) {
                         valid.push(item);
                     });
                 if(valid.length==0){
-                    send("#redNo images could be found for subreddit '" + spooky + "'.");
+                    pm(caller, "#redNo images could be found for subreddit '" + spooky + "'.");
                     return;
                 }
                 var randomIndex = Math.floor(Math.random() * valid.length);
                 var item = valid[randomIndex];
-                send("\\" + item.data.title + "\n" + item.data.url);
+                pm(caller, "\\" + item.data.title + "\n" + item.data.url);
             }).fail(function(){
-                send("#redType in a valid subreddit, dummy!");
+                pm(caller, "#redType in a valid subreddit, dummy!");
             }
         );
     }
@@ -394,13 +419,13 @@ function image(spooky) {
 
 // Roulette function
 function roulette(bullets) {
-    var theone = Math.floor(Math.random() * 6)
+    var theone = Math.floor(Math.random() * 6);
     if (bullets > 6) {
-        send("#redToo many bullets. Max is 6.")
+        send("#redToo many bullets. Max is 6.");
     } else if (theone <= bullets - 1) {
-        send("#redBang! You're dead.")
+        send("#redBang! You're dead.");
     } else {
-        send("#greenYou got lucky.")
+        send("#greenYou got lucky.");
     }
 }
 
@@ -547,6 +572,7 @@ function corkboard(url) {
     CLIENT.submit("/bg " + theme); 
 }
 
+// Useless translate function, now abandoned
 function translate(lang, stuff) {
     $.getJSON("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20150209T041526Z.00e0389b9281a02f.a79c46b2b222abe4cb25dee77e00b4567c4171be&lang=en-" + lang + "&text=" + encodeURIComponent(stuff)).success(function(response) {
         resp = response.text
@@ -561,34 +587,11 @@ function inject(name, js) {
     }
 }
 
-// Lists online users
-function getOnlineUsers() {
-    var online = [];
-    for (c in ONLINE.models) {
-        online.push(ONLINE.models[c].attributes.nick);
-    }
-    return online;
-}
-
-// Fetch random item from a Facebook user's feed
-function randomFeed(uid) {
-    FB.api(
-        "/" + uid + "/posts",
-        function (response) {
-            console.log(response);
-            if (response && !response.error) {
-                console.log(response);
-                console.log("kek");
-                return response;
-            }
-        }
-    );
-}
-
 // ======================
 //  Rock-Paper-Scissors!
 // ======================
 
+// Definind some variables
 var games = [];
 var id = -1;
 var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
@@ -596,14 +599,19 @@ var rock = "rock";
 var paper = "paper";
 var scissors = "scissors";
 var quit = "quit";
-var me = botnick;
 
+// Generate a game ID
 function gameId() {
     id++;
     return id;
 }
 
+// Give someone reusable links for dueling a user
 function duel(caller, subject) {
+    if (!isOnline("subject")) {
+        pm(caller, "#redThat user is not online!");
+        return false;
+    }
     var invitation = "#orangeYou asked to duel " + subject + " in a fair game of rock-paper-scissors. Pick your arms.";
     var lrock = pmlink("!rps " + subject + " " + rock, "Rock!");
     var lpaper = pmlink("!rps " + subject + " " + paper, "Paper!");
@@ -613,8 +621,12 @@ function duel(caller, subject) {
     pm(caller, invitation);
 }
 
+// Start a game between two users
 function startGame(caller, subject, start) {
-    if (start == "quit") {
+    if (!isOnline("subject")) {
+        pm(caller, "#redThat user is not online!");
+        return false;
+    } else if (start == "quit") {
         send("#red" + caller + " just gave up on dueling " + subject + "!");
     } else {
         var myId = gameId();
@@ -629,6 +641,7 @@ function startGame(caller, subject, start) {
     }
 }
 
+// When the challenged user picks an option...
 function play(caller, command, id) {
     var game = games[id];
     var ended = game[3];
@@ -655,22 +668,7 @@ function play(caller, command, id) {
     }
 }
 
-// Wrapper for PMing
-function pm(user, message) {
-    send("/pm " + user + "|" + message);
-}
-
-// Make JS link
-function jslink(script, text) {
-    return "/?javascript:" + script + "|[" + text + "]|";
-}
-
-// Make JS self PM link
-function pmlink(message, text) {
-    return jslink("CLIENT.submit('/pm " + me + "\\|" + message + "');", text);
-}
-
-// Run game for two strings, returns string as result
+// Run game for two strings, returns result, or false for invalid input
 function runGame(a, b) {
     a = a.toLowerCase();
     b = b.toLowerCase();
