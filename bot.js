@@ -33,7 +33,7 @@ var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP", "InfraR
 var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
 
 // Sent when someone issues !help
-var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
+var help  = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
     help += "         !checkem: Roll a random 5-digit number.\n";
@@ -54,6 +54,18 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
     help += "         !interject [something]: I'd just like to interject for a moment...\n";
     help += "         !duel [username]: (BROKEN) Get reusable links to duel someone in Rock-Paper-Scissors.\n";
     help += "         !math [math]: I can do math too!";
+    help += "         !how2math: An introduction to math.js.";
+    
+var mathhelp  = "#cyanHere's how to do math with Masterbot.\n"
+    mathhelp += "         You can input simple math expressions, like /%9 + 10|.\n";
+    mathhelp += "         You can also use functions, like sin(), cos(), sqrt() and others.\n";
+    mathhelp += "         It also supports boolean logic (/%true|, /%false|) and binary operators such as /%&| and /%\||.\n";
+    mathhelp += "         You can evaluate equality with /%==|, such as /%a = 1; a == -1|.\n";
+    mathhelp += "         You can define variables, but they only exist within that command, like with /%a = 3;|.\n";
+    mathhelp += "         You can convert units, like in /%50cm in inch| or /%50 kilogram in lb|.\n";
+    mathhelp += "         Always separate statements with semicolons, like in /%a = 3; a - 4;|. Use multiple lines if you want.\n";
+    mathhelp += "         Only the last statement is outputted in the answer, but all are executed.\n";
+    mathhelp += "         Refer to http://mathjs.org/ for more details.\n";
 
 // Anti-spam variables
 var antiSpam = false;
@@ -143,7 +155,7 @@ String.prototype.contains = function(it) {
 // Username popup and flair setter, basic setup
 function setup() {
     if (CLIENT.get("nick") !== botnick)
-        CLIENT.submit("/nick " + botnick);
+        CLIENT.submit("/login bottybot " + botnick);
     CLIENT.submit("/safe");
     CLIENT.set("part", "to get repaired by Bruno");
     CLIENT.set("mask", "brunos.secret.bot.laboratory");
@@ -190,7 +202,7 @@ function handler(data) {
         } else if (text.contains("!ask")) {
             ask(name);
         } else if (text.contains("!help")) {
-            pm(name, "|" + help);
+            pm(name, help);
         } else if (text.contains("!shouthelp")) {
             send(help);
         } else if (text.contains("watch?v=")) {
@@ -247,6 +259,8 @@ function handler(data) {
             doMath(argumentString);
         } else if (text.contains("!update")) {
             update(name);
+        } else if (text.contains("!how2math")) {
+            pm(name, mathhelp);
         }
             
     }
