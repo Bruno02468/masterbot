@@ -55,11 +55,12 @@ var help  = "#cyanI am Masterbot, a creation of Bruno02468, with code from Rando
     help += "         !duel [username]: (BROKEN) Get reusable links to duel someone in Rock-Paper-Scissors.\n";
     help += "         !math [math]: I can do math too!";
     help += "         !how2math: An introduction to math.js.";
+    help += "         !insult [someone]: Insult 'em.";
     
 var mathhelp  = "#cyanHere's how to do math with Masterbot.\n"
     mathhelp += "         You can input simple math expressions, like /%9 + 10|.\n";
     mathhelp += "         You can also use functions, like sin(), cos(), sqrt() and others.\n";
-    mathhelp += "         It also supports boolean logic (/%true|, /%false|) and binary operators such as /%&| and /%\||.\n";
+    mathhelp += "         It also supports boolean logic (/%true|, /%false|) and binary operators such as & (AND) and \| (OR).\n";
     mathhelp += "         You can evaluate equality with /%==|, such as /%a = 1; a == -1|.\n";
     mathhelp += "         You can define variables, but they only exist within that command, like with /%a = 3;|.\n";
     mathhelp += "         You can convert units, like in /%50cm in inch| or /%50 kilogram in lb|.\n";
@@ -150,6 +151,11 @@ function escapeForSending(string) {
 // Case insensitive string lookup function
 String.prototype.contains = function(it) { 
     return this.toLowerCase().indexOf(it.toLowerCase()) != -1;
+};
+
+// Pick random item from array
+Array.prototype.randomItem = function() {
+    return this[Math.floor(Math.random()*this.length)];
 };
 
 // Username popup and flair setter, basic setup
@@ -261,6 +267,8 @@ function handler(data) {
             update(name);
         } else if (text.contains("!how2math")) {
             pm(name, mathhelp);
+        } else if (text.contains("!insult")) {
+            insult(name, argumentString);
         }
             
     }
@@ -600,26 +608,6 @@ function interject(s) {
     send(quote);
 }
 
-// Put stuff in the frame
-function frame(url) {
-    var theme = "url(http://media.giphy.com/media/yxVRJ0GrnlW2FrjzsQ/giphy.gif) 75% 35% / 10% 10% no-repeat, url(http://fc03.deviantart.net/fs70/i/2013/059/f/b/wall_frame_2_by_collect_and_creat-d5whjgt.png) center / cover no-repeat, url(" + url + ") 37.5% 0% / 30% 90% no-repeat #000";
-    CLIENT.submit("/bg " + theme);
-}
-
-// Put stuff in a corkboard
-function corkboard(url) {
-    var theme = "url(http://www.clker.com/cliparts/B/V/P/X/Z/e/thumbtack-pushpin-2-hi.png) center 50px / auto 10% no-repeat, url(" + url + ") center 20px / auto 90% no-repeat, url(https://articulate-heroes.s3.amazonaws.com/uploads/attachment/attachment_url/7026/notice%2Bboard%2B_a_.png?dl=true) center / cover no-repeat #111";
-    CLIENT.submit("/bg " + theme); 
-}
-
-// Useless translate function, now abandoned
-function translate(lang, stuff) {
-    $.getJSON("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20150209T041526Z.00e0389b9281a02f.a79c46b2b222abe4cb25dee77e00b4567c4171be&lang=en-" + lang + "&text=" + encodeURIComponent(stuff)).success(function(response) {
-        resp = response.text;
-        send("#green" + stuff + " in " + lang + " is: \"" + resp + "\"");
-    });
-}
-
 // Inject JS -- Bruno only
 function inject(name, js) {
     if (name == "Bruno02468") {
@@ -639,6 +627,74 @@ function doMath(someMath) {
     } catch (err) {
         send("#cyanI do math, not... that. /_" + err.message + "|.");
     }
+}
+
+// Insult generator :-)
+function makeInsult(who) {
+    
+    var gross = ["shit", "feces", "cocaine", "weed", "butthole", "dog-ass", "smegma",
+    "dick-cheese", "blood-clot", "ballsack", "testicle", "gasoline", "cum", "sperm",
+    "fart", "sulphur", "dirt", "ash", "baby-powder", "toilet-paper", "dick", "penis"
+    "male-genitalia", "female-genitalia", "dog-poo", "baking-soda", "little-children",
+    "pussy", "goat-fur", "acarus", "insect", "dildo", "welfare"];
+    
+    var gerunds = ["sucking", "licking", "eating", "loving", "fiddling", "smelling",
+    "sniffing", "snorting", "inserting", "globbing", "swallowing"];
+          
+    var adjectives = ["aggressive", "aloof", "arrogant", "belligerent", "big-headed",
+    "bitchy", "boastful", "bone-idle", "boring", "bossy", "callous", "cantankerous",
+    "careless", "changeable", "clinging", "compulsive", "conservative", "cowardly",
+    "cruel", "cunning", "cynical", "dirty", "deceitful", "detached", "dishonest", "dogmatic",
+    "domineering", "finicky", "flirtatious", "foolish", "foolhardy", "fussy", "greedy",
+    "grumpy", "gullible", "harsh ", "impatient", "impolite", "impulsive", "inconsiderate",
+    "inconsistent", "indecisive", "indiscreet", "inflexible", "interfering", "intolerant",
+    "irresponsible", "jealous", "lazy", "Machiavellian", "materialistic", "mean",
+    "miserly", "moody", "narrow-minded", "nasty", "naughty", "nervous", "obsessive",
+    "obstinate", "overcritical", "overemotional", "parsimonious", "patronizing",
+    "perverse", "pessimistic", "pompous", "possessive", "pusillanimous", "quarrelsome",
+    "quick-tempered", "resentful", "rude", "ruthless", "sarcastic", "secretive",
+    "selfish", "self-centred", "self-indulgent", "silly", "sneaky", "stingy", "stubborn",
+    "stupid", "superficial", "tactless", "timid", "touchy", "thoughtless", "truculent",
+    "unkind", "unpredictable", "unreliable", "unsuccessful", "untidy", "untrustworthy", "vague",
+    "vain", "vengeful", "vulgar", "weak-willed", "poor", "chromosome-lacking", "chromosome-bearing",
+    "chromosome-shuffled", "brain-dead", "shitty", "crappy", "buggy", "laggy", "muddy",
+    "squeaky", "gooey", "rotten-brained", "spooky", "Brazilian", "American", "sweaty"
+    "unemployed", "low-intelligence"];
+    
+    var things = ["dolt", "idiot", "retard", "dumbass", "capitalist", "cock-smoker",
+    "pedophile", "4channer", "8channer", "narcissist", "scum of the Earth", "fuckwit",
+    "bumbaclot", "son of a bitch", "bad friend", "shithead", "wind-headed", "empty vase",
+    "toilet paper", "brony", "furry", "belieber", "communist", "liberal", "republican",
+    "democrat", "socialist", "one-directioner", "drug user", "drug addict", "part of NEET",
+    "Dinkleberg", "piece of goat testicles", "ambientalist", "flip-flop", "SJW",
+    "tumblr activist", "slacktivist", "couch potato", "ass gremlin", "cheater",
+    "jock", "welfare leech"];
+
+    function article(word) {
+        var vowels = ["a", "e", "i", "o", "u"];
+        if (vowels.indexOf(word[0]) > -1) {
+            return "an";
+        }
+        return "a";
+    }
+    
+    var gr = gross.randomItem();
+    var ar = article(gr);
+    var ge = gerunds.randomItem();
+    var ad = adjectives.randomItem();
+    var th = things.randomItem();
+    
+    return "You, " + who + ", are " + ar + " " + gr + "-" + ge + " " + ad + " " + th + ".";
+}
+
+// Insult someone
+function insult(caller, who) {
+    var theInsult = makeInsult(who);
+    if (who == "!insult") {
+        insult(caller, caller);
+        return false;
+    }
+    send(theInsult);
 }
 
 // ======================
