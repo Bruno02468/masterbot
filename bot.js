@@ -660,7 +660,8 @@ function makeInsult(who) {
     "jock", "welfare leech", "failed abortion", "fetus", "sad cum", "hippie", "programmer",
     "redditor", "sex toy", "nerd", "slug", "bunch of sticks", "Applefag", "summerfag",
     "jailbait", "flat earther", "Christian", "atheist", "shitlord", "cum dumpster",
-    "asshole", "ass", "ass ray", "ass bread", "half-wit", "flip-flop", "tard"];
+    "asshole", "ass", "ass ray", "ass bread", "half-wit", "flip-flop", "tard", "wannabe",
+    "gonnabe"];
 
     function article(word) {
         var vowels = ["a", "e", "i", "o", "u"];
