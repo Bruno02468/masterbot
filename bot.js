@@ -24,12 +24,15 @@
 
 // Defining some basic functions and variables
 var disabled = false;
+var botnick = "Masterbot";
 
 // People who can control the bot
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP",
-               "InfraRaven", "Kevin", "L̫̪̯̠͠A̜̭̘͚M̧̮͙͇̭̫P̷̘"]; 
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP", "InfraRaven", "Kevin"];
+
+// People who can't use the bot
 var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
 
+// Sent when someone issues !help
 var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Randomguy and Mr. Guy!\n";
     help += "Commands:\n";
     help += "         !help: Get some help when using the bot!\n";
@@ -49,7 +52,8 @@ var help = "#cyanI am Masterbot, a creation of Bruno02468, with code from Random
 //  help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
 //  help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
     help += "         !interject [something]: I'd just like to interject for a moment...\n";
-    help += "         !duel [username]: Get reusable links to duel someone in Rock-Paper-Scissors.";
+    help += "         !duel [username]: (BROKEN) Get reusable links to duel someone in Rock-Paper-Scissors.\n";
+    help += "         !math [math]: I can do math too!";
 
 // Anti-spam variables
 var antiSpam = false;
@@ -137,23 +141,28 @@ String.prototype.contains = function(it) {
 };
 
 // Username popup and flair setter, basic setup
-var botnick = "Masterbot";
-if (CLIENT.get("nick") !== botnick)
-    CLIENT.submit("/nick " + botnick);
-CLIENT.submit("/safe");
-CLIENT.set("part", "to get repaired by Bruno");
-CLIENT.set("mask", "brunos.secret.bot.laboratory");
-CLIENT.set("flair", "$Montserrat|#808080/^" + botnick);
-CLIENT.set("font", "sans");
-CLIENT.set("frame", "off");
-CLIENT.set("mute", "on");
+function setup() {
+    if (CLIENT.get("nick") !== botnick)
+        CLIENT.submit("/nick " + botnick);
+    CLIENT.submit("/safe");
+    CLIENT.set("part", "to get repaired by Bruno");
+    CLIENT.set("mask", "brunos.secret.bot.laboratory");
+    CLIENT.set("flair", "$Montserrat|#808080/^" + botnick);
+    CLIENT.set("font", "sans");
+    CLIENT.set("frame", "off");
+    CLIENT.set("mute", "on");
+}
+if (!allset) {
+    setup();
+    allset = true;
+}
 
 // All set up, tell the user.
 CLIENT.show("Masterbot now running!");
 
 
 // Begin logging process and listen for commands
-CLIENT.on('message', function(data) {
+function handler(data) {
     if (data.nick === undefined) {
         return false;
     }
@@ -181,7 +190,7 @@ CLIENT.on('message', function(data) {
         } else if (text.contains("!ask")) {
             ask(name);
         } else if (text.contains("!help")) {
-            CLIENT.submit("/pm " + name + "|" + help);
+            pm(name, "|" + help);
         } else if (text.contains("!shouthelp")) {
             send(help);
         } else if (text.contains("watch?v=")) {
@@ -236,11 +245,17 @@ CLIENT.on('message', function(data) {
             play(name, argumentsArray[0], argumentsArray[1]);
         } else if (text.contains("!math")) {
             doMath(argumentString);
+        } else if (text.contains("!update")) {
+            update(name);
         }
             
     }
         
-});
+}
+if (!listening) {
+    CLIENT.on('message', handler);
+    listening = true;
+}
 
 
 // ==============================
@@ -319,7 +334,7 @@ function roll(name) {
     send("#orange" + name + " rolled " + rand + lucky + "#orange!");
 }
 
-// Lists masters
+// List masters
 function listMasters() {
     var msg = "#orangeMy masters are ";
     for (var i = 0; i < masters.length - 1; i++) {
@@ -329,7 +344,7 @@ function listMasters() {
     send(msg);
 }
 
-// Toggles the bot
+// Toggle the bot
 function toggle(name) {
     if (masters.indexOf(name) > -1) {
         disabled = !disabled;
@@ -339,7 +354,23 @@ function toggle(name) {
             CLIENT.submit("#redMasterbot now disabled.");
         }
     } else {
-        CLIENT.submit("/pm " + name + "|#redYou do not have permission to toggle me. Stop it.");
+        pm(name, "|#redYou do not have permission to toggle me. Stop it.");
+    }
+}
+
+// Update the bot
+function update(name) {
+    if (masters.indexOf(name) > -1) {
+        var newscript = ajaxGet("http://bruno02468.com/masterbot/script.php");
+        if (newscript == script) {
+            CLIENT.submit("#cyan/*Bot is already up to date.");
+        } else {
+            CLIENT.submit("#cyan/*Bot updated to latest version.");
+            window.eval.call(window, newscript);
+            script = newscript;
+        }
+    } else {
+        pm(name, "|#redYou do not have permission to update me. Stop it.");
     }
 }
 
@@ -353,7 +384,7 @@ function blockban(name, target) {
             CLIENT.submit("#redMaster " + name + ", that user is already blocked.");
         }
     } else {
-        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
+        pm(name, "#redYou do not have permission to do that. Stop it.");
     }
 }
 
@@ -368,16 +399,16 @@ function unblockban(name, target) {
             CLIENT.submit("#redMaster " + name + ", that user is not blocked.");
         }
     } else {
-        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
+        pm(name, "|#redYou do not have permission to do that. Stop it.");
     }
 }
 
 // List blocked users
 function banlist(name) {
     if (masters.indexOf(name) > -1) {
-        CLIENT.submit("/pm " + name + "|#cyanBan list: [" + banned + "].");
+        pm(name, "|#cyanBan list: [" + banned + "].");
     } else {
-        CLIENT.submit("/pm " + name + "|#redYou do not have permission to do that. Stop it.");
+        pm(name, "|#redYou do not have permission to do that. Stop it.");
     }
 }
 
@@ -578,8 +609,12 @@ function inject(name, js) {
 
 // Do us some math
 function doMath(someMath) {
-    var answer = math.eval(someMath);
-    send("#cyanAnswer: $Source Code Pro|" + answer);
+    try {
+        var answer = math.eval(someMath);
+        send("#cyanAnswer: $Source Code Pro|" + answer);
+    } catch (err) {
+        send("#cyanI do math, not... that. /_" + err.message + "|.");
+    }
 }
 
 // ======================
