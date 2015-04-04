@@ -620,7 +620,7 @@ function makeInsult(who) {
     "dick-cheese", "blood-clot", "ballsack", "testicle", "gasoline", "cum", "sperm",
     "fart", "sulphur", "dirt", "ash", "baby-powder", "toilet-paper", "dick", "penis",
     "male-genitalia", "female-genitalia", "dog-poo", "baking-soda", "little-children",
-    "pussy", "goat-fur", "acarus", "insect", "dildo", "tree", "Starbucks", "coffee",
+    "pussy", "goat-fur", "mite", "insect", "dildo", "tree", "Starbucks", "coffee",
     "Haskell-code", "Star-Wars", "Star-Trek", "K-pop", "iPhone", "iMac", "iPod",
     "Apple", "Steve-Jobs", "garbage", "battery-acid", "ass"];
     
@@ -648,7 +648,7 @@ function makeInsult(who) {
     "squeaky", "gooey", "rotten-brained", "spooky", "Brazilian", "American", "sweaty",
     "unemployed", "low-intelligence", "circumcised", "underaged", "over", "radical",
     "fedora-tipping", "fedora-wearing", "privileged", "fat-ass", "submissive", "filthy",
-    "useless"];
+    "useless", "show-on-head"];
     
     var things = ["dolt", "idiot", "retard", "dumbass", "capitalist", "cock-smoker",
     "pedophile", "4channer", "8channer", "narcissist", "scum of the Earth", "fuckwit",
@@ -661,7 +661,7 @@ function makeInsult(who) {
     "redditor", "sex toy", "nerd", "slug", "bunch of sticks", "Applefag", "summerfag",
     "jailbait", "flat earther", "Christian", "atheist", "shitlord", "cum dumpster",
     "asshole", "ass", "ass ray", "ass bread", "half-wit", "flip-flop", "tard", "wannabe",
-    "gonnabe"];
+    "gonnabe", "dickweed", "leech", "sponge", "snick-snack"];
 
     function article(word) {
         var vowels = ["a", "e", "i", "o", "u"];
