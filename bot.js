@@ -282,7 +282,12 @@ function getTitles(message) {
     for (var c in urls) {
         var id = urls[c].match(idpattern)[0];
         if (id !== undefined) {
-            getTitle(id);
+            var video_id = id.split('v=')[1];
+            var ampersandPosition = video_id.indexOf('&');
+            if(ampersandPosition !== -1) {
+                video_id = video_id.substring(0, ampersandPosition);
+            }
+            getTitle(video_id);
         }
     }
 }
