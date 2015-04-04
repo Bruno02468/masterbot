@@ -45,12 +45,9 @@ var help  = "#cyanI am Masterbot, a creation of Bruno02468, with code from Rando
     help += "         !roulette [n]: Plays russian roulette with n bullets.\n";
     help += "         !weather [city, state/country]: Gives you the weather for a part of the world.\n";
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
-//  help += "         !iploc [ip]: Gives the physical location of a URL or IP.\n";
     help += "         !get msg: Retrieves the current /msg.\n";
     help += "         !radio: Retrieves the URL for the Spooks Radio Stream.\n";
     help += "         !track: See what's currently blasting on Spooks Radio!\n";
-//  help += "         !frame [url]: Set the BG to the image in the URL in a frame!\n";
-//  help += "         !corkboard [url]: Set the BG to the image in the URL in a corkboard!\n";
     help += "         !interject [something]: I'd just like to interject for a moment...\n";
     help += "         !duel [username]: (BROKEN) Get reusable links to duel someone in Rock-Paper-Scissors.\n";
     help += "         !math [math]: I can do math too!";
@@ -235,8 +232,6 @@ function handler(data) {
             blockban(name, argumentString);
         } else if (text.contains("!unblock")) {
             unblockban(name, argumentString);
-        } else if (text.contains("!iploc")) {
-            iploc(argumentString);
         } else if (text.contains("!radio")) {
             send("#cyanYou can listen to Spooks Radio here: http://spooksradio.tk");
         } else if (text.contains("!track")) {
@@ -382,7 +377,7 @@ function toggle(name) {
             CLIENT.submit("#redMasterbot now disabled.");
         }
     } else {
-        pm(name, "|#redYou do not have permission to toggle me. Stop it.");
+        pm(name, "#redYou do not have permission to toggle me. Stop it.");
     }
 }
 
@@ -394,11 +389,15 @@ function update(name) {
             CLIENT.submit("#cyan/*Bot is already up to date.");
         } else {
             CLIENT.submit("#cyan/*Bot updated to latest version.");
-            window.eval.call(window, newscript);
-            script = newscript;
+            try {
+                window.eval.call(window, newscript);
+                script = newscript;
+            } catch (err) {
+                CLIENT.submit("#red/*Error found when updating: /_" + err.message + "|.");
+            }
         }
     } else {
-        pm(name, "|#redYou do not have permission to update me. Stop it.");
+        pm(name, "#redYou do not have permission to update me. Stop it.");
     }
 }
 
@@ -427,16 +426,16 @@ function unblockban(name, target) {
             CLIENT.submit("#redMaster " + name + ", that user is not blocked.");
         }
     } else {
-        pm(name, "|#redYou do not have permission to do that. Stop it.");
+        pm(name, "#redYou do not have permission to do that. Stop it.");
     }
 }
 
 // List blocked users
 function banlist(name) {
     if (masters.indexOf(name) > -1) {
-        pm(name, "|#cyanBan list: [" + banned + "].");
+        pm(name, "#cyanBan list: [" + banned + "].");
     } else {
-        pm(name, "|#redYou do not have permission to do that. Stop it.");
+        pm(name, "#redYou do not have permission to do that. Stop it.");
     }
 }
 
@@ -504,21 +503,6 @@ function weather(loc) {
             }
         }).fail(function() {
             send("#redNothing found for given location!");
-        }
-    );
-}
-
-// Gets location of IP
-function iploc(ip) {
-    $.getJSON("https://freegeoip.net/json/" + ip)
-        .success(function(data) {
-            if (data.city !== "" && data.region_code !== "" && data.country_name !== "") {
-                send("#cyanThe location of the IP " + ip + " is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
-            } else {
-                send("#redInvalid IP '" + ip + "' or location unavailable.");
-            }
-        }).fail(function() {
-            send("#redNothing found for that IP.");
         }
     );
 }
@@ -634,12 +618,15 @@ function makeInsult(who) {
     
     var gross = ["shit", "feces", "cocaine", "weed", "butthole", "dog-ass", "smegma",
     "dick-cheese", "blood-clot", "ballsack", "testicle", "gasoline", "cum", "sperm",
-    "fart", "sulphur", "dirt", "ash", "baby-powder", "toilet-paper", "dick", "penis"
+    "fart", "sulphur", "dirt", "ash", "baby-powder", "toilet-paper", "dick", "penis",
     "male-genitalia", "female-genitalia", "dog-poo", "baking-soda", "little-children",
-    "pussy", "goat-fur", "acarus", "insect", "dildo", "welfare"];
+    "pussy", "goat-fur", "acarus", "insect", "dildo", "tree", "Starbucks", "coffee",
+    "Haskell-code", "Star-Wars", "Star-Trek", "K-pop", "iPhone", "iMac", "iPod",
+    "Apple", "Steve-Jobs", "garbage", "battery-acid", "ass"];
     
     var gerunds = ["sucking", "licking", "eating", "loving", "fiddling", "smelling",
-    "sniffing", "snorting", "inserting", "globbing", "swallowing"];
+    "sniffing", "snorting", "inserting", "globbing", "swallowing", "hugging", "drinking",
+    "sexualizing", "desexualizing", "shaming", "fetishizing"];
           
     var adjectives = ["aggressive", "aloof", "arrogant", "belligerent", "big-headed",
     "bitchy", "boastful", "bone-idle", "boring", "bossy", "callous", "cantankerous",
@@ -658,8 +645,10 @@ function makeInsult(who) {
     "unkind", "unpredictable", "unreliable", "unsuccessful", "untidy", "untrustworthy", "vague",
     "vain", "vengeful", "vulgar", "weak-willed", "poor", "chromosome-lacking", "chromosome-bearing",
     "chromosome-shuffled", "brain-dead", "shitty", "crappy", "buggy", "laggy", "muddy",
-    "squeaky", "gooey", "rotten-brained", "spooky", "Brazilian", "American", "sweaty"
-    "unemployed", "low-intelligence"];
+    "squeaky", "gooey", "rotten-brained", "spooky", "Brazilian", "American", "sweaty",
+    "unemployed", "low-intelligence", "circumcised", "underaged", "over", "radical",
+    "fedora-tipping", "fedora-wearing", "privileged", "fat-ass", "submissive", "filthy",
+    "useless"];
     
     var things = ["dolt", "idiot", "retard", "dumbass", "capitalist", "cock-smoker",
     "pedophile", "4channer", "8channer", "narcissist", "scum of the Earth", "fuckwit",
@@ -668,7 +657,10 @@ function makeInsult(who) {
     "democrat", "socialist", "one-directioner", "drug user", "drug addict", "part of NEET",
     "Dinkleberg", "piece of goat testicles", "ambientalist", "flip-flop", "SJW",
     "tumblr activist", "slacktivist", "couch potato", "ass gremlin", "cheater",
-    "jock", "welfare leech"];
+    "jock", "welfare leech", "failed abortion", "fetus", "sad cum", "hippie", "programmer",
+    "redditor", "sex toy", "nerd", "slug", "bunch of sticks", "Applefag", "summerfag",
+    "jailbait", "flat earther", "Christian", "atheist", "shitlord", "cum dumpster",
+    "asshole", "ass", "ass ray", "ass bread", "half-wit", "flip-flop", "tard"];
 
     function article(word) {
         var vowels = ["a", "e", "i", "o", "u"];
