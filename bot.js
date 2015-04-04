@@ -270,7 +270,9 @@ function getTitle(id) {
     var xml = ajaxGet("http://gdata.youtube.com/feeds/api/videos/" + id);
     var parser = new DOMParser();
     var xmlDocument = parser.parseFromString(xml, "text/xml");
-    CLIENT.submit("#cyanTitle: " + xmlDocument.getElementsByTagName("title")[0].innerHTML);
+    var title = xmlDocument.getElementsByTagName("title")[0].innerHTML;
+    var thumb = "\n                     https://img.youtube.com/vi/" + id + "/default.jpg"
+    send("#cyanTitle: " + title + thumb);
 }
 
 // Look for the titles of  YouTube videos in the messages
@@ -278,7 +280,6 @@ function getTitles(message) {
     var urlpattern = /(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])/gim;
     var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gim;
     var urls = message.match(urlpattern);
-    console.log(urls);
     for (var c in urls) {
         var id = urls[c].match(idpattern)[0];
         if (id !== undefined) {
