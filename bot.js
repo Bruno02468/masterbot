@@ -50,9 +50,10 @@ var help  = "#cyanI am Masterbot, a creation of Bruno02468, with code from Rando
     help += "         !track: See what's currently blasting on Spooks Radio!\n";
     help += "         !interject [something]: I'd just like to interject for a moment...\n";
     help += "         !duel [username]: (BROKEN) Get reusable links to duel someone in Rock-Paper-Scissors.\n";
-    help += "         !math [math]: I can do math too!";
-    help += "         !how2math: An introduction to math.js.";
-    help += "         !insult [someone]: Insult 'em.";
+    help += "         !math [math]: I can do math too!\n";
+    help += "         !how2math: An introduction to math.js.\n";
+    help += "         !insult [someone]: Insult them!\n";
+    help += "         !compliment [someone]: Compliment them to make up for it.";
     
 var mathhelp  = "#cyanHere's how to do math with Masterbot.\n"
     mathhelp += "         You can input simple math expressions, like /%9 + 10|.\n";
@@ -63,7 +64,7 @@ var mathhelp  = "#cyanHere's how to do math with Masterbot.\n"
     mathhelp += "         You can convert units, like in /%50cm in inch| or /%50 kilogram in lb|.\n";
     mathhelp += "         Always separate statements with semicolons, like in /%a = 3; a - 4;|. Use multiple lines if you want.\n";
     mathhelp += "         Only the last statement is outputted in the answer, but all are executed.\n";
-    mathhelp += "         Refer to http://mathjs.org/ for more details.\n";
+    mathhelp += "         Refer to http://mathjs.org/ for more details.";
 
 // Anti-spam variables
 var antiSpam = false;
@@ -264,6 +265,8 @@ function handler(data) {
             pm(name, mathhelp);
         } else if (text.contains("!insult")) {
             insult(name, argumentString);
+        } else if (text.contains("!compliment")) {
+            compliment(name, argumentString);
         }
             
     }
@@ -478,7 +481,8 @@ function roulette(bullets) {
 
 // Gets definition of a word
 function define(word) {
-    $.getJSON("https://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5")
+    $.getJSON("https://api.wordnik.com/v4/word.json/" + word
+    + "/definitions?limit=1&includeRelated=true&sourceDictionaries=wiktionary&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5")
         .success(function(data) {
             if (data[0] === undefined) {
                 send("#redNo definition could be found.");
@@ -492,7 +496,8 @@ function define(word) {
 
 // Gets weather for a location
 function weather(loc) {
-    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
+    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" 
+    + loc + "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys")
         .success(function(data) {
             if (data.query.results !== null) {
                 var farenheit = data.query.results.channel.item.condition.temp;
@@ -588,7 +593,8 @@ function interject(s) {
     if (!s || s == "!interject") {
         s = "Linux";
     }
-    var quote = "/%I'd just like to interject for a moment. What you're referring to as " + s + " is, in fact, GNU\/" + s + ", or as I've recently taken to calling it, GNU plus " + s + ".";
+    var quote = "/%I'd just like to interject for a moment. What you're referring to as "
+              + s + " is, in fact, GNU\/" + s + ", or as I've recently taken to calling it, GNU plus " + s + ".";
     send(quote);
 }
 
@@ -613,63 +619,71 @@ function doMath(someMath) {
     }
 }
 
+// Generate an article for a word
+function article(word) {
+    var vowels = ["a", "e", "i", "o", "u"];
+    if (vowels.indexOf(word[0]) > -1) {
+        return "an";
+    }
+    return "a";
+}
+
 // Insult generator :-)
 function makeInsult(who) {
     
-    var gross = ["shit", "feces", "cocaine", "weed", "butthole", "dog-ass", "smegma",
-    "dick-cheese", "blood-clot", "ballsack", "testicle", "gasoline", "cum", "sperm",
-    "fart", "sulphur", "dirt", "ash", "baby-powder", "toilet-paper", "dick", "penis",
-    "male-genitalia", "female-genitalia", "dog-poo", "baking-soda", "little-children",
-    "pussy", "goat-fur", "mite", "insect", "dildo", "tree", "Starbucks", "coffee",
-    "Haskell-code", "Star-Wars", "Star-Trek", "K-pop", "iPhone", "iMac", "iPod",
-    "Apple", "Steve-Jobs", "garbage", "battery-acid", "ass"];
+    var gross = ["shit", "feces", "cocaine", "weed", "butthole", "dog-ass",
+    "dick-cheese", "blood-clot", "ballsack", "testicle", "gasoline", "cum",
+    "fart", "sulphur", "dirt", "ash", "baby-powder", "toilet-paper", "dick",
+    "male-genitalia", "female-genitalia", "dog-poo", "baking-soda",
+    "pussy", "goat-fur", "mite", "insect", "dildo", "tree", "Starbucks",
+    "Haskell-code", "Star-Wars", "Star-Trek", "K-pop", "iPhone", "iMac",
+    "Apple", "Steve-Jobs", "garbage", "battery-acid", "ass", "smegma",
+    "penis", "little-children", "coffee", "iPod", "sperm"];
     
-    var gerunds = ["sucking", "licking", "eating", "loving", "fiddling", "smelling",
-    "sniffing", "snorting", "inserting", "globbing", "swallowing", "hugging", "drinking",
-    "sexualizing", "desexualizing", "shaming", "fetishizing"];
+    var gerunds = ["sucking", "licking", "eating", "loving", "fiddling",
+    "sniffing", "snorting", "inserting", "globbing", "swallowing", "hugging",
+    "sexualizing", "desexualizing", "shaming", "fetishizing", "smelling",
+    "drinking"];
           
-    var adjectives = ["aggressive", "aloof", "arrogant", "belligerent", "big-headed",
-    "bitchy", "boastful", "bone-idle", "boring", "bossy", "callous", "cantankerous",
-    "careless", "changeable", "clinging", "compulsive", "conservative", "cowardly",
-    "cruel", "cunning", "cynical", "dirty", "deceitful", "detached", "dishonest", "dogmatic",
-    "domineering", "finicky", "flirtatious", "foolish", "foolhardy", "fussy", "greedy",
-    "grumpy", "gullible", "harsh ", "impatient", "impolite", "impulsive", "inconsiderate",
-    "inconsistent", "indecisive", "indiscreet", "inflexible", "interfering", "intolerant",
-    "irresponsible", "jealous", "lazy", "Machiavellian", "materialistic", "mean",
-    "miserly", "moody", "narrow-minded", "nasty", "naughty", "nervous", "obsessive",
+    var adjectives = ["aggressive", "aloof", "arrogant", "belligerent",
+    "bitchy", "boastful", "bone-idle", "boring", "bossy", "callous",
+    "careless", "changeable", "clinging", "compulsive", "conservative",
+    "cruel", "cunning", "cynical", "dirty", "deceitful", "detached",
+    "domineering", "finicky", "flirtatious", "foolish", "foolhardy", "fussy",
+    "grumpy", "gullible", "harsh ", "impatient", "impolite", "impulsive",
+    "inconsistent", "indecisive", "indiscreet", "inflexible", "interfering",
+    "irresponsible", "jealous", "lazy", "Machiavellian", "materialistic",
+    "miserly", "moody", "narrow-minded", "nasty", "naughty", "nervous",
     "obstinate", "overcritical", "overemotional", "parsimonious", "patronizing",
-    "perverse", "pessimistic", "pompous", "possessive", "pusillanimous", "quarrelsome",
+    "perverse", "pessimistic", "pompous", "possessive", "pusillanimous",
     "quick-tempered", "resentful", "rude", "ruthless", "sarcastic", "secretive",
-    "selfish", "self-centred", "self-indulgent", "silly", "sneaky", "stingy", "stubborn",
-    "stupid", "superficial", "tactless", "timid", "touchy", "thoughtless", "truculent",
-    "unkind", "unpredictable", "unreliable", "unsuccessful", "untidy", "untrustworthy", "vague",
-    "vain", "vengeful", "vulgar", "weak-willed", "poor", "chromosome-lacking", "chromosome-bearing",
-    "chromosome-shuffled", "brain-dead", "shitty", "crappy", "buggy", "laggy", "muddy",
-    "squeaky", "gooey", "rotten-brained", "spooky", "Brazilian", "American", "sweaty",
-    "unemployed", "low-intelligence", "circumcised", "underaged", "over", "radical",
-    "fedora-tipping", "fedora-wearing", "privileged", "fat-ass", "submissive", "filthy",
-    "useless", "show-on-head"];
+    "selfish", "self-centred", "self-indulgent", "silly", "sneaky", "stingy",
+    "stupid", "superficial", "tactless", "timid", "touchy", "thoughtless",
+    "unkind", "unpredictable", "unreliable", "unsuccessful", "untidy",
+    "vain", "vengeful", "vulgar", "weak-willed", "poor", "chromosome-lacking",
+    "chromosome-shuffled", "brain-dead", "shitty", "crappy", "buggy", "laggy",
+    "squeaky", "gooey", "rotten-brained", "spooky", "Brazilian", "American",
+    "unemployed", "low-intelligence", "circumcised", "underaged", "over",
+    "fedora-tipping", "fedora-wearing", "privileged", "fat-ass", "submissive",
+    "useless", "show-on-head", "dishonest", "dogmatic", "greedy", "big-headed",
+    "cantankerous", "cowardly", "inconsiderate",  "intolerant", "mean",
+    "obsessive",  "quarrelsome", "stubborn", "truculent",  "untrustworthy",
+    "vague", "chromosome-bearing", "muddy", "sweaty", "radical", "filthy"];
     
-    var things = ["dolt", "idiot", "retard", "dumbass", "capitalist", "cock-smoker",
-    "pedophile", "4channer", "8channer", "narcissist", "scum of the Earth", "fuckwit",
-    "bumbaclot", "son of a bitch", "bad friend", "shithead", "wind-headed", "empty vase",
-    "toilet paper", "brony", "furry", "belieber", "communist", "liberal", "republican",
-    "democrat", "socialist", "one-directioner", "drug user", "drug addict", "part of NEET",
+    var things = ["dolt", "idiot", "retard", "dumbass", "capitalist",
+    "cock-smoker", "pedophile", "4channer", "8channer", "narcissist",
+    "scum of the Earth", "fuckwit", "bumbaclot", "son of a bitch", "bad friend",
+    "shithead", "wind-headed", "empty vase", "toilet paper", "brony", "furry",
+    "belieber", "communist", "liberal", "republican", "democrat", "socialist",
+    "one-directioner", "drug user", "drug addict", "part of NEET",
     "Dinkleberg", "piece of goat testicles", "ambientalist", "flip-flop", "SJW",
     "tumblr activist", "slacktivist", "couch potato", "ass gremlin", "cheater",
-    "jock", "welfare leech", "failed abortion", "fetus", "sad cum", "hippie", "programmer",
-    "redditor", "sex toy", "nerd", "slug", "bunch of sticks", "Applefag", "summerfag",
-    "jailbait", "flat earther", "Christian", "atheist", "shitlord", "cum dumpster",
-    "asshole", "ass", "ass ray", "ass bread", "half-wit", "flip-flop", "tard", "wannabe",
-    "gonnabe", "dickweed", "leech", "sponge", "snick-snack"];
-
-    function article(word) {
-        var vowels = ["a", "e", "i", "o", "u"];
-        if (vowels.indexOf(word[0]) > -1) {
-            return "an";
-        }
-        return "a";
-    }
+    "jock", "welfare leech", "failed abortion", "fetus", "sad cum", "hippie",
+    "programmer", "redditor", "sex toy", "nerd", "slug", "bunch of sticks",
+    "Applefag", "summerfag", "jailbait", "flat earther", "Christian", "atheist",
+    "shitlord", "cum dumpster", "asshole", "ass", "ass ray", "ass bread",
+    "half-wit", "flip-flop", "tard", "wannabe", "gonnabe", "dickweed", "leech",
+    "sponge", "snick-snack"];
     
     var gr = gross.randomItem();
     var ar = article(gr);
@@ -677,17 +691,84 @@ function makeInsult(who) {
     var ad = adjectives.randomItem();
     var th = things.randomItem();
     
-    return "You, " + who + ", are " + ar + " " + gr + "-" + ge + " " + ad + " " + th + ".";
+    return "You, " + who + ", are " + ar + " " + gr + "-" + ge + " " + ad + " "
+            + th + ".";
 }
 
 // Insult someone
 function insult(caller, who) {
-    var theInsult = makeInsult(who);
     if (who == "!insult") {
         insult(caller, caller);
         return false;
     }
+    var theInsult = makeInsult(who);
     send(theInsult);
+}
+
+// Compliment generator
+function makeCompliment(who) {
+    
+    var adverbs = ["very", "extremely", "unebelivably", "absolutely", "highly",
+    "uniquely", "deeply", "strongly", "delightfully", "astonishingly"];
+          
+    var adjectives = ["adaptable", "adventurous", "affable", "affectionate",
+    "agreeable", "ambitious", "amiable", "amicable", "amusing", "brave",
+    "broad-minded", "calm", "caring", "charming", "communicative",
+    "conscientious", "considerate", "convivial", "courageous", "courteous",
+    "decisive", "determined", "diligent", "diplomatic", "discreet", "dynamic",
+    "easygoing", "emotional", "energetic", "enthusiastic", "exuberant",
+    "faithful", "fearless", "forceful", "frank", "friendly", "funny", 
+    "gentle", "good", "gregarious", "hard-working", "helpful", "honest",
+    "imaginative", "impartial", "independent", "intellectual", "intelligent",
+    "intuitive", "inventive", "kind", "loving", "loyal", "modest", "neat",
+    "nice", "optimistic", "passionate", "patient", "persistent ", "pioneering",
+    "philosophical", "placid", "plucky", "polite", "powerful", "practical",
+    "pro-active", "quick-witted", "rational", "reliable", "reserved",
+    "resourceful", "romantic", "self-confident", "self-disciplined", "sensible",
+    "sensitive", "sincere", "sociable", "straightforward", "sympathetic",
+    "thoughtful", "tidy", "tough", "unassuming", "understanding", "versatile",
+    "warmhearted", "willing", "humorous", "generous", "witty", "fair-minded",
+    "creative", "compassionate", "bright", "handsome", "cute", "sexy",
+    "beautiful"];
+    
+    var person = ["person", "comrade", "friend", "patriot", "partner", "winner",
+    "human being", "personality", "carbon-based life form"];
+    
+    var good = ["good", "great", "awesome", "perfect"];
+    
+    var verbs = ["looking", "smelling", "tasting", "feeling"];
+    
+    var ubody = ["teeth", "hair", "genitalia", "legs", "arms", "hands",
+    "nails", "eyes", "toes", "pubes", "armpits", "elbows", "shoulders"];
+    var cbody = ["/*ASS|", "nose", "butt"];
+    var body = [ubody, cbody];
+    
+    
+    var av = adverbs.randomItem();
+    var ad = adjectives.randomItem();
+    var ax = article(av);
+    var pr = person.randomItem();
+    var gd = good.randomItem();
+    var ar = "some";
+    var vb = verbs.randomItem();
+    var bd = body.randomItem().randomItem();
+    if (cbody.indexOf(bd) > -1) {
+        ar = article(gd);
+    }
+    
+    return "You, " + who + ", are " + ax + " " + av + " " + ad + " " + pr + ", with "
+           + ar + " " + gd + "-" + vb + " " + bd + " right there!";
+
+}
+
+// Compliment someone
+function compliment(caller, who) {
+    if (who == "!compliment") {
+        compliment(caller, caller);
+        return false;
+    }
+    var theCompliment = makeCompliment(who);
+    send(theCompliment);
 }
 
 // ======================
@@ -715,12 +796,14 @@ function duel(caller, subject) {
         pm(caller, "#redThat user is not online!");
         return false;
     }
-    var invitation = "#orangeYou asked to duel " + subject + " in a fair game of rock-paper-scissors. Pick your arms.";
+    var invitation = "#orangeYou asked to duel " + subject + " in a fair game "
+                   + "of rock-paper-scissors. Pick your arms.";
     var lrock = pmlink("!rps " + subject + " " + rock, "Rock!");
     var lpaper = pmlink("!rps " + subject + " " + paper, "Paper!");
     var lscissors = pmlink("!rps " + subject + " " + scissors, "Scissors!");
     var lquit = pmlink("!rps " + subject + " " + quit, "Uh... nevermind.");
-    invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit;
+    invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors
+                + "\\n" + lquit;
     pm(caller, invitation);
 }
 
@@ -737,8 +820,10 @@ function startGame(caller, subject, start) {
         var lpaper = pmlink("!play " + paper + " " + myId, "Paper!");
         var lscissors = pmlink("!play " + scissors + " " + myId, "Scissors!");
         var lquit = pmlink("!play " + quit + " " + myId, "I'm a coward.");
-        var invitation = "#green" + caller + " has challenged you for a fair duel of Rock-Paper-Scissors!\\nPick your arms or run.";
-        invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors + "\\n" + lquit;
+        var invitation = "#green" + caller + " has challenged you for a fair "
+                      + "duel of Rock-Paper-Scissors!\\nPick your arms or run.";
+        invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors
+                   + "\\n" + lquit;
         pm(subject, invitation);
         games.push([caller, subject, start, false]);
     }
