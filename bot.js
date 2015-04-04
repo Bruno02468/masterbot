@@ -170,7 +170,7 @@ function handler(data) {
     var text = data.message.trim();
     var trueMessage = parser.removeHTML(parser.parse(text));
     trueMessage = trueMessage.trim();
-    var argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
+    var argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1).trim();
     var argumentsArray = argumentString.split(" ");
     
     if (name !== botnick && !(banned.indexOf(name) > -1)) {
@@ -609,6 +609,10 @@ function inject(name, js) {
 
 // Do us some math
 function doMath(someMath) {
+    if (someMath == "!math" || someMath == undefined) {
+        send("#cyanPlease enter a valid math.js expression.");
+        return false;
+    }
     try {
         var answer = math.eval(someMath);
         send("#cyanAnswer: $Source Code Pro|" + answer);
