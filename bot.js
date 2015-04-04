@@ -166,7 +166,7 @@ CLIENT.on('message', function(data) {
     
     if (name !== botnick && !(banned.indexOf(name) > -1)) {
         
-        //COMMAND HANDLERS
+        // COMMAND HANDLERS
         // name = the person who issued the command
         // argumentString = everything after the command
         // argumentsArray = all the whitespace-defined words after the command
