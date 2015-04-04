@@ -105,7 +105,7 @@ function pmlink(message, text) {
 // Lists online users
 function getOnlineUsers() {
     var online = [];
-    for (c in ONLINE.models) {
+    for (var c in ONLINE.models) {
         online.push(ONLINE.models[c].attributes.nick);
     }
     return online;
@@ -154,12 +154,14 @@ CLIENT.show("Masterbot now running!");
 
 // Begin logging process and listen for commands
 CLIENT.on('message', function(data) {
+    if (data.nick === undefined) {
+        return false;
+    }
+    var name = data.nick;
     var text = data.message.trim();
-    if (data.nick !== undefined)
-        var name = data.nick;
     var trueMessage = parser.removeHTML(parser.parse(text));
     trueMessage = trueMessage.trim();
-    argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
+    var argumentString = trueMessage.substring(trueMessage.indexOf(" ") + 1);
     var argumentsArray = argumentString.split(" ");
     
     if (name !== botnick && !(banned.indexOf(name) > -1)) {
@@ -262,7 +264,7 @@ function getTitles(message) {
     var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gim;
     var urls = message.match(urlpattern);
     console.log(urls);
-    for (c in urls) {
+    for (var c in urls) {
         var id = urls[c].match(idpattern)[0];
         if (id !== undefined) {
             getTitle(id);
@@ -385,12 +387,12 @@ function image(spooky, caller) {
         $.getJSON("https://api.reddit.com/r/" + spooky + "/hot.json?limit=100")
             .done(function(response) {
                 resp = response.data.children;
-                var valid = []
+                var valid = [];
                 $.map(resp, function(item){
                     if(/\.(?:gif|jpg|jpeg|png|bmp)$/gi.exec(item.data.url))
                         valid.push(item);
                     });
-                if(valid.length==0){
+                if (valid.length === 0) {
                     pm(caller, "#redNo images could be found for subreddit '" + spooky + "'.");
                     return;
                 }
@@ -423,7 +425,7 @@ function define(word) {
             if (data[0] === undefined) {
                 send("#redNo definition could be found.");
             } else {
-                send("#blue" + word + ": #cyan" + data[0].text)
+                send("#blue" + word + ": #cyan" + data[0].text);
             }
             return;
         }
@@ -451,7 +453,7 @@ function weather(loc) {
 function iploc(ip) {
     $.getJSON("https://freegeoip.net/json/" + ip)
         .success(function(data) {
-            if (data.city != "" && data.region_code != "" && data.country_name != "") {
+            if (data.city !== "" && data.region_code !== "" && data.country_name !== "") {
                 send("#cyanThe location of the IP " + ip + " is " + data.city + ", " + data.region_code + ", " + data.country_name + ".");
             } else {
                 send("#redInvalid IP '" + ip + "' or location unavailable.");
@@ -473,7 +475,7 @@ function til() {
                     valid.push(item);
                 }
             });
-            if (valid.length==0) {
+            if (valid.length === 0) {
                 CLIENT.submit("No self posts could be found");
                 return;
             }
@@ -499,7 +501,7 @@ function quote(sub) {
                 valid.push(item);
             }
         });
-        if (valid.length == 0) {
+        if (valid.length === 0) {
             CLIENT.submit("#redNo posts could be found.");
             return;
         }
@@ -562,9 +564,9 @@ function corkboard(url) {
 // Useless translate function, now abandoned
 function translate(lang, stuff) {
     $.getJSON("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20150209T041526Z.00e0389b9281a02f.a79c46b2b222abe4cb25dee77e00b4567c4171be&lang=en-" + lang + "&text=" + encodeURIComponent(stuff)).success(function(response) {
-        resp = response.text
-        send("#green" + stuff + " in " + lang + " is: \"" + resp + "\"")
-    })
+        resp = response.text;
+        send("#green" + stuff + " in " + lang + " is: \"" + resp + "\"");
+    });
 }
 
 // Inject JS -- Bruno only
