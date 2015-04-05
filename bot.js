@@ -27,7 +27,7 @@ var disabled = false;
 var botnick = "Masterbot";
 
 // People who can control the bot
-var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr. Guy", "LAMP", "InfraRaven", "Kevin"];
+var masters = ["Bruno02468", "sammich", "Randomguy_", "Mr.Guy", "LAMP", "InfraRaven", "Kevin"];
 
 // People who can't use the bot
 var banned = ["gaybutts", "DoomsdayMuffinz", "Anonymous", "fingers"];
