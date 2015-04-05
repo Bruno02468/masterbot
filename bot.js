@@ -207,8 +207,6 @@ function handler(data) {
             ask(name);
         } else if (text.contains("!help")) {
             pm(name, help);
-        } else if (text.contains("!shouthelp")) {
-            send(help);
         } else if (text.contains("watch?v=")) {
             getTitles(text);
         } else if (text.contains("!count")) {
