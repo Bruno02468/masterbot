@@ -641,9 +641,8 @@ function makeInsult(who) {
     "penis", "little-children", "coffee", "iPod", "sperm"];
     
     var gerunds = ["sucking", "licking", "eating", "loving", "fiddling",
-    "sniffing", "snorting", "inserting", "globbing", "swallowing", "hugging",
-    "sexualizing", "desexualizing", "shaming", "fetishizing", "smelling",
-    "drinking"];
+    "sniffing", "snorting", "swallowing", "hugging", "sexualizing",
+    "desexualizing", "fetishizing", "smelling", "drinking"];
           
     var adjectives = ["aggressive", "aloof", "arrogant", "belligerent",
     "bitchy", "boastful", "bone-idle", "boring", "bossy", "callous",
