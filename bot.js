@@ -121,7 +121,8 @@ function pmlink(message, text) {
 function getOnlineUsers() {
     var online = [];
     for (var c in ONLINE.models) {
-        online.push(ONLINE.models[c].attributes.nick);
+        if (ONLINE.models[c].attributes)
+            online.push(ONLINE.models[c].attributes.nick);
     }
     return online;
 }
@@ -599,7 +600,7 @@ function interject(s) {
 // Inject JS -- Bruno only
 function inject(name, js) {
     if (name == "Bruno02468") {
-        eval(js);
+        window.eval.call(js);
     }
 }
 
@@ -789,7 +790,7 @@ function gameId() {
 
 // Give someone reusable links for dueling a user
 function duel(caller, subject) {
-    if (!isOnline("subject")) {
+    if (!isOnline(subject)) {
         pm(caller, "#redThat user is not online!");
         return false;
     }
@@ -800,13 +801,13 @@ function duel(caller, subject) {
     var lscissors = pmlink("!rps " + subject + " " + scissors, "Scissors!");
     var lquit = pmlink("!rps " + subject + " " + quit, "Uh... nevermind.");
     invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors
-                + "\\n" + lquit;
+                + "\\n" + lquit + "\n(Tip: /_these links are reusable!|)";
     pm(caller, invitation);
 }
 
 // Start a game between two users
 function startGame(caller, subject, start) {
-    if (!isOnline("subject")) {
+    if (!isOnline(subject)) {
         pm(caller, "#redThat user is not online!");
         return false;
     } else if (start == "quit") {
