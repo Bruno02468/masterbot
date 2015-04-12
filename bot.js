@@ -47,7 +47,7 @@ var help  = "#cyanI am Masterbot, a creation of Bruno02468, with code from Rando
     help += "         !til: Gives a random fact someone learned. Learn something new!\n";
     help += "         !get msg: Retrieves the current /msg.\n";
     help += "         !radio: Retrieves the URL for the Spooks Radio Stream.\n";
-    help += "         !track: See what's currently blasting on Spooks Radio!\n";
+    help += "         !track [main, rock, hardstyle]: See what's currently blasting on Spooks Radio!\n";
     help += "         !interject [something]: I'd just like to interject for a moment...\n";
     help += "         !duel [username]: (BROKEN) Get reusable links to duel someone in Rock-Paper-Scissors.\n";
     help += "         !math [math]: I can do math too!\n";
@@ -235,7 +235,7 @@ function handler(data) {
         } else if (text.contains("!radio")) {
             send("#cyanYou can listen to Spooks Radio here: http://spooksradio.tk");
         } else if (text.contains("!track")) {
-            getSong();
+            getSong(argumentString);
         } else if (text.contains("!pick")) {
             pick(argumentString, true);
         } else if (text.contains("!stream")) {
@@ -578,12 +578,22 @@ function getMsg() {
 }
 
 // Say the current track on Spooks Radio
-function getSong() {
-    var songname = ajaxGet("http://spooksradio.tk/currentsong_bruno.php");
-    if (!songname) {
-        songname = "nothing at the moment";
+function getSong(stream) {
+    if (stream == "!track" || stream == "main") {
+        var songname = ajaxGet("http://spooksradio.tk/currentsong_bruno.php");
+    } else {
+        try {
+            var songname = ajaxGet("http://" + stream + ".spooksradio.tk/currentsong_bruno.php");
+        } catch (err) {
+            send("#redInvalid stream! Try main, rock or hardstyle.");
+            return;
+        }
+    }
+    if (!songname || songname == "") {
+        var songname = "nothing at the moment";
     }
     send("#cyanSpooks Radio is currently playing " + songname + ".");
+    
 }
 
 // I'd just like to interject for a moment...
