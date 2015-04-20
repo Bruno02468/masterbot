@@ -208,7 +208,7 @@ function handler(data) {
             ask(name);
         } else if (text.contains("!help")) {
             pm(name, help);
-        } else if (text.contains("watch?v=")) {
+        } else if (text.contains("watch?v=") || text.contains("youtu.be")) {
             getTitles(text);
         } else if (text.contains("!count")) {
             getCount();
@@ -287,11 +287,11 @@ if (!listening) {
 // Sends the title for a given YouTube video ID
 function getTitle(id) {
     var xml = ajaxGet("http://gdata.youtube.com/feeds/api/videos/" + id);
-    var parser = new DOMParser();
-    var xmlDocument = parser.parseFromString(xml, "text/xml");
+    var myparser = new DOMParser();
+    var xmlDocument = myparser.parseFromString(xml, "text/xml");
     var title = xmlDocument.getElementsByTagName("title")[0].innerHTML;
     var thumb = "\n                     https://img.youtube.com/vi/" + id + "/default.jpg"
-    send("#cyanTitle: " + title + thumb);
+    CLIENT.submit("#cyanTitle: " + title + thumb);
 }
 
 // Look for the titles of  YouTube videos in the messages
