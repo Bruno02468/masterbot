@@ -53,7 +53,8 @@ var help  = "#cyanI am Masterbot, a creation of Bruno02468, with code from Rando
     help += "         !math [math]: I can do math too!\n";
     help += "         !how2math: An introduction to math.js.\n";
     help += "         !insult [someone]: Insult them!\n";
-    help += "         !compliment [someone]: Compliment them to make up for it.";
+    help += "         !compliment [someone]: Compliment them to make up for it.\n";
+    help += "         !lispify [something]: Generate Lisp code for some text.";
     
 var mathhelp  = "#cyanHere's how to do math with Masterbot.\n"
     mathhelp += "         You can input simple math expressions, like /%9 + 10|.\n";
@@ -266,6 +267,8 @@ function handler(data) {
             insult(name, argumentString);
         } else if (text.contains("!compliment")) {
             compliment(name, argumentString);
+        } else if (text.contains("!lispify")) {
+            lispify(argumentString);
         }
             
     }
@@ -311,6 +314,28 @@ function getTitles(message) {
         }
     }
 }
+
+// Generate Lisp code from string
+function lispify(s) {
+    if (s.toLowerCase() == "!lispify") {
+        send("Nothing specified.");
+        return;
+    }
+    var result = "$Source Code Pro|##black#white\n";
+    var lines = s.split("\n")
+    for (var i = 0; i < lines.length; i++) {
+        var words = lines[i].split(" ");
+        var end = "";
+        for (var j = 0; j < words.length; j++) {
+            result += "( " + words[j] + " ";
+            end += ")";
+        }
+        result += end + "\n";
+    }
+    send(result);
+}
+
+// Generate Lisp code from user input
 
 // Answers questions
 function ask(name) {
@@ -599,7 +624,7 @@ function getSong(stream) {
 // I'd just like to interject for a moment...
 function interject(s) {
     s = escapeForSending(s.trim());
-    if (!s || s == "!interject") {
+    if (!s || s.toLowerCase() == "!interject") {
         s = "Linux";
     }
     var quote = "/%I'd just like to interject for a moment. What you're referring to as "
