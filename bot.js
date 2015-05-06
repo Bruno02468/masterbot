@@ -142,6 +142,11 @@ function ajaxGet(url) {
     return request.responseText;
 }
 
+// Used when making unsafe cross-domain requests
+function crossGet(url) {
+    return ajaxGet("http://aws.bruno02468.com/proxy.php?url=" + encodeURIComponent(url));
+}
+
 // Escaping strings
 function escapeForSending(string) {
     var pat = /\/(?:)/gi;
@@ -287,13 +292,18 @@ if (!listening) {
 // These are called when a user issues a command, to keep
 // the command handlers themselves short and clean.
 
-// Sends the title for a given YouTube video ID
-function getTitle(id) {
-    var xml = ajaxGet("http://gdata.youtube.com/feeds/api/videos/" + id);
+// Sends the title for a given YouTube video URL
+function getTitle(url) {
+    var html = crossGet(url);
+    var video_id = url.split('v=')[1];
+    var ampersandPosition = video_id.indexOf('&');
+    if (ampersandPosition !== -1) {
+        video_id = video_id.substring(0, ampersandPosition);
+    }
     var myparser = new DOMParser();
-    var xmlDocument = myparser.parseFromString(xml, "text/xml");
-    var title = xmlDocument.getElementsByTagName("title")[0].innerHTML;
-    var thumb = "\n                     https://img.youtube.com/vi/" + id + "/default.jpg"
+    var xmlDocument = myparser.parseFromString(html, "text/html");
+    var title = xmlDocument.getElementById("eow-title").innerHTML.replace(/\n/, "").trim();
+    var thumb = "\n                     https://img.youtube.com/vi/" + video_id + "/default.jpg"
     CLIENT.submit("#cyanTitle: " + title + thumb);
 }
 
@@ -303,15 +313,7 @@ function getTitles(message) {
     var idpattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/gim;
     var urls = message.match(urlpattern);
     for (var c in urls) {
-        var id = urls[c].match(idpattern)[0];
-        if (id !== undefined) {
-            var video_id = id.split('v=')[1];
-            var ampersandPosition = video_id.indexOf('&');
-            if(ampersandPosition !== -1) {
-                video_id = video_id.substring(0, ampersandPosition);
-            }
-            getTitle(video_id);
-        }
+        getTitle(urls[c]);
     }
 }
 
