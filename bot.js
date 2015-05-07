@@ -144,7 +144,7 @@ function ajaxGet(url) {
 
 // Used when making unsafe cross-domain requests
 function crossGet(url) {
-    return ajaxGet("http://aws.bruno02468.com/proxy.php?url=" + encodeURIComponent(url));
+    return ajaxGet("http://bruno02468.com/cors.php?url=" + encodeURIComponent(url));
 }
 
 // Escaping strings
