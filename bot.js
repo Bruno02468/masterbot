@@ -166,15 +166,7 @@ Array.prototype.randomItem = function() {
 // Username popup and flair setter, basic setup
 function setup() {
     if (CLIENT.get("nick") !== botnick)
-    {
         CLIENT.submit("/login bottybot " + botnick);
-    }
-    //if the bot is still not logged in, try /nick
-    if (CLIENT.get("nick") !== botnick)
-    {
-        CLIENT.submit("/nick " + botnick);
-    }
-
     CLIENT.submit("/safe");
     CLIENT.set("part", "to get repaired by Bruno");
     CLIENT.set("mask", "brunos.secret.bot.laboratory");
