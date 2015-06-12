@@ -80,6 +80,12 @@ function spamFilters() {
     }, 700);
 }
 
+// Fix the bot's name
+function fixNick() {
+    if (CLIENT.attributes.nick !== botnick)
+        CLIENT.submit("/login bottybot " + botnick);
+}
+
 // Decrement spam score
 setInterval(function() {
     if (score > 0) {
@@ -97,6 +103,7 @@ $('head').append('<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/1.5.
 
 // Send message and trigger anti-spam
 function send(text) {
+    fixNick();
     if (!antiSpam && score < 7 && !disabled) {
         CLIENT.submit(text);
         spamFilters();
