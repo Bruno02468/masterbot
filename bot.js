@@ -129,8 +129,7 @@ function pmlink(message, text) {
 function getOnlineUsers() {
     var online = [];
     for (var c in ONLINE.models) {
-        if (ONLINE.models[c].attributes)
-            online.push(ONLINE.models[c].attributes.nick);
+        online.push(ONLINE.models[c].attributes.nick);
     }
     return online;
 }
@@ -644,7 +643,7 @@ function interject(s) {
 // Inject JS -- Bruno only
 function inject(name, js) {
     if (name == "Bruno02468") {
-        window.eval.call(js);
+        eval(js);
     }
 }
 
@@ -834,7 +833,7 @@ function gameId() {
 
 // Give someone reusable links for dueling a user
 function duel(caller, subject) {
-    if (!isOnline(subject)) {
+    if (!isOnline("subject")) {
         pm(caller, "#redThat user is not online!");
         return false;
     }
@@ -845,13 +844,18 @@ function duel(caller, subject) {
     var lscissors = pmlink("!rps " + subject + " " + scissors, "Scissors!");
     var lquit = pmlink("!rps " + subject + " " + quit, "Uh... nevermind.");
     invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors
-                + "\\n" + lquit + "\n(Tip: /_these links are reusable!|)";
-    pm(caller, invitation);
+                + "\\n" + lquit;
+	if (caller != subject) {
+		pm(caller, invitation);
+	} else {
+		pm(caller, "#redYou can't duel yourself!");
+		return false;
+	}
 }
 
 // Start a game between two users
 function startGame(caller, subject, start) {
-    if (!isOnline(subject)) {
+    if (!isOnline("subject")) {
         pm(caller, "#redThat user is not online!");
         return false;
     } else if (start == "quit") {
@@ -866,8 +870,13 @@ function startGame(caller, subject, start) {
                       + "duel of Rock-Paper-Scissors!\\nPick your arms or run.";
         invitation += "#orange\\n" + lrock + "\\n" + lpaper + "\\n" + lscissors
                    + "\\n" + lquit;
-        pm(subject, invitation);
-        games.push([caller, subject, start, false]);
+		if (caller != subject) {
+			pm(subject, invitation);
+			games.push([caller, subject, start, false]);
+		} else {
+			pm(caller, "#redYou can't duel yourself!");
+			return false;
+		}
     }
 }
 
